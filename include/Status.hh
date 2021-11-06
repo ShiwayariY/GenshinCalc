@@ -46,7 +46,7 @@ struct Hit {
 using Combo = std::vector<Hit>;
 
 struct Status {
-	// give [..._perc, ..._bonus, crit_..., energy_recharge] values in % (i.e. pyro_bonus = 46.0 for 46%)
+	// [..._perc, ..._bonus, crit_..., energy_recharge] are %-values (i.e. pyro_bonus = 46.0 for 46%)
 	float
 	  base_hp = 0.0,
 	  flat_hp = 0.0,

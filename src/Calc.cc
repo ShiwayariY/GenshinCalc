@@ -39,13 +39,13 @@ float Calc::avg_dmg(const Combo& combo) const {
 		const float hit_atk = total_atk() * hit.scaling_perc / 100.0;
 		DEBUG("Hit Atk: " << hit_atk);
 
-		const float bonus_mult = (100.0 + dmg_bonus(hit.element, hit.talent)) / 100.0;
+		const float bonus_mult = 1.0 + dmg_bonus(hit.element, hit.talent) / 100.0;
 		DEBUG("Bonus mult: " << bonus_mult);
 
 		float hit_dmg = hit_atk * bonus_mult * amplifying_mutliplier(hit.reaction);
 		DEBUG("Base dmg hit: " << hit_dmg);
 
-		if (hit.can_crit) hit_dmg *= (1.0 + std::min(100.0f, m_stats.crit_rate) * m_stats.crit_dmg / 10000.0);
+		if (hit.can_crit) hit_dmg *= 1.0 + std::min(100.0f, m_stats.crit_rate) * m_stats.crit_dmg / 10000.0;
 		DEBUG("Crit avg hit: " << hit_dmg);
 
 		dmg += hit_dmg;
