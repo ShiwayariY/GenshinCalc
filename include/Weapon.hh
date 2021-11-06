@@ -32,6 +32,21 @@ public:
 	void apply_effects(Status&) const override {}
 };
 
+// -------------------------------------------------- The Catch --------------------------------------------------
+
+class TheCatch : public Weapon {
+public:
+	TheCatch() :
+			Weapon{
+				{ .base_atk = 510,
+				  .crit_rate = 12.0,
+				  .energy_recharge = 45.9,
+				  .burst_bonus = 32.0 }
+			} {}
+
+	void apply_effects(Status&) const override {}
+};
+
 }
 
 #endif
