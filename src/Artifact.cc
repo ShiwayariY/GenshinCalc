@@ -27,6 +27,9 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::BlizzardStrayer:
 			use_set_BlizzardStrayer(stats, piece_count);
 			break;
+		case SetType::HeartOfDepth:
+			use_set_HeartOfDepth(stats, piece_count);
+			break;
 		case SetType::Emblem:
 			use_set_Emblem(stats, piece_count);
 			break;
@@ -47,6 +50,14 @@ void Artifact::use_set_Gladiator(Status& stats, int piece_count) {
 void Artifact::use_set_BlizzardStrayer(Status& stats, int piece_count) {
 	if (piece_count >= 2) stats.cryo_bonus += 15.0;
 	if (piece_count >= 4) stats.crit_rate += 40.0;
+}
+
+void Artifact::use_set_HeartOfDepth(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.hydro_bonus += 15.0;
+	if (piece_count >= 4) {
+		stats.normal_bonus += 30.0;
+		stats.charged_bonus += 30.0;
+	}
 }
 
 void Artifact::use_set_Emblem(Status& stats, int piece_count) {

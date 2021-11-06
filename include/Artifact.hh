@@ -86,6 +86,7 @@ public:
 private:
 	static void use_set_Gladiator(Status&, int piece_count);
 	static void use_set_BlizzardStrayer(Status&, int piece_count);
+	static void use_set_HeartOfDepth(Status&, int piece_count);
 	static void use_set_Emblem(Status&, int piece_count);
 	static void use_set_Shimenawa(Status&, int piece_count);
 
