@@ -62,7 +62,7 @@ void Artifact::use_set_HeartOfDepth(Status& stats, int piece_count) {
 
 void Artifact::use_set_Emblem(Status& stats, int piece_count) {
 	if (piece_count >= 2) stats.energy_recharge += 20.0;
-	if (piece_count >= 4) stats.burst_bonus += std::max(75.0, 0.25 * stats.energy_recharge);
+	if (piece_count >= 4) stats.burst_bonus += std::min(75.0, 0.25 * stats.energy_recharge);
 }
 
 void Artifact::use_set_Shimenawa(Status& stats, int piece_count) {
