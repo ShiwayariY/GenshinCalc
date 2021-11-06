@@ -15,6 +15,10 @@ include_directories(
 
 add_executable(GenshinCalc
 	src/main.cc
+	src/Calc.cc
+	src/Artifact.cc
+	src/Weapon.cc
+	src/Character.cc
 )
 
 #target_link_libraries(GenshinCalc
