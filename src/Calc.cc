@@ -60,16 +60,16 @@ void Calc::init_stats() const {
 	DEBUG("___Base stats___\n"
 		  << m_stats);
 
-	m_char.apply_effects(m_stats);
-	DEBUG("___after char effects___\n"
-		  << m_stats);
-
 	m_weapon.apply_effects(m_stats);
 	DEBUG("___after weapon effects___\n"
 		  << m_stats);
 
 	apply_artifact_sets();
 	DEBUG("___after artifact sets___\n"
+		  << m_stats);
+
+	m_char.apply_effects(m_stats);
+	DEBUG("___after char effects___\n"
 		  << m_stats);
 }
 
