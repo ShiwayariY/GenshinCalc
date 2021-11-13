@@ -36,6 +36,9 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::Shimenawa:
 			use_set_Shimenawa(stats, piece_count);
 			break;
+		case SetType::HuskOfOpulentDreams:
+			use_set_HuskOfOpulentDreams(stats, piece_count);
+			break;
 
 		default:
 			throw "NOT IMPLEMENTED";
@@ -45,6 +48,11 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 void Artifact::use_set_Gladiator(Status& stats, int piece_count) {
 	if (piece_count >= 2) stats.atk_perc += 18.0;
 	if (piece_count >= 4) stats.normal_bonus += 35.0;
+}
+
+void Artifact::use_set_WanderersTroupe(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.elem_mastery += 80;
+	if (piece_count >= 4) stats.charged_bonus += 35.0;
 }
 
 void Artifact::use_set_BlizzardStrayer(Status& stats, int piece_count) {
@@ -71,6 +79,14 @@ void Artifact::use_set_Shimenawa(Status& stats, int piece_count) {
 		stats.normal_bonus += 50.0;
 		stats.charged_bonus += 50.0;
 		stats.plunge_bonus += 50.0;
+	}
+}
+
+void Artifact::use_set_HuskOfOpulentDreams(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.def_perc += 30.0;
+	if (piece_count >= 4) {
+		stats.def_perc += 24.0;
+		stats.geo_bonus += 24.0;
 	}
 }
 
