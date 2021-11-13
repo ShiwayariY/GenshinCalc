@@ -87,6 +87,27 @@ public:
 
 	void apply_effects(Status&) const override {}
 };
+
+// -------------------------------------------------- Redhorn Stonethresher --------------------------------------------------
+
+class RedhornStonethresher : public Weapon {
+public:
+	RedhornStonethresher(unsigned int refine = 1) :
+			Weapon{
+				Status{ .base_atk = 542.0f,
+				  .def_perc = 21.0f + static_cast<float>(refine) * 7.0f,
+				  .crit_dmg = 88.2f }
+			},
+			m_refine{ refine } {
+		DEBUG("___Redhorn Stonethresher___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override;
+
+private:
+	const unsigned int m_refine = 1;
+};
 }
 
 #endif
