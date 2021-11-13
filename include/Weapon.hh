@@ -56,7 +56,7 @@ class Whiteblind : public Weapon {
 public:
 	Whiteblind(unsigned int refine = 1) :
 			Weapon{
-				Status{ .base_atk = 510.0f,
+				{ .base_atk = 510.0f,
 				  .atk_perc = 18.0f + static_cast<float>(refine) * 6.0f,
 				  .def_perc = 51.7f + 18.0f + static_cast<float>(refine) * 6.0f }
 			} {
@@ -94,7 +94,7 @@ class RedhornStonethresher : public Weapon {
 public:
 	RedhornStonethresher(unsigned int refine = 1) :
 			Weapon{
-				Status{ .base_atk = 542.0f,
+				{ .base_atk = 542.0f,
 				  .def_perc = 21.0f + static_cast<float>(refine) * 7.0f,
 				  .crit_dmg = 88.2f }
 			},
