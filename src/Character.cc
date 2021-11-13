@@ -7,7 +7,7 @@ namespace GenshinCalc {
 Character::Character(Status stats) :
 		status{ stats } {}
 
-// -------------------------------------------------- AYAKA --------------------------------------------------
+// -------------------------------------------------- Ayaka --------------------------------------------------
 
 Hit Ayaka::get_hit(DmgTalent talent, unsigned int hit_num) const {
 	auto hit = ABILITIES.at({ talent, hit_num });
@@ -39,6 +39,22 @@ Hit Baal::get_hit(DmgTalent talent, unsigned int hit_num) const {
 void Baal::apply_effects(Status& stats) const {
 	stats.electro_bonus += 0.4 * (stats.energy_recharge - 100.0);
 	stats.burst_bonus += 0.29 * 90;
+}
+
+// -------------------------------------------------- Itto --------------------------------------------------
+
+Hit Itto::get_hit(DmgTalent talent, unsigned int hit_num) const {
+	auto hit = ABILITIES.at({ talent, hit_num });
+	if (!RoyalDescent && hit.talent == DmgTalent::Normal) hit.element = DmgElement::Phys;
+	return hit;
+}
+
+void Itto::apply_effects(Status& stats) const {
+	const float total_def = (stats.base_def * (1.0 + stats.def_perc / 100.0) + stats.flat_def);
+	if (RoyalDescent)
+		stats.flat_atk += 1.0368 * total_def;
+	if (SuperlativeSuperstrength)
+		stats.charged_bonus += 0.35 * total_def;
 }
 
 }

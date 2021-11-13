@@ -99,6 +99,41 @@ private:
 	};
 };
 
+// -------------------------------------------------- Itto --------------------------------------------------
+
+class Itto : public Character {
+public:
+	bool RoyalDescent = true;
+	bool SuperlativeSuperstrength = true;
+
+	Itto() :
+			Character{
+				{ .base_hp = 12858.0,
+				  .base_atk = 227.0,
+				  .base_def = 959.0,
+				  .crit_rate = 24.2,
+				  .crit_dmg = 50.0,
+				  .energy_recharge = 100.0 }
+			} {
+		DEBUG("___Itto___\n"
+			  << status);
+	}
+
+	Hit get_hit(DmgTalent, unsigned int hit_num) const override;
+	void apply_effects(Status&) const override;
+
+private:
+	inline static const Abilities ABILITIES{
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 156.62 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 150.96 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 181.15 } },
+		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 231.72 } },
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 180.2 } },	// Arataki Kesagiri Combo Slash
+		{ { DmgTalent::Charged, 2 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 377.4 } },	// Arataki Kesagiri Final Slash
+		{ { DmgTalent::Charged, 3 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 178.84 } },	// Saichimonji Slash
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Geo, 552.96 } }
+	};
+};
 }
 
 #endif
