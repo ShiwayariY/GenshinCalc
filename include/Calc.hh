@@ -27,7 +27,11 @@ public:
 	  float def_reduction_perc,
 	  float res_perc);
 
-	float avg_dmg(const Combo&) const;
+	float avg_dmg(
+	  const Combo&,
+	  void (*modifier)(Status&) = [](Status&) {}) const;
+
+	static void geo_resonance_modifier(Status&);
 
 private:
 	mutable Status m_stats; // not part of state / only used for intermediate results

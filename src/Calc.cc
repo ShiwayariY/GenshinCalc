@@ -31,8 +31,9 @@ float Calc::dmg_dealt(
 	return dmg_applied * def_multiplier(char_level, enemy_level, def_reduction_perc) * res_multiplier(res_perc);
 }
 
-float Calc::avg_dmg(const Combo& combo) const {
+float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) const {
 	init_stats();
+	modifier(m_stats);
 	float dmg = 0.0;
 
 	for (const Hit& hit : combo) {
@@ -51,6 +52,14 @@ float Calc::avg_dmg(const Combo& combo) const {
 		dmg += hit_dmg;
 	}
 	return dmg;
+}
+
+void Calc::geo_resonance_modifier(Status& stats) {
+	stats.normal_bonus += 15.0;
+	stats.charged_bonus += 15.0;
+	stats.plunge_bonus += 15.0;
+	stats.skill_bonus += 15.0;
+	stats.burst_bonus += 15.0;
 }
 
 // private
