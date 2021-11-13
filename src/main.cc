@@ -139,9 +139,34 @@ void calc_Baal() {
 	std::cout << dmg_dealt << std::endl;
 }
 
+void calc_Itto() {
+	Artifact *f, *p, *s, *g, *h;
+
+	Itto itto;
+	Whiteblind whiteblind{ 5 };
+	SkywardPride skyward_pride{ 1 };
+	Combo combo{
+		// ...
+	};
+	Calc calc{ itto, whiteblind, *f, *p, *s, *g, *h };
+	const auto avg_dmg = calc.avg_dmg(combo, Calc::geo_resonance_modifier);
+
+	const unsigned CHAR_LVL = 90;
+	const unsigned ENEMY_LVL = 90;
+	const float ENEMY_RES = 10.0;
+	const float DEF_REDUCTION = 0.0;
+	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg,
+	  CHAR_LVL,
+	  ENEMY_LVL,
+	  DEF_REDUCTION,
+	  ENEMY_RES - 20.0); // with geo reso -20% resistance
+
+	std::cout << dmg_dealt << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Baal();
+	calc_Itto();
 }
