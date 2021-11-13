@@ -32,8 +32,8 @@ float Calc::dmg_dealt(
 }
 
 float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) const {
-	init_stats();
 	modifier(m_stats);
+	init_stats();
 	float dmg = 0.0;
 
 	for (const Hit& hit : combo) {
@@ -65,7 +65,7 @@ void Calc::geo_resonance_modifier(Status& stats) {
 // private
 
 void Calc::init_stats() const {
-	m_stats = m_char.status + m_weapon.status + m_flower.status() + m_feather.status() + m_sand.status() + m_goblet.status() + m_head.status();
+	m_stats = m_stats + m_char.status + m_weapon.status + m_flower.status() + m_feather.status() + m_sand.status() + m_goblet.status() + m_head.status();
 	DEBUG("___Base stats___\n"
 		  << m_stats);
 
