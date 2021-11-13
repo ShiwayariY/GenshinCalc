@@ -118,7 +118,9 @@ struct Status {
 			.skill_bonus = skill_bonus + other.skill_bonus,
 			.burst_bonus = burst_bonus + other.burst_bonus,
 
-			.reaction_bonus = reaction_bonus + other.reaction_bonus
+			.reaction_bonus = reaction_bonus + other.reaction_bonus,
+
+			.additional_dmg = additional_dmg + other.additional_dmg
 		};
 	};
 };
