@@ -42,7 +42,10 @@ public:
 				  .crit_rate = 12.0f,
 				  .energy_recharge = 45.9f,
 				  .burst_bonus = 32.0f }
-			} {}
+			} {
+		DEBUG("___The Catch___\n"
+			  << status);
+	}
 
 	void apply_effects(Status&) const override {}
 };
@@ -56,7 +59,10 @@ public:
 				Status{ .base_atk = 510.0f,
 				  .atk_perc = 18.0f + static_cast<float>(refine) * 6.0f,
 				  .def_perc = 51.7f + 18.0f + static_cast<float>(refine) * 6.0f }
-			} {}
+			} {
+		DEBUG("___Whiteblind___\n"
+			  << status);
+	}
 
 	void apply_effects(Status&) const override {}
 };
@@ -74,7 +80,10 @@ public:
 				  .plunge_bonus = 6.0f + static_cast<float>(refine) * 2.0f,
 				  .skill_bonus = 6.0f + static_cast<float>(refine) * 2.0f,
 				  .burst_bonus = 6.0f + static_cast<float>(refine) * 2.0f }
-			} {}
+			} {
+		DEBUG("___Skyward Pride___\n"
+			  << status);
+	}
 
 	void apply_effects(Status&) const override {}
 };
