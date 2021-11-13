@@ -54,7 +54,7 @@ void Itto::apply_effects(Status& stats) const {
 	if (RoyalDescent)
 		stats.flat_atk += 1.0368 * total_def;
 	if (SuperlativeSuperstrength)
-		stats.charged_bonus += 0.35 * total_def;
+		stats.additional_dmg += 0.35 * total_def;
 }
 
 }

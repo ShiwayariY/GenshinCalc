@@ -79,7 +79,9 @@ struct Status {
 	  plunge_bonus = 0.0,
 	  skill_bonus = 0.0,
 	  burst_bonus = 0.0,
-	  reaction_bonus = 0.0;
+	  reaction_bonus = 0.0,
+	  
+	  additional_dmg = 0.0; // like flat atk, but without talent scaling
 
 	Status operator+(const Status& other) const {
 		return Status{
