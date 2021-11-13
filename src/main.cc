@@ -140,16 +140,66 @@ void calc_Baal() {
 }
 
 void calc_Itto() {
-	Artifact *f, *p, *s, *g, *h;
+	Artifact f{
+		Main::Flower,
+		SetType::HuskOfOpulentDreams,
+		{ StatusRoll::DefPerc, 7.29 },
+		{ StatusRoll::AtkPerc, 5.83 },
+		{ StatusRoll::CDmg, 23.31 },
+		{ StatusRoll::CRate, 15.56 }
+	};
+	Artifact p{
+		Main::Feather,
+		SetType::HuskOfOpulentDreams,
+		{ StatusRoll::DefPerc, 7.29 },
+		{ StatusRoll::CRate, 11.67 },
+		{ StatusRoll::AtkPerc, 5.83 },
+		{ StatusRoll::CDmg, 31.08 }
+	};
+	Artifact s{
+		Main::SandDef,
+		SetType::HuskOfOpulentDreams,
+		{ StatusRoll::AtkPerc, 5.83 },
+		{ StatusRoll::CRate, 11.67 },
+		{ StatusRoll::CDmg, 31.08 },
+		{ StatusRoll::Def, 23.15 },
+	};
+	Artifact g{
+		Main::GobletGeo,
+		SetType::HuskOfOpulentDreams,
+		{ StatusRoll::DefPerc, 7.29 },
+		{ StatusRoll::CRate, 11.67 },
+		{ StatusRoll::AtkPerc, 5.83 },
+		{ StatusRoll::CDmg, 31.08 }
+	};
+	Artifact h{
+		Main::HeadCDmg,
+		SetType::HuskOfOpulentDreams,
+		{ StatusRoll::DefPerc, 7.29 },
+		{ StatusRoll::CRate, 23.34 },
+		{ StatusRoll::AtkPerc, 5.83 },
+		{ StatusRoll::Def, 23.15 }
+	};
 
 	Itto itto;
 	Whiteblind whiteblind{ 5 };
 	SkywardPride skyward_pride{ 1 };
+	auto arataki_combo = itto.get_hit(DmgTalent::Charged, 1);
+	auto final_slash = itto.get_hit(DmgTalent::Charged, 2);
 	Combo combo{
-		// ...
+		arataki_combo,
+		arataki_combo,
+		arataki_combo,
+		arataki_combo,
+		final_slash
 	};
-	Calc calc{ itto, whiteblind, *f, *p, *s, *g, *h };
-	const auto avg_dmg = calc.avg_dmg(combo, Calc::geo_resonance_modifier);
+	Calc calc{ itto, whiteblind, f, p, s, g, h };
+	const auto avg_dmg = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::geo_resonance_modifier(stats);
+		stats.geo_bonus += 15.0; // Gorou skill
+		stats.flat_def += 350;   // Gorou skill
+		stats.def_perc += 25.0;  // Gorou burst passive
+	});
 
 	const unsigned CHAR_LVL = 90;
 	const unsigned ENEMY_LVL = 90;
@@ -159,7 +209,7 @@ void calc_Itto() {
 	  CHAR_LVL,
 	  ENEMY_LVL,
 	  DEF_REDUCTION,
-	  ENEMY_RES - 20.0); // with geo reso -20% resistance
+	  ENEMY_RES - 40.0); // geo reso -20% resistance + zhongli shield
 
 	std::cout << dmg_dealt << std::endl;
 }
