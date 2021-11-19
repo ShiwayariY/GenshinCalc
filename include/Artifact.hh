@@ -42,6 +42,7 @@ public:
 		Gladiator,
 		Wanderer,
 		Noblesse,
+		Bloodstained,
 		Emblem,
 		Shimenawa,
 		HeartOfDepth,
@@ -54,6 +55,7 @@ public:
 		Maiden,
 		Bolide,
 		ThunderingFury,
+		Thundersoother,
 		HuskOfOpulentDreams,
 		OceanHuedClam
 	};
@@ -96,6 +98,9 @@ private:
 	static void use_set_Emblem(Status&, int piece_count);
 	static void use_set_Shimenawa(Status&, int piece_count);
 	static void use_set_HuskOfOpulentDreams(Status&, int piece_count);
+	static void use_set_PaleFlame(Status&, int piece_count);
+	static void use_set_Millileth(Status&, int piece_count);
+	static void use_set_BloodstainedChivalry(Status&, int piece_count);
 
 	void set_main(Main);
 	void add_status(StatusRoll, float value);

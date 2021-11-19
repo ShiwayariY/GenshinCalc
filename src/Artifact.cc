@@ -1,4 +1,5 @@
 #include <cmath>
+#include <exception>
 
 #include <Artifact.hh>
 
@@ -39,9 +40,18 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::HuskOfOpulentDreams:
 			use_set_HuskOfOpulentDreams(stats, piece_count);
 			break;
+		case SetType::PaleFlame:
+			use_set_PaleFlame(stats, piece_count);
+			break;
+		case SetType::Millileth:
+			use_set_Millileth(stats, piece_count);
+			break;
+		case SetType::Bloodstained:
+			use_set_BloodstainedChivalry(stats, piece_count);
+			break;
 
 		default:
-			throw "NOT IMPLEMENTED";
+			throw std::logic_error{ "Artifact set not implemented" };
 	}
 }
 
@@ -88,6 +98,24 @@ void Artifact::use_set_HuskOfOpulentDreams(Status& stats, int piece_count) {
 		stats.def_perc += 24.0;
 		stats.geo_bonus += 24.0;
 	}
+}
+
+void Artifact::use_set_PaleFlame(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.phys_bonus += 25.0;
+	if (piece_count >= 4) {
+		stats.atk_perc += 18.0;
+		stats.phys_bonus += 25.0;
+	}
+}
+
+void Artifact::use_set_Millileth(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.hp_perc += 20.0;
+	if (piece_count >= 4) stats.atk_perc += 20.0;
+}
+
+void Artifact::use_set_BloodstainedChivalry(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.phys_bonus += 25.0;
+	if (piece_count >= 4) stats.charged_bonus += 50.0;
 }
 
 void Artifact::set_main(Main main) {
