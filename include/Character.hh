@@ -99,6 +99,46 @@ private:
 	};
 };
 
+// -------------------------------------------------- Eula --------------------------------------------------
+
+class Eula : public Character {
+public:
+	inline static const float Resistance_down = -23.0;
+	unsigned Lightfall_stacks = 13;
+
+	Eula() :
+			Character{
+				{ .base_hp = 13226,
+				  .base_atk = 342,
+				  .base_def = 751,
+				  .crit_rate = 5.0,
+				  .crit_dmg = 88.4 }
+			} {
+		DEBUG("___Eula___\n"
+			  << status);
+	}
+
+	Hit get_hit(DmgTalent, unsigned int hit_num) const override;
+	void apply_effects(Status&) const override {}
+
+private:
+	inline static const float Lightfall_dmg_per_stack = 137.78;
+
+	inline static const Abilities ABILITIES{
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 164.86 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 171.87 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 2.0 * 104.35 } },
+		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 206.95 } },
+		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 2.0 * 131.97 } },
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 234.24 } }, // Press
+		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 392.96 } }, // Hold
+		{ { DmgTalent::Skill, 3 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 153.6 } },  // Icewhirl Brand
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 417.52 } }, // Initial hit
+		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Phys, 337.17 } }, // Shattered Lightfall Sword (passive)
+		{ { DmgTalent::Burst, 3 }, Hit{ DmgTalent::Burst, DmgElement::Phys, 674.34 } }  // Lightfall Sword base dmg
+	};
+};
+
 // -------------------------------------------------- Itto --------------------------------------------------
 
 class Itto : public Character {
@@ -128,9 +168,9 @@ private:
 		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 150.96 } },
 		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 181.15 } },
 		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 231.72 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 180.2 } },	// Arataki Kesagiri Combo Slash
-		{ { DmgTalent::Charged, 2 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 377.4 } },	// Arataki Kesagiri Final Slash
-		{ { DmgTalent::Charged, 3 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 178.84 } },	// Saichimonji Slash
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 180.2 } },  // Arataki Kesagiri Combo Slash
+		{ { DmgTalent::Charged, 2 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 377.4 } },  // Arataki Kesagiri Final Slash
+		{ { DmgTalent::Charged, 3 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 178.84 } }, // Saichimonji Slash
 		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Geo, 552.96 } }
 	};
 };

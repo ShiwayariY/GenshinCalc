@@ -41,6 +41,15 @@ void Baal::apply_effects(Status& stats) const {
 	stats.burst_bonus += 0.29 * 90;
 }
 
+// -------------------------------------------------- Eula --------------------------------------------------
+
+Hit Eula::get_hit(DmgTalent talent, unsigned int hit_num) const {
+	auto hit = ABILITIES.at({ talent, hit_num });
+	if (talent == DmgTalent::Burst && hit_num == 3)
+		hit.scaling_perc += static_cast<float>(Lightfall_stacks) * Lightfall_dmg_per_stack;
+	return hit;
+}
+
 // -------------------------------------------------- Itto --------------------------------------------------
 
 Hit Itto::get_hit(DmgTalent talent, unsigned int hit_num) const {
@@ -56,5 +65,4 @@ void Itto::apply_effects(Status& stats) const {
 	if (SuperlativeSuperstrength)
 		stats.additional_dmg += 0.35 * total_def;
 }
-
 }
