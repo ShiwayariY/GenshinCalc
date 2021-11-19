@@ -29,14 +29,17 @@ public:
 
 	float avg_dmg(
 	  const Combo&,
-	  void (*modifier)(Status&) = [](Status&) {}) const;
+	  void (*modifier)(Status&) = [](Status&) {});
+
+	// retrieve total stats after calculating avg_dmg(...
+	Status status() const;
 
 	static void geo_resonance_modifier(Status&);
 
 private:
-	mutable Status m_stats; // not part of state / only used for intermediate results
-	void init_stats() const;
-	void apply_artifact_sets() const;
+	Status m_stats;
+	void init_stats();
+	void apply_artifact_sets();
 
 	static float def_multiplier(
 	  unsigned int char_level,

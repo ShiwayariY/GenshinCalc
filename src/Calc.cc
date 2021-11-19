@@ -31,7 +31,8 @@ float Calc::dmg_dealt(
 	return dmg_applied * def_multiplier(char_level, enemy_level, def_reduction_perc) * res_multiplier(res_perc);
 }
 
-float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) const {
+float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) {
+	m_stats = Status{};
 	modifier(m_stats);
 	init_stats();
 	float dmg = 0.0;
@@ -54,6 +55,10 @@ float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) const {
 	return dmg;
 }
 
+Status Calc::status() const {
+	return m_stats;
+}
+
 void Calc::geo_resonance_modifier(Status& stats) {
 	stats.normal_bonus += 15.0;
 	stats.charged_bonus += 15.0;
@@ -64,7 +69,7 @@ void Calc::geo_resonance_modifier(Status& stats) {
 
 // private
 
-void Calc::init_stats() const {
+void Calc::init_stats() {
 	m_stats = m_stats + m_char.status + m_weapon.status + m_flower.status() + m_feather.status() + m_sand.status() + m_goblet.status() + m_head.status();
 	DEBUG("___Base stats___\n"
 		  << m_stats);
@@ -82,7 +87,7 @@ void Calc::init_stats() const {
 		  << m_stats);
 }
 
-void Calc::apply_artifact_sets() const {
+void Calc::apply_artifact_sets() {
 	std::map<Artifact::SetType, int> piece_count;
 	piece_count[m_flower.type()]++;
 	piece_count[m_feather.type()]++;
