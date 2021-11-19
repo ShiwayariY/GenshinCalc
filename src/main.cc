@@ -303,9 +303,91 @@ void calc_Itto() {
 	std::cout << dmg_dealt << std::endl;
 }
 
+void calc_Eula() {
+	std::vector<Artifact> arts = {
+		{ Main::Flower,
+		  SetType::PaleFlame,
+		  { StatusRoll::Def, 46 },
+		  { StatusRoll::ER, 9.7 },
+		  { StatusRoll::CRate, 14.0 },
+		  { StatusRoll::EM, 23 } },
+		{ Main::Flower,
+		  SetType::PaleFlame,
+		  { StatusRoll::DefPerc, 10.9 },
+		  { StatusRoll::CDmg, 13.2 },
+		  { StatusRoll::ER, 16.2 },
+		  { StatusRoll::Atk, 19 } },
+		{ Main::Feather,
+		  SetType::PaleFlame,
+		  { StatusRoll::Def, 42 },
+		  { StatusRoll::CDmg, 5.4 },
+		  { StatusRoll::CRate, 13.2 },
+		  { StatusRoll::HP, 269 } },
+		{ Main::SandAtk,
+		  SetType::PaleFlame,
+		  { StatusRoll::EM, 35 },
+		  { StatusRoll::ER, 5.8 },
+		  { StatusRoll::Atk, 31 },
+		  { StatusRoll::CDmg, 17.1 } },
+		{ Main::SandAtk,
+		  SetType::PaleFlame,
+		  { StatusRoll::CRate, 3.5 },
+		  { StatusRoll::CDmg, 7.8 },
+		  { StatusRoll::HP, 568 },
+		  { StatusRoll::Def, 83 } },
+		{ Main::SandAtk,
+		  SetType::PaleFlame,
+		  { StatusRoll::HP, 299 },
+		  { StatusRoll::EM, 56 },
+		  { StatusRoll::CRate, 8.6 },
+		  { StatusRoll::Atk, 14 } },
+		{ Main::GobletPhys,
+		  SetType::Millileth,
+		  { StatusRoll::AtkPerc, 10.5 },
+		  { StatusRoll::ER, 16.8 },
+		  { StatusRoll::Def, 19 },
+		  { StatusRoll::CRate, 6.2 } },
+		{ Main::GobletPhys,
+		  SetType::Millileth,
+		  { StatusRoll::CDmg, 12.4 },
+		  { StatusRoll::ER, 21.4 },
+		  { StatusRoll::HP, 299 },
+		  { StatusRoll::Def, 19 } },
+		{ Main::HeadCRate,
+		  SetType::PaleFlame,
+		  { StatusRoll::AtkPerc, 15.7 },
+		  { StatusRoll::HPPerc, 4.1 },
+		  { StatusRoll::DefPerc, 5.8 },
+		  { StatusRoll::CDmg, 28.0 } }
+	};
+
+	Eula eula;
+	SnowtombedStarsilver starsilver;
+	Combo combo{
+		eula.get_hit(DmgTalent::Skill, 1),
+		eula.get_hit(DmgTalent::Burst, 1),
+		eula.get_hit(DmgTalent::Normal, 1),
+		eula.get_hit(DmgTalent::Normal, 2),
+		eula.get_hit(DmgTalent::Normal, 3),
+		eula.get_hit(DmgTalent::Normal, 4),
+		eula.get_hit(DmgTalent::Skill, 2),
+		eula.get_hit(DmgTalent::Skill, 3),
+		eula.get_hit(DmgTalent::Skill, 3),
+		eula.get_hit(DmgTalent::Burst, 2),
+		eula.get_hit(DmgTalent::Normal, 1),
+		eula.get_hit(DmgTalent::Normal, 2),
+		eula.get_hit(DmgTalent::Normal, 3),
+		eula.get_hit(DmgTalent::Burst, 3)
+	};
+	const auto avg_dmg = list_sets_by_dmg(eula, starsilver, arts, combo, {}, Calc::cryo_resonance_modifier);
+	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg, 90, 90, 0, Eula::Resistance_down);
+
+	std::cout << "raw: " << avg_dmg << ", dealt: " << dmg_dealt << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Itto();
+	calc_Eula();
 }
