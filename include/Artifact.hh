@@ -1,3 +1,4 @@
+#include <iostream>
 #include <utility>
 
 #include <Status.hh>
@@ -85,6 +86,8 @@ public:
 		return m_status;
 	}
 
+	friend std::ostream& operator<<(std::ostream&, const Artifact&);
+
 private:
 	static void use_set_Gladiator(Status&, int piece_count);
 	static void use_set_WanderersTroupe(Status&, int piece_count);
@@ -100,6 +103,8 @@ private:
 	Status m_status;
 	SetType m_type;
 };
+
+std::ostream& operator<<(std::ostream&, const Artifact&);
 
 }
 

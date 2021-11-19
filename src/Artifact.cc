@@ -209,4 +209,9 @@ void Artifact::add_status(StatusRoll type, float value) {
 	}
 }
 
+std::ostream& operator<<(std::ostream& os, const Artifact& a) {
+	os << a.status();
+	return os;
+}
+
 }
