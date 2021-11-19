@@ -34,6 +34,8 @@ public:
 	// retrieve total stats after calculating avg_dmg(...
 	Status status() const;
 
+	static void pyro_resonance_modifier(Status&);
+	static void cryo_resonance_modifier(Status&);
 	static void geo_resonance_modifier(Status&);
 
 private:

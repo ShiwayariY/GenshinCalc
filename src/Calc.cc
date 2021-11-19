@@ -59,6 +59,14 @@ Status Calc::status() const {
 	return m_stats;
 }
 
+void Calc::pyro_resonance_modifier(Status& stats) {
+	stats.atk_perc += 25.0;
+}
+
+void Calc::cryo_resonance_modifier(Status& stats) {
+	stats.crit_rate += 15.0;
+}
+
 void Calc::geo_resonance_modifier(Status& stats) {
 	stats.normal_bonus += 15.0;
 	stats.charged_bonus += 15.0;
