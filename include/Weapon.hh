@@ -88,6 +88,22 @@ public:
 	void apply_effects(Status&) const override {}
 };
 
+// -------------------------------------------------- Snowtombed Starsilver --------------------------------------------------
+
+class SnowtombedStarsilver : public Weapon {
+public:
+	SnowtombedStarsilver() :
+			Weapon{
+				{ .base_atk = 565.0f,
+				  .phys_bonus = 34.5f }
+			} {
+		DEBUG("___Snowtombed Starsilver___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
 // -------------------------------------------------- Redhorn Stonethresher --------------------------------------------------
 
 class RedhornStonethresher : public Weapon {
