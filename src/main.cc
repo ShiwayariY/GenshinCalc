@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+#include <set>
+#include <array>
+#include <algorithm>
 
 #include <Status.hh>
 #include <Character.hh>
@@ -11,6 +15,91 @@ namespace GenshinCalc {
 using Main = Artifact::Main;
 using SetType = Artifact::SetType;
 using StatusRoll = Artifact::StatusRoll;
+
+bool has_min_stats(const Status& stats, const Status& min) {
+	return stats.base_hp >= min.base_hp					   //
+		   && stats.flat_hp >= min.flat_hp				   //
+		   && stats.hp_perc >= min.hp_perc				   //
+		   && stats.base_atk >= min.base_atk			   //
+		   && stats.flat_atk >= min.flat_atk			   //
+		   && stats.atk_perc >= min.atk_perc			   //
+		   && stats.base_def >= min.base_def			   //
+		   && stats.flat_def >= min.flat_def			   //
+		   && stats.def_perc >= min.def_perc			   //
+		   && stats.crit_rate >= min.crit_rate			   //
+		   && stats.crit_dmg >= min.crit_dmg			   //
+		   && stats.energy_recharge >= min.energy_recharge //
+		   && stats.elem_mastery >= min.elem_mastery	   //
+		   && stats.healing_bonus >= min.healing_bonus	 //
+		   && stats.pyro_bonus >= min.pyro_bonus		   //
+		   && stats.hydro_bonus >= min.hydro_bonus		   //
+		   && stats.cryo_bonus >= min.cryo_bonus		   //
+		   && stats.electro_bonus >= min.electro_bonus	 //
+		   && stats.anemo_bonus >= min.anemo_bonus		   //
+		   && stats.geo_bonus >= min.geo_bonus			   //
+		   && stats.phys_bonus >= min.phys_bonus		   //
+		   && stats.normal_bonus >= min.normal_bonus	   //
+		   && stats.charged_bonus >= min.charged_bonus	 //
+		   && stats.plunge_bonus >= min.plunge_bonus	   //
+		   && stats.skill_bonus >= min.skill_bonus		   //
+		   && stats.burst_bonus >= min.burst_bonus		   //
+		   && stats.reaction_bonus >= min.reaction_bonus   //
+		   && stats.additional_dmg >= min.additional_dmg;
+}
+
+struct ArtifactCollection {
+	std::vector<Artifact> flowers, feathers, sands, goblets, heads;
+};
+ArtifactCollection collect_artifacts(const std::vector<Artifact>& arts) {
+	ArtifactCollection coll;
+	auto copy_arts = [&arts](std::vector<Artifact>& to, std::set<Main> mains) {
+		std::copy_if(arts.begin(), arts.end(), std::back_inserter(to),
+		  [&mains](const auto& a) { return mains.contains(a.main()); });
+	};
+	copy_arts(coll.flowers, { Main::Flower });
+	copy_arts(coll.feathers, { Main::Feather });
+	copy_arts(coll.sands, { Main::SandAtk, Main::SandDef, Main::SandEM, Main::SandER, Main::SandHP });
+	copy_arts(coll.goblets, { Main::GobletAtk, Main::GobletDef, Main::GobletHP, Main::GobletEM,
+							  Main::GobletAnemo, Main::GobletCryo, Main::GobletElectro, Main::GobletGeo, Main::GobletHydro, Main::GobletPyro, Main::GobletPhys });
+	copy_arts(coll.heads, { Main::HeadAtk, Main::HeadDef, Main::HeadHP, Main::HeadEM, Main::HeadCRate, Main::HeadCDmg, Main::HeadHealing });
+	return coll;
+}
+
+// returns avg_dmg on best set
+float list_sets_by_dmg(
+  const Character& chara,
+  const Weapon& weapon,
+  const std::vector<Artifact>& arts,
+  const Combo& combo,
+  const Status& min_stats = Status{},
+  void (*modifier)(Status&) = [](Status&) {}) {
+
+	auto coll = collect_artifacts(arts);
+	std::vector<std::pair<float, std::vector<Artifact>>> results;
+	for (const auto& flower : coll.flowers)
+		for (const auto& feather : coll.feathers)
+			for (const auto& sand : coll.sands)
+				for (const auto& goblet : coll.goblets)
+					for (const auto& head : coll.heads) {
+						Calc calc(chara, weapon, flower, feather, sand, goblet, head);
+						const float avg_dmg = calc.avg_dmg(combo, modifier);
+						if (has_min_stats(calc.status(), min_stats))
+							results.push_back({ avg_dmg, { flower, feather, sand, goblet, head } });
+					}
+
+	std::sort(results.begin(), results.end(), [](const auto& lhs, const auto& rhs) { return lhs.first > rhs.first; });
+	const char newline = '\n'; // outsmart clang-format
+	for (const auto& [dmg, set] : results) {
+		std::cout << "Average dmg: " << dmg << "\n"
+				  << "___Flower___" << newline << set[0] << "\n"
+				  << "___Feather__" << newline << set[1] << "\n"
+				  << "___Sand_____" << newline << set[2] << "\n"
+				  << "___Goblet___" << newline << set[3] << "\n"
+				  << "___Head_____" << newline << set[4] << "\n"
+				  << "*************************************************************************************************\n";
+	}
+	return (results.empty() ? 0.0 : results[0].first);
+}
 
 void calc_Ayaka() {
 	Artifact flower{
