@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <iomanip>
 #include <vector>
 
 #ifndef GENSHINCALC_INCLUDE_STATUS
@@ -126,15 +126,34 @@ struct Status {
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Status& s) {
-	os << "HP:  " << s.base_hp << " + " << s.hp_perc << "% + " << s.flat_hp << "\n"
-	   << "Atk: " << s.base_atk << " + " << s.atk_perc << "% + " << s.flat_atk << "\n"
-	   << "Def: " << s.base_def << " + " << s.def_perc << "% + " << s.flat_def << "\n"
-	   << "CR / CD / ER / EM / HB: " << s.crit_rate << " / " << s.crit_dmg << " / " << s.energy_recharge << " / " << s.elem_mastery << " / " << s.healing_bonus << "\n"
-	   << "Pyro / Hydro / Cryo / Electro / Anemo / Geo / Phys: "
-	   << s.pyro_bonus << " / " << s.hydro_bonus << " / " << s.cryo_bonus << " / " << s.electro_bonus << " / " << s.anemo_bonus << " / " << s.geo_bonus << " / " << s.phys_bonus << "\n"
-	   << "Normal / Charged / Plunge / Skill / Burst / Reaction: "
-	   << s.normal_bonus << " / " << s.charged_bonus << " / " << s.plunge_bonus << " / " << s.skill_bonus << " / " << s.burst_bonus << " / " << s.reaction_bonus
-	   << std::endl;
+	os << "HP base               " << std::setw(10) << s.base_hp << "   |   "
+	   << "HP%                   " << std::setw(10) << s.hp_perc << "   |   "
+	   << "HP                    " << std::setw(10) << s.flat_hp << "|\n"
+	   << "ATK base              " << std::setw(10) << s.base_atk << "   |   "
+	   << "ATK%                  " << std::setw(10) << s.atk_perc << "   |   "
+	   << "ATK                   " << std::setw(10) << s.flat_atk << "|\n"
+	   << "DEF base              " << std::setw(10) << s.base_atk << "   |   "
+	   << "DEF%                  " << std::setw(10) << s.def_perc << "   |   "
+	   << "DEF                   " << std::setw(10) << s.flat_def << "|\n"
+	   << "CRIT Rate             " << std::setw(10) << s.crit_rate << "   |   "
+	   << "CRIT DMG              " << std::setw(10) << s.crit_dmg << "   |   "
+	   << "Energy Recharge       " << std::setw(10) << s.energy_recharge << "|\n"
+	   << "Elemental Mastery     " << std::setw(10) << s.elem_mastery << "   |   "
+	   << "Healing Bonus         " << std::setw(10) << s.elem_mastery << "|\n"
+	   << "Pyro DMG              " << std::setw(10) << s.pyro_bonus << "   |   "
+	   << "Hydro DMG             " << std::setw(10) << s.hydro_bonus << "   |   "
+	   << "Cryo DMG              " << std::setw(10) << s.cryo_bonus << "|\n"
+	   << "Electro DMG           " << std::setw(10) << s.electro_bonus << "   |   "
+	   << "Anemo DMG             " << std::setw(10) << s.anemo_bonus << "   |   "
+	   << "Geo DMG               " << std::setw(10) << s.geo_bonus << "|\n"
+	   << "Physical DMG          " << std::setw(10) << s.phys_bonus << "|\n"
+	   << "Normal DMG            " << std::setw(10) << s.normal_bonus << "   |   "
+	   << "Charged DMG           " << std::setw(10) << s.charged_bonus << "   |   "
+	   << "Plunge DMG            " << std::setw(10) << s.plunge_bonus << "|\n"
+	   << "Skill DMG             " << std::setw(10) << s.skill_bonus << "   |   "
+	   << "Burst DMG             " << std::setw(10) << s.burst_bonus << "   |   "
+	   << "Reaction DMG          " << std::setw(10) << s.reaction_bonus << "|\n"
+	   << "Additional DMG        " << std::setw(10) << s.additional_dmg << "|\n";
 	return os;
 }
 
