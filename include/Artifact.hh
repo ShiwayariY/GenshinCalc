@@ -81,6 +81,9 @@ public:
 
 	static void apply_effects(Status&, SetType, int piece_count);
 
+	Main main() const {
+		return m_main;
+	}
 	SetType type() const {
 		return m_type;
 	}
@@ -102,11 +105,12 @@ private:
 	static void use_set_Millileth(Status&, int piece_count);
 	static void use_set_BloodstainedChivalry(Status&, int piece_count);
 
-	void set_main(Main);
+	void set_main();
 	void add_status(StatusRoll, float value);
 
+	const Main m_main;
+	const SetType m_type;
 	Status m_status;
-	SetType m_type;
 };
 
 std::ostream& operator<<(std::ostream&, const Artifact&);

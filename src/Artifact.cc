@@ -14,8 +14,9 @@ Artifact::Artifact(Main main, SetType set,
   std::pair<StatusRoll, float> stat2,
   std::pair<StatusRoll, float> stat3,
   std::pair<StatusRoll, float> stat4) :
+		m_main{ main },
 		m_type{ set } {
-	set_main(main);
+	set_main();
 	for (const auto& [type, value] : { stat1, stat2, stat3, stat4 })
 		add_status(type, value);
 }
@@ -118,8 +119,8 @@ void Artifact::use_set_BloodstainedChivalry(Status& stats, int piece_count) {
 	if (piece_count >= 4) stats.charged_bonus += 50.0;
 }
 
-void Artifact::set_main(Main main) {
-	switch (main) {
+void Artifact::set_main() {
+	switch (m_main) {
 		case Main::Flower:
 			m_status.flat_hp = 4780.0;
 			break;
