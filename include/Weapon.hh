@@ -124,6 +124,24 @@ public:
 private:
 	const unsigned int m_refine = 1;
 };
+
+// -------------------------------------------------- Deathmatch --------------------------------------------------
+
+class Deathmatch : public Weapon {
+public:
+	Deathmatch(unsigned int refine = 1, bool single_opponent = false) :
+			Weapon{
+				{ .base_atk = 454.0f,
+				  .atk_perc = (single_opponent ? 18.0f : 12.0f) + static_cast<float>(refine) * (single_opponent ? 6.0f : 4.0f),
+				  .def_perc = single_opponent ? 0.0f : (12.0f + static_cast<float>(refine) * 4.0f),
+				  .crit_rate = 36.8f }
+			} {
+		DEBUG("___Deathmatch___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
 }
 
 #endif
