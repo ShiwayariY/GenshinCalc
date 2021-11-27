@@ -22,7 +22,7 @@ public:
 
 // -------------------------------------------------- Ayaka --------------------------------------------------
 
-class Ayaka : public Character {
+class Ayaka : public Character { // 10 10 10
 public:
 	bool AmatsumiKunitsumiSanctification = true;
 	bool KantenSenmyouBlessing = true;
@@ -46,20 +46,22 @@ public:
 
 private:
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 90.4 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 96.2 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 123.8 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 44.8 * 3.0 } },
-		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 154.5 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Cryo, 109.0 * 3.0 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 431.0 } },
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 202.0 * 19.0 + 303.0 } }
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 90.39 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 96.24 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 123.79 } },
+		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 44.77 * 3.0 } },
+		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 154.55 } },
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Cryo, 108.97 * 3.0 } },
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 430.56 } },
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 202.14 } }, // Cutting dmg (19 hits)
+		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 303.21 } }  // Explosion dmg
+
 	};
 };
 
 // -------------------------------------------------- Baal --------------------------------------------------
 
-class Baal : public Character {
+class Baal : public Character { // 6 8 10
 public:
 	unsigned int energy_consumed = 80 + 80 + 60;
 
@@ -80,6 +82,10 @@ public:
 	void apply_effects(Status&) const override;
 
 private:
+	inline static const float BalefulOmen_burst_bonus = 0.29;
+	inline static const float MusouShinsetsu_resolve_per_energy = 0.2;
+	inline static const float MusouShinsetsu_resolve_bonus_initial = 7.0;
+	inline static const float MusouShinsetsu_resolve_bonus_normal = 1.31;
 	inline static const Abilities ABILITIES{
 		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 57.6 } },
 		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 57.8 } },
@@ -87,23 +93,23 @@ private:
 		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 42.1 + 42.1 } },
 		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 95.1 } },
 		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Phys, 144.8 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 187.5 } },		 // initial hit
-		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 67.2 } },		 // coord. attack
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 681.0 } },		 // initial hit
-		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 75.2 } },		 // N1
-		{ { DmgTalent::Burst, 3 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 73.9 } },		 // N2
-		{ { DmgTalent::Burst, 4 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 90.5 } },		 // N3
-		{ { DmgTalent::Burst, 5 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 51.9 + 52.1 } },  // N4
-		{ { DmgTalent::Burst, 6 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 124.4 } },		 // N5
-		{ { DmgTalent::Burst, 7 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 103.6 + 125.1 } } // charged
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 187.5 } },		  // initial hit
+		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 67.2 } },		  // coord. attack
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 721.44 } },		  // initial hit
+		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 79.82 } },		  // N1
+		{ { DmgTalent::Burst, 3 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 78.42 } },		  // N2
+		{ { DmgTalent::Burst, 4 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 96.02 } },		  // N3
+		{ { DmgTalent::Burst, 5 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 55.11 + 55.26 } }, // N4
+		{ { DmgTalent::Burst, 6 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 131.92 } },		  // N5
+		{ { DmgTalent::Burst, 7 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 109.9 + 132.67 } } // charged
 	};
 };
 
 // -------------------------------------------------- Eula --------------------------------------------------
 
-class Eula : public Character {
+class Eula : public Character { // 9 9 9
 public:
-	inline static const float Resistance_down = -23.0;
+	inline static const float Resistance_down = -24.0;
 	unsigned Lightfall_stacks = 13;
 
 	Eula() :
@@ -130,9 +136,9 @@ private:
 		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 2.0 * 104.35 } },
 		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 206.95 } },
 		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 2.0 * 131.97 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 234.24 } }, // Press
-		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 392.96 } }, // Hold
-		{ { DmgTalent::Skill, 3 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 153.6 } },  // Icewhirl Brand
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 248.88 } }, // Press
+		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 417.52 } }, // Hold
+		{ { DmgTalent::Skill, 3 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 163.2 } },  // Icewhirl Brand
 		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 417.52 } }, // Initial hit
 		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Phys, 337.17 } }, // Shattered Lightfall Sword (passive)
 		{ { DmgTalent::Burst, 3 }, Hit{ DmgTalent::Burst, DmgElement::Phys, 674.34 } }  // Lightfall Sword base dmg
@@ -141,7 +147,7 @@ private:
 
 // -------------------------------------------------- Itto --------------------------------------------------
 
-class Itto : public Character {
+class Itto : public Character { // 10 10 10
 public:
 	bool RoyalDescent = true;
 	bool SuperlativeSuperstrength = true;
@@ -163,6 +169,7 @@ public:
 	void apply_effects(Status&) const override;
 
 private:
+	inline static const float RoyalDescent_atk_bonus = 1.0368;
 	inline static const Abilities ABILITIES{
 		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 156.62 } },
 		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 150.96 } },
