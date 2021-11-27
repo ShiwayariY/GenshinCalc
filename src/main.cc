@@ -147,10 +147,71 @@ void calc_Ayaka() {
 
 	Calc calc{ ayaka, black_sword, flower, feather, sand, goblet, head };
 
-	ayaka.AmatsumiKunitsumiSanctification = false;
-	Combo combo{ ayaka.get_hit(DmgTalent::Normal, 1) };
-	const auto avg_dmg = calc.avg_dmg(combo);
-	Calc::dmg_dealt(avg_dmg, 90, 87, 0.0, 10.0);
+	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
+	const auto dmg = calc.avg_dmg(combo, Calc::cryo_resonance_modifier);
+	const auto dmg_shenhe = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.cryo_bonus += 10.0;
+		stats.skill_bonus += 15.0;
+		stats.burst_bonus += 15.0;
+		stats.normal_bonus += 15.0;
+		stats.charged_bonus += 15.0;
+		// stats.additional_dmg += 1200.0;
+	});
+	const auto dmg_kokomi = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.atk_perc += 68.0;
+	});
+	const auto dmg_baal = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.burst_bonus += 0.29 * 80.0;
+	});
+	const auto dmg_ganyu = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.cryo_bonus += 20.0;
+	});
+	const auto dmg_kazuha = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.cryo_bonus += 0.04 * (3.0 * 187.0 + 115.0 + 165.0);
+	});
+	const auto team_baal = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.cryo_bonus += 20.0;
+		stats.burst_bonus += 0.29 * 80.0;
+		stats.atk_perc += 68.0; // TTDS + Millileth
+	});
+	const auto team_shenhe = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.cryo_bonus += 30.0;	// Ganyu + Shenhe
+		stats.skill_bonus += 15.0;   // <Shenhe>
+		stats.burst_bonus += 15.0;   //
+		stats.normal_bonus += 15.0;  //
+		stats.charged_bonus += 15.0; // </Shenhe>
+		stats.atk_perc += 68.0;		 // TTDS + Millileth
+	});
+	const auto team_shenhe_kazuha = calc.avg_dmg(combo, [](Status& stats) {
+		Calc::cryo_resonance_modifier(stats);
+		stats.cryo_bonus += 10.0 + 0.04 * (3.0 * 187.0 + 115.0 + 165.0); // Shenhe + Kazuha
+		stats.skill_bonus += 15.0;										 // <Shenhe>
+		stats.burst_bonus += 15.0;										 //
+		stats.normal_bonus += 15.0;										 //
+		stats.charged_bonus += 15.0;									 // </Shenhe>
+		stats.atk_perc += 68.0;											 // TTDS + Millileth
+	});
+	auto print_dmg_with_res = [&](const float& ENEMY_RES) {
+		std::cout << "_____Enemy resistance: " << ENEMY_RES << "%_____\n"
+				  << "Ayaka solo: " << Calc::dmg_dealt(dmg, 90, 90, 0.0, ENEMY_RES) << "\n"
+				  << "with Kokomi: " << Calc::dmg_dealt(dmg_kokomi, 90, 90, 0.0, ENEMY_RES) << "\n"
+				  << "with Baal: " << Calc::dmg_dealt(dmg_baal, 90, 90, 0.0, ENEMY_RES) << "\n"
+				  << "with Ganyu: " << Calc::dmg_dealt(dmg_ganyu, 90, 90, 0.0, ENEMY_RES) << "\n"
+				  << "with Kazuha: " << Calc::dmg_dealt(dmg_kazuha, 90, 90, 0.0, ENEMY_RES - 40.0) << "\n"
+				  << "with Shenhe: " << Calc::dmg_dealt(dmg_shenhe, 90, 90, 0.0, ENEMY_RES - 14.0) << "\n"
+				  << "Ayaka / Kokomi / Ganyu / Baal: " << Calc::dmg_dealt(team_baal, 90, 90, 0.0, ENEMY_RES) << "\n"
+				  << "Ayaka / Kokomi / Ganyu / Shenhe: " << Calc::dmg_dealt(team_shenhe, 90, 90, 0.0, ENEMY_RES - 14.0) << "\n"
+				  << "Ayaka / Kokomi / Kazuha / Shenhe: " << Calc::dmg_dealt(team_shenhe_kazuha, 90, 90, 0.0, ENEMY_RES - 54.0) << "\n";
+	};
+	print_dmg_with_res(10.0);
+	print_dmg_with_res(50.0);
 }
 
 void calc_Baal() {
@@ -380,14 +441,64 @@ void calc_Eula() {
 		eula.get_hit(DmgTalent::Burst, 3)
 	};
 	const auto avg_dmg = list_sets_by_dmg(eula, starsilver, arts, combo, {}, Calc::cryo_resonance_modifier);
-	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg, 90, 90, 0, Eula::Resistance_down);
+	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg, 90, 90, 0, 10.0 + Eula::Resistance_down);
 
 	std::cout << "raw: " << avg_dmg << ", dealt: " << dmg_dealt << std::endl;
 }
 
+void calc_HuTao() {
+	std::vector<Artifact> arts = {
+		{ Main::Flower,
+		  SetType::Shimenawa,
+		  { StatusRoll::ER, 5.8 },
+		  { StatusRoll::AtkPerc, 9.9 },
+		  { StatusRoll::CDmg, 28.7 },
+		  { StatusRoll::EM, 21 } },
+		{ Main::Feather,
+		  SetType::Shimenawa,
+		  { StatusRoll::EM, 54 },
+		  { StatusRoll::CDmg, 14.0 },
+		  { StatusRoll::HPPerc, 5.3 },
+		  { StatusRoll::CRate, 10.1 } },
+		{ Main::SandHP,
+		  SetType::Shimenawa,
+		  { StatusRoll::CRate, 3.9 },
+		  { StatusRoll::HP, 866 },
+		  { StatusRoll::Def, 19 },
+		  { StatusRoll::ER, 17.5 } },
+		{ Main::GobletPyro,
+		  SetType::HeartOfDepth,
+		  { StatusRoll::HPPerc, 5.3 },
+		  { StatusRoll::CRate, 3.9 },
+		  { StatusRoll::CDmg, 20.2 },
+		  { StatusRoll::EM, 58 } },
+		{ Main::HeadCDmg,
+		  SetType::Shimenawa,
+		  { StatusRoll::HPPerc, 14.0 },
+		  { StatusRoll::AtkPerc, 4.1 },
+		  { StatusRoll::EM, 40 },
+		  { StatusRoll::CRate, 105.4 } }
+	};
+	HuTao hutao;
+	Deathmatch deathmatch{ 1 };
+
+	Combo combo{ hutao.get_hit(DmgTalent::Charged, 1) };
+	combo[0].reaction = Reaction::VapeByPyro;
+
+	const auto avg_dmg = list_sets_by_dmg(hutao, deathmatch, arts, combo, Status{}, Calc::pyro_resonance_modifier);
+	const auto avg_dmg_sucrose = list_sets_by_dmg(hutao, deathmatch, arts, combo, Status{},
+	  [](Status& stats) {
+		  Calc::pyro_resonance_modifier(stats);
+		  stats.elem_mastery += 50.0 + 0.2 * 820;
+	  });
+
+	std::cout << "raw: " << avg_dmg << "\n"
+			  << "dealt (no buff): " << Calc::dmg_dealt(avg_dmg, 90, 90, 0.0, 10.0) << "\n"
+			  << "dealt (Sucrose + VV): " << Calc::dmg_dealt(avg_dmg_sucrose, 90, 90, 0.0, -30.0) << std::endl;
+}
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Eula();
+	calc_Ayaka();
 }
