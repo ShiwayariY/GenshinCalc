@@ -181,6 +181,45 @@ private:
 		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Geo, 552.96 } }
 	};
 };
+
+// -------------------------------------------------- Hu Tao --------------------------------------------------
+
+class HuTao : public Character { // 9 9 8
+public:
+	bool GuideToAfterlife = true;
+
+	HuTao() :
+			Character{
+				{ .base_hp = 15552.0,
+				  .base_atk = 106.0,
+				  .base_def = 876.0,
+				  .crit_rate = 5.0,
+				  .crit_dmg = 88.4,
+				  .energy_recharge = 100.0 }
+			} {
+		DEBUG("___HuTao___\n"
+			  << status);
+	}
+
+	Hit get_hit(DmgTalent, unsigned int hit_num) const override;
+	void apply_effects(Status&) const override;
+
+private:
+	inline static const float GuideToAfterlife_atk_ratio = 0.0596;
+	inline static const Abilities ABILITIES{
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 78.85 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 81.15 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 102.68 } },
+		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 110.4 } },
+		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 55.96 + 59.2 } },
+		{ { DmgTalent::Normal, 6 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 144.57 } },
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Phys, 228.66 } },
+		{ { DmgTalent::Plunge, 1 }, Hit{ DmgTalent::Plunge, DmgElement::Phys, 110.02 } },
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 108.8 } },  // Blood Blossom
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 446.74 } }, // high HP
+		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 558.42 } }  // low HP
+	};
+};
 }
 
 #endif
