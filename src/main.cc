@@ -65,8 +65,24 @@ ArtifactCollection collect_artifacts(const std::vector<Artifact>& arts) {
 	return coll;
 }
 
-// returns avg_dmg on best set
-float list_sets_by_dmg(
+struct SetResult {
+	float dmg = 0.0;
+	Status stats;
+	std::vector<Artifact> artifacts;
+};
+std::ostream& operator<<(std::ostream& os, const SetResult& set) {
+	const char newline = '\n'; // outsmart clang-format
+	std::cout << "Average dmg: " << set.dmg << "\n"
+			  << "___Flower___" << newline << set.artifacts[0] << "\n"
+			  << "___Feather__" << newline << set.artifacts[1] << "\n"
+			  << "___Sand_____" << newline << set.artifacts[2] << "\n"
+			  << "___Goblet___" << newline << set.artifacts[3] << "\n"
+			  << "___Head_____" << newline << set.artifacts[4] << "\n"
+			  << "____________" << newline << set.stats
+			  << "*************************************************************************************************\n";
+	return os;
+}
+std::vector<SetResult> list_sets_by_dmg(
   const Character& chara,
   const Weapon& weapon,
   const std::vector<Artifact>& arts,
@@ -75,7 +91,7 @@ float list_sets_by_dmg(
   void (*modifier)(Status&) = [](Status&) {}) {
 
 	auto coll = collect_artifacts(arts);
-	std::vector<std::pair<float, std::vector<Artifact>>> results;
+	std::vector<SetResult> results;
 	for (const auto& flower : coll.flowers)
 		for (const auto& feather : coll.feathers)
 			for (const auto& sand : coll.sands)
@@ -84,72 +100,90 @@ float list_sets_by_dmg(
 						Calc calc(chara, weapon, flower, feather, sand, goblet, head);
 						const float avg_dmg = calc.avg_dmg(combo, modifier);
 						if (has_min_stats(calc.status(), min_stats))
-							results.push_back({ avg_dmg, { flower, feather, sand, goblet, head } });
+							results.push_back({ avg_dmg, calc.status(), { flower, feather, sand, goblet, head } });
 					}
 
-	std::sort(results.begin(), results.end(), [](const auto& lhs, const auto& rhs) { return lhs.first > rhs.first; });
-	const char newline = '\n'; // outsmart clang-format
-	for (const auto& [dmg, set] : results) {
-		std::cout << "Average dmg: " << dmg << "\n"
-				  << "___Flower___" << newline << set[0] << "\n"
-				  << "___Feather__" << newline << set[1] << "\n"
-				  << "___Sand_____" << newline << set[2] << "\n"
-				  << "___Goblet___" << newline << set[3] << "\n"
-				  << "___Head_____" << newline << set[4] << "\n"
-				  << "*************************************************************************************************\n";
+	std::sort(results.begin(), results.end(), [](const auto& lhs, const auto& rhs) { return lhs.dmg > rhs.dmg; });
+	return results;
+}
+
+float best_set(
+  const Character& chara,
+  const Weapon& weapon,
+  const std::vector<Artifact>& arts,
+  const Combo& combo,
+  const Status& min_stats = Status{},
+  void (*modifier)(Status&) = [](Status&) {}) {
+	const auto sets = list_sets_by_dmg(chara, weapon, arts, combo, min_stats, modifier);
+	if (!sets.empty()) {
+		std::cout << sets[0];
+		return sets[0].dmg;
 	}
-	return (results.empty() ? 0.0 : results[0].first);
+	return 0.0;
 }
 
 void calc_Ayaka() {
-	Artifact flower{
-		Main::Flower,
-		SetType::BlizzardStrayer,
-		{ StatusRoll::AtkPerc, 9.3 },
-		{ StatusRoll::EM, 21 },
-		{ StatusRoll::ER, 5.8 },
-		{ StatusRoll::CDmg, 25.7 }
-	};
-	Artifact feather{
-		Main::Feather,
-		SetType::BlizzardStrayer,
-		{ StatusRoll::CDmg, 14.0 },
-		{ StatusRoll::ER, 13.0 },
-		{ StatusRoll::AtkPerc, 10.5 },
-		{ StatusRoll::CRate, 6.2 }
-	};
-	Artifact sand{
-		Main::SandAtk,
-		SetType::BlizzardStrayer,
-		{ StatusRoll::CDmg, 14.0 },
-		{ StatusRoll::ER, 11.0 },
-		{ StatusRoll::Atk, 29 },
-		{ StatusRoll::DefPerc, 13.1 }
-	};
-	Artifact goblet{
-		Main::GobletCryo,
-		SetType::Gladiator,
-		{ StatusRoll::Def, 19 },
-		{ StatusRoll::CRate, 8.6 },
-		{ StatusRoll::ER, 11.0 },
-		{ StatusRoll::AtkPerc, 9.3 }
-	};
-	Artifact head{
-		Main::HeadCDmg,
-		SetType::BlizzardStrayer,
-		{ StatusRoll::EM, 40 },
-		{ StatusRoll::AtkPerc, 8.2 },
-		{ StatusRoll::Atk, 53 },
-		{ StatusRoll::ER, 5.2 }
+	std::vector<Artifact> arts{
+		{ Main::Flower,
+		  SetType::BlizzardStrayer,
+		  { StatusRoll::AtkPerc, 9.3 },
+		  { StatusRoll::EM, 21 },
+		  { StatusRoll::ER, 5.8 },
+		  { StatusRoll::CDmg, 25.7 } },
+		{ Main::Flower,
+		  SetType::BlizzardStrayer,
+		  { StatusRoll::CDmg, 6.2 },
+		  { StatusRoll::CRate, 10.9 },
+		  { StatusRoll::Atk, 49 },
+		  { StatusRoll::AtkPerc, 5.3 } },
+		{ Main::Flower,
+		  SetType::BlizzardStrayer,
+		  { StatusRoll::AtkPerc, 10.5 },
+		  { StatusRoll::CRate, 5.8 },
+		  { StatusRoll::Atk, 33 },
+		  { StatusRoll::CDmg, 11.7 } },
+		{ Main::Feather,
+		  SetType::BlizzardStrayer,
+		  { StatusRoll::CDmg, 14.0 },
+		  { StatusRoll::ER, 13.0 },
+		  { StatusRoll::AtkPerc, 10.5 },
+		  { StatusRoll::CRate, 6.2 } },
+		{ Main::SandAtk,
+		  SetType::BlizzardStrayer,
+		  { StatusRoll::CDmg, 14.0 },
+		  { StatusRoll::ER, 11.0 },
+		  { StatusRoll::Atk, 29 },
+		  { StatusRoll::DefPerc, 13.1 } },
+		{ Main::SandAtk,
+		  SetType::BlizzardStrayer,
+		  { StatusRoll::HPPerc, 9.3 },
+		  { StatusRoll::ER, 11.7 },
+		  { StatusRoll::CRate, 10.1 },
+		  { StatusRoll::EM, 21 } },
+		{ Main::GobletCryo,
+		  SetType::Gladiator,
+		  { StatusRoll::Def, 19 },
+		  { StatusRoll::CRate, 8.6 },
+		  { StatusRoll::ER, 11.0 },
+		  { StatusRoll::AtkPerc, 9.3 } },
+		{ Main::HeadCDmg,
+		  SetType::BlizzardStrayer,
+		  { StatusRoll::EM, 40 },
+		  { StatusRoll::AtkPerc, 8.2 },
+		  { StatusRoll::Atk, 53 },
+		  { StatusRoll::ER, 5.2 } }
 	};
 	Ayaka ayaka;
 	BlackSword black_sword;
-
-	Calc calc{ ayaka, black_sword, flower, feather, sand, goblet, head };
-
+	Mistsplitter mistsplitter;
 	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
-	const auto dmg = calc.avg_dmg(combo, Calc::cryo_resonance_modifier);
-	const auto dmg_shenhe = calc.avg_dmg(combo, [](Status& stats) {
+
+	auto best = [&](void (*modifier)(Status&)) {
+		return best_set(ayaka, mistsplitter, arts, combo, Status{}, modifier);
+	};
+
+	const auto dmg = best(Calc::cryo_resonance_modifier);
+	const auto dmg_shenhe = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.cryo_bonus += 10.0;
 		stats.skill_bonus += 15.0;
@@ -158,29 +192,29 @@ void calc_Ayaka() {
 		stats.charged_bonus += 15.0;
 		// stats.additional_dmg += 1200.0;
 	});
-	const auto dmg_kokomi = calc.avg_dmg(combo, [](Status& stats) {
+	const auto dmg_kokomi = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.atk_perc += 68.0;
 	});
-	const auto dmg_baal = calc.avg_dmg(combo, [](Status& stats) {
+	const auto dmg_baal = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.burst_bonus += 0.29 * 80.0;
 	});
-	const auto dmg_ganyu = calc.avg_dmg(combo, [](Status& stats) {
+	const auto dmg_ganyu = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.cryo_bonus += 20.0;
 	});
-	const auto dmg_kazuha = calc.avg_dmg(combo, [](Status& stats) {
+	const auto dmg_kazuha = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.cryo_bonus += 0.04 * (3.0 * 187.0 + 115.0 + 165.0);
 	});
-	const auto team_baal = calc.avg_dmg(combo, [](Status& stats) {
+	const auto team_baal = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.cryo_bonus += 20.0;
 		stats.burst_bonus += 0.29 * 80.0;
 		stats.atk_perc += 68.0; // TTDS + Millileth
 	});
-	const auto team_shenhe = calc.avg_dmg(combo, [](Status& stats) {
+	const auto team_shenhe = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.cryo_bonus += 30.0;	// Ganyu + Shenhe
 		stats.skill_bonus += 15.0;   // <Shenhe>
@@ -189,7 +223,7 @@ void calc_Ayaka() {
 		stats.charged_bonus += 15.0; // </Shenhe>
 		stats.atk_perc += 68.0;		 // TTDS + Millileth
 	});
-	const auto team_shenhe_kazuha = calc.avg_dmg(combo, [](Status& stats) {
+	const auto team_shenhe_kazuha = best([](Status& stats) {
 		Calc::cryo_resonance_modifier(stats);
 		stats.cryo_bonus += 10.0 + 0.04 * (3.0 * 187.0 + 115.0 + 165.0); // Shenhe + Kazuha
 		stats.skill_bonus += 15.0;										 // <Shenhe>
@@ -485,8 +519,8 @@ void calc_HuTao() {
 	Combo combo{ hutao.get_hit(DmgTalent::Charged, 1) };
 	combo[0].reaction = Reaction::VapeByPyro;
 
-	const auto avg_dmg = list_sets_by_dmg(hutao, deathmatch, arts, combo, Status{}, Calc::pyro_resonance_modifier);
-	const auto avg_dmg_sucrose = list_sets_by_dmg(hutao, deathmatch, arts, combo, Status{},
+	const auto avg_dmg = best_set(hutao, deathmatch, arts, combo, Status{}, Calc::pyro_resonance_modifier);
+	const auto avg_dmg_sucrose = best_set(hutao, deathmatch, arts, combo, Status{},
 	  [](Status& stats) {
 		  Calc::pyro_resonance_modifier(stats);
 		  stats.elem_mastery += 50.0 + 0.2 * 820;
