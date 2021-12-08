@@ -458,7 +458,8 @@ void calc_Eula() {
 
 	Eula eula;
 	SnowtombedStarsilver starsilver;
-	Combo combo{
+	SerpentSpine serpentspine{ 1 };
+	Combo burst_rotation{
 		eula.get_hit(DmgTalent::Skill, 1),
 		eula.get_hit(DmgTalent::Burst, 1),
 		eula.get_hit(DmgTalent::Normal, 1),
@@ -474,10 +475,27 @@ void calc_Eula() {
 		eula.get_hit(DmgTalent::Normal, 3),
 		eula.get_hit(DmgTalent::Burst, 3)
 	};
-	const auto avg_dmg = list_sets_by_dmg(eula, starsilver, arts, combo, {}, Calc::cryo_resonance_modifier);
-	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg, 90, 90, 0, 10.0 + Eula::Resistance_down);
+	Combo normal_atk{ eula.get_hit(DmgTalent::Normal, 1) };
 
-	std::cout << "raw: " << avg_dmg << ", dealt: " << dmg_dealt << std::endl;
+	auto weapon_dmg = [&](Weapon& w) {
+		return best_set(eula, w, arts, burst_rotation, {}, Calc::cryo_resonance_modifier);
+	};
+	auto dmg_dealt = [&](auto& dmg) {
+		return Calc::dmg_dealt(dmg, 90, 90, 0, 10.0 + Eula::Resistance_down);
+	};
+
+	const auto dmg_starsilver = weapon_dmg(starsilver);
+	const auto dealt_starsilver = dmg_dealt(dmg_starsilver);
+	std::cout << "___Starsilver___\n"
+			  << "raw: " << dmg_starsilver << ", dealt: " << dealt_starsilver << "\n"
+			  << "___Serpent Spine___\n";
+
+	for (unsigned stacks = 0; stacks <= 5; ++stacks) {
+		serpentspine.stacks = stacks;
+		const auto dmg_spine = weapon_dmg(serpentspine);
+		const auto dealt = dmg_dealt(dmg_spine);
+		std::cout << stacks << " stacks | raw: " << dmg_spine << ", dealt: " << dealt << "\n";
+	}
 }
 
 void calc_HuTao() {
@@ -534,5 +552,5 @@ void calc_HuTao() {
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Ayaka();
+	calc_Eula();
 }
