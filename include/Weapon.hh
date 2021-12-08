@@ -32,6 +32,28 @@ public:
 	void apply_effects(Status&) const override {}
 };
 
+// -------------------------------------------------- Mistsplitter --------------------------------------------------
+
+class Mistsplitter : public Weapon {
+public:
+	Mistsplitter() :
+			Weapon{
+				{ .base_atk = 674.0f,
+				  .crit_dmg = 44.1f,
+				  .pyro_bonus = 40.0f,
+				  .hydro_bonus = 40.0,
+				  .cryo_bonus = 40.0,
+				  .electro_bonus = 40.0,
+				  .anemo_bonus = 40.0,
+				  .geo_bonus = 0.40 }
+			} {
+		DEBUG("___Mistsplitter ___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
 // -------------------------------------------------- The Catch --------------------------------------------------
 
 class TheCatch : public Weapon {
@@ -102,6 +124,28 @@ public:
 	}
 
 	void apply_effects(Status&) const override {}
+};
+
+// -------------------------------------------------- Serpent Spine --------------------------------------------------
+
+class SerpentSpine : public Weapon {
+	float DMG_per_stack = 0.0;
+
+public:
+	unsigned stacks = 5;
+
+	SerpentSpine(unsigned refine = 1) :
+			Weapon{
+				{ .base_atk = 510.0f,
+				  .crit_rate = 27.6f }
+			},
+			DMG_per_stack{ 5.0f + static_cast<float>(refine) } {
+
+		DEBUG("___Serpent Spine___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override;
 };
 
 // -------------------------------------------------- Redhorn Stonethresher --------------------------------------------------
