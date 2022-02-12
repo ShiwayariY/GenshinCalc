@@ -50,6 +50,12 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::Bloodstained:
 			use_set_BloodstainedChivalry(stats, piece_count);
 			break;
+		case SetType::ThunderingFury:
+			use_set_ThunderingFury(stats, piece_count);
+			break;
+		case SetType::Wanderer:
+			use_set_Wanderer(stats, piece_count);
+			break;
 
 		default:
 			throw std::logic_error{ "Artifact set not implemented" };
@@ -117,6 +123,19 @@ void Artifact::use_set_Millileth(Status& stats, int piece_count) {
 void Artifact::use_set_BloodstainedChivalry(Status& stats, int piece_count) {
 	if (piece_count >= 2) stats.phys_bonus += 25.0;
 	if (piece_count >= 4) stats.charged_bonus += 50.0;
+}
+
+void Artifact::use_set_ThunderingFury(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.electro_bonus += 15.0;
+	if (piece_count >= 4)
+		throw std::logic_error{
+			"ThunderingFury 4 set not implemented (transformative reactions not implemented)"
+		};
+}
+
+void Artifact::use_set_Wanderer(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.elem_mastery += 80.0;
+	if (piece_count >= 4) stats.charged_bonus += 35.0;
 }
 
 void Artifact::set_main() {

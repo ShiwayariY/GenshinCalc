@@ -104,6 +104,8 @@ private:
 	static void use_set_PaleFlame(Status&, int piece_count);
 	static void use_set_Millileth(Status&, int piece_count);
 	static void use_set_BloodstainedChivalry(Status&, int piece_count);
+	static void use_set_ThunderingFury(Status&, int piece_count);
+	static void use_set_Wanderer(Status&, int piece_count);
 
 	void set_main();
 	void add_status(StatusRoll, float value);
