@@ -36,16 +36,16 @@ public:
 
 class Mistsplitter : public Weapon {
 public:
-	Mistsplitter() :
+	Mistsplitter(unsigned stacks = 3) :
 			Weapon{
 				{ .base_atk = 674.0f,
 				  .crit_dmg = 44.1f,
-				  .pyro_bonus = 40.0f,
-				  .hydro_bonus = 40.0,
-				  .cryo_bonus = 40.0,
-				  .electro_bonus = 40.0,
-				  .anemo_bonus = 40.0,
-				  .geo_bonus = 0.40 }
+				  .pyro_bonus = 12.0f + 8.0f * stacks + (stacks == 3 ? 4.0f : 0.0f),
+				  .hydro_bonus = 12.0f + 8.0f * stacks + (stacks == 3 ? 4.0f : 0.0f),
+				  .cryo_bonus = 12.0f + 8.0f * stacks + (stacks == 3 ? 4.0f : 0.0f),
+				  .electro_bonus = 12.0f + 8.0f * stacks + (stacks == 3 ? 4.0f : 0.0f),
+				  .anemo_bonus = 12.0f + 8.0f * stacks + (stacks == 3 ? 4.0f : 0.0f),
+				  .geo_bonus = 12.0f + 8.0f * stacks + (stacks == 3 ? 4.0f : 0.0f) }
 			} {
 		DEBUG("___Mistsplitter ___\n"
 			  << status);
