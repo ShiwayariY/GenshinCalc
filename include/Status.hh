@@ -139,7 +139,7 @@ inline std::ostream& operator<<(std::ostream& os, const Status& s) {
 	   << "CRIT DMG              " << std::setw(10) << s.crit_dmg << "   |   "
 	   << "Energy Recharge       " << std::setw(10) << s.energy_recharge << "   |\n"
 	   << "Elemental Mastery     " << std::setw(10) << s.elem_mastery << "   |   "
-	   << "Healing Bonus         " << std::setw(10) << s.elem_mastery << "   |\n"
+	   << "Healing Bonus         " << std::setw(10) << s.healing_bonus << "   |\n"
 	   << "Pyro DMG              " << std::setw(10) << s.pyro_bonus << "   |   "
 	   << "Hydro DMG             " << std::setw(10) << s.hydro_bonus << "   |   "
 	   << "Cryo DMG              " << std::setw(10) << s.cryo_bonus << "   |\n"
