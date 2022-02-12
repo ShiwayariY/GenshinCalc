@@ -3,12 +3,14 @@
 #include <set>
 #include <array>
 #include <algorithm>
+#include <memory>
 
 #include <Status.hh>
 #include <Character.hh>
 #include <Weapon.hh>
 #include <Artifact.hh>
 #include <Calc.hh>
+#include <Artifact_constants.hh>
 
 namespace GenshinCalc {
 
@@ -122,64 +124,14 @@ float best_set(
 	return 0.0;
 }
 
-void calc_Ayaka() {
-	std::vector<Artifact> arts{
-		{ Main::Flower,
-		  SetType::BlizzardStrayer,
-		  { StatusRoll::AtkPerc, 9.3 },
-		  { StatusRoll::EM, 21 },
-		  { StatusRoll::ER, 5.8 },
-		  { StatusRoll::CDmg, 25.7 } },
-		{ Main::Flower,
-		  SetType::BlizzardStrayer,
-		  { StatusRoll::CDmg, 6.2 },
-		  { StatusRoll::CRate, 10.9 },
-		  { StatusRoll::Atk, 49 },
-		  { StatusRoll::AtkPerc, 5.3 } },
-		{ Main::Flower,
-		  SetType::BlizzardStrayer,
-		  { StatusRoll::AtkPerc, 10.5 },
-		  { StatusRoll::CRate, 5.8 },
-		  { StatusRoll::Atk, 33 },
-		  { StatusRoll::CDmg, 11.7 } },
-		{ Main::Feather,
-		  SetType::BlizzardStrayer,
-		  { StatusRoll::CDmg, 14.0 },
-		  { StatusRoll::ER, 13.0 },
-		  { StatusRoll::AtkPerc, 10.5 },
-		  { StatusRoll::CRate, 6.2 } },
-		{ Main::SandAtk,
-		  SetType::BlizzardStrayer,
-		  { StatusRoll::CDmg, 14.0 },
-		  { StatusRoll::ER, 11.0 },
-		  { StatusRoll::Atk, 29 },
-		  { StatusRoll::DefPerc, 13.1 } },
-		{ Main::SandAtk,
-		  SetType::BlizzardStrayer,
-		  { StatusRoll::HPPerc, 9.3 },
-		  { StatusRoll::ER, 11.7 },
-		  { StatusRoll::CRate, 10.1 },
-		  { StatusRoll::EM, 21 } },
-		{ Main::GobletCryo,
-		  SetType::Gladiator,
-		  { StatusRoll::Def, 19 },
-		  { StatusRoll::CRate, 8.6 },
-		  { StatusRoll::ER, 11.0 },
-		  { StatusRoll::AtkPerc, 9.3 } },
-		{ Main::HeadCDmg,
-		  SetType::BlizzardStrayer,
-		  { StatusRoll::EM, 40 },
-		  { StatusRoll::AtkPerc, 8.2 },
-		  { StatusRoll::Atk, 53 },
-		  { StatusRoll::ER, 5.2 } }
-	};
+void calc_Ayaka_team() {
 	Ayaka ayaka;
 	BlackSword black_sword;
-	Mistsplitter mistsplitter;
-	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
+	Mistsplitter mistsplitter{ 1 };
+	Combo combo{ ayaka.get_hit(DmgTalent::Normal, 1) };
 
 	auto best = [&](void (*modifier)(Status&)) {
-		return best_set(ayaka, mistsplitter, arts, combo, Status{}, modifier);
+		return best_set(ayaka, mistsplitter, AYAKA_ARTS, combo, Status{}, modifier);
 	};
 
 	const auto dmg = best(Calc::cryo_resonance_modifier);
@@ -246,6 +198,15 @@ void calc_Ayaka() {
 	};
 	print_dmg_with_res(10.0);
 	print_dmg_with_res(50.0);
+}
+
+void calc_Ayaka_solo() {
+	Ayaka ayaka;
+	auto weapon = std::make_unique<Mistsplitter>();
+	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
+
+	const auto dmg = best_set(ayaka, *weapon, AYAKA_ARTS, combo, Status{}, Calc::cryo_resonance_modifier);
+	std::cout << Calc::dmg_dealt(dmg, 90, 90, 0.0, 10.0) << std::endl;
 }
 
 void calc_Baal() {
@@ -499,58 +460,61 @@ void calc_Eula() {
 }
 
 void calc_HuTao() {
-	std::vector<Artifact> arts = {
-		{ Main::Flower,
-		  SetType::Shimenawa,
-		  { StatusRoll::ER, 5.8 },
-		  { StatusRoll::AtkPerc, 9.9 },
-		  { StatusRoll::CDmg, 28.7 },
-		  { StatusRoll::EM, 21 } },
-		{ Main::Feather,
-		  SetType::Shimenawa,
-		  { StatusRoll::EM, 54 },
-		  { StatusRoll::CDmg, 14.0 },
-		  { StatusRoll::HPPerc, 5.3 },
-		  { StatusRoll::CRate, 10.1 } },
-		{ Main::SandHP,
-		  SetType::Shimenawa,
-		  { StatusRoll::CRate, 3.9 },
-		  { StatusRoll::HP, 866 },
-		  { StatusRoll::Def, 19 },
-		  { StatusRoll::ER, 17.5 } },
-		{ Main::GobletPyro,
-		  SetType::HeartOfDepth,
-		  { StatusRoll::HPPerc, 5.3 },
-		  { StatusRoll::CRate, 3.9 },
-		  { StatusRoll::CDmg, 20.2 },
-		  { StatusRoll::EM, 58 } },
-		{ Main::HeadCDmg,
-		  SetType::Shimenawa,
-		  { StatusRoll::HPPerc, 14.0 },
-		  { StatusRoll::AtkPerc, 4.1 },
-		  { StatusRoll::EM, 40 },
-		  { StatusRoll::CRate, 105.4 } }
+	constexpr static float SUCROSE_EM = 864.0;
+	constexpr static int ENEMY_LVL = 95;
+	constexpr static float ENEMY_RES = 10.0;
+
+	const HuTao hutao;
+	const Deathmatch deathmatch{ 1, true };
+	Combo combo{
+		hutao.get_hit(DmgTalent::Normal, 1),
+		hutao.get_hit(DmgTalent::Charged, 1)
 	};
-	HuTao hutao;
-	Deathmatch deathmatch{ 1 };
+	combo[1].reaction = Reaction::VapeByPyro;
 
-	Combo combo{ hutao.get_hit(DmgTalent::Charged, 1) };
-	combo[0].reaction = Reaction::VapeByPyro;
+	auto modifiers = [](Status& stats) {
+		Calc::pyro_resonance_modifier(stats);
+		stats.elem_mastery += 50.0 + 0.2 * SUCROSE_EM;
+	};
 
-	const auto avg_dmg = best_set(hutao, deathmatch, arts, combo, Status{}, Calc::pyro_resonance_modifier);
-	const auto avg_dmg_sucrose = best_set(hutao, deathmatch, arts, combo, Status{},
-	  [](Status& stats) {
-		  Calc::pyro_resonance_modifier(stats);
-		  stats.elem_mastery += 50.0 + 0.2 * 820;
-	  });
-
-	std::cout << "raw: " << avg_dmg << "\n"
-			  << "dealt (no buff): " << Calc::dmg_dealt(avg_dmg, 90, 90, 0.0, 10.0) << "\n"
-			  << "dealt (Sucrose + VV): " << Calc::dmg_dealt(avg_dmg_sucrose, 90, 90, 0.0, -30.0) << std::endl;
+	auto best_result = list_sets_by_dmg(hutao, deathmatch, HUTAO_ARTS, combo, Status{}, modifiers).at(0);
+	std::cout << best_result
+			  << "dealt (Sucrose + VV): " << Calc::dmg_dealt(best_result.dmg, 90, ENEMY_LVL, 0.0, ENEMY_RES - 40.0) << std::endl;
 }
+
+void calc_Yae() {
+	constexpr static int ENEMY_LVL = 95;
+	constexpr static float ENEMY_RES = 10.0;
+
+	const YaeMiko yae;
+	const LostPrayer lost_prayer;
+	Widsith widsith{ 1 };
+	widsith.Song = Widsith::ThemeSong::Recitative;
+
+	Combo skill{
+		yae.get_hit(DmgTalent::Skill, 3)
+	};
+	Combo burst{
+		yae.get_hit(DmgTalent::Burst, 1),
+		yae.get_hit(DmgTalent::Burst, 2),
+		yae.get_hit(DmgTalent::Burst, 2),
+		yae.get_hit(DmgTalent::Burst, 2)
+	};
+	Combo normal{
+		yae.get_hit(DmgTalent::Normal, 1),
+		yae.get_hit(DmgTalent::Normal, 2),
+		yae.get_hit(DmgTalent::Normal, 3)
+	};
+	Combo charged{
+		yae.get_hit(DmgTalent::Charged, 1)
+	};
+	auto avg_dmg = best_set(yae, lost_prayer, YAE_ARTS, skill);
+	std::cout << "avg dmg: " << Calc::dmg_dealt(avg_dmg, 90, ENEMY_LVL, 0.0, ENEMY_RES) << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Eula();
+	calc_Yae();
 }
