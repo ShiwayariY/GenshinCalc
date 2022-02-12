@@ -51,7 +51,7 @@ private:
 
 	float total_atk() const;
 	float dmg_bonus(DmgElement, DmgTalent) const;
-	float amplifying_mutliplier(Reaction) const;
+	float amplifying_multiplier(Reaction) const;
 
 	const Character& m_char;
 	const Weapon& m_weapon;

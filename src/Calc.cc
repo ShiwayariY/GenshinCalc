@@ -44,7 +44,7 @@ float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) {
 		const float bonus_mult = 1.0 + dmg_bonus(hit.element, hit.talent) / 100.0;
 		DEBUG("Bonus mult: " << bonus_mult);
 
-		float hit_dmg = hit_atk * bonus_mult * amplifying_mutliplier(hit.reaction);
+		float hit_dmg = hit_atk * bonus_mult * amplifying_multiplier(hit.reaction);
 		DEBUG("Base dmg hit: " << hit_dmg);
 
 		if (hit.can_crit) hit_dmg *= 1.0 + std::min(100.0f, m_stats.crit_rate) * m_stats.crit_dmg / 10000.0;
@@ -183,7 +183,7 @@ float Calc::dmg_bonus(DmgElement elem, DmgTalent talent) const {
 	return bonus;
 }
 
-float Calc::amplifying_mutliplier(Reaction reaction) const {
+float Calc::amplifying_multiplier(Reaction reaction) const {
 	float reaction_multiplier = 1.0;
 	switch (reaction) {
 		case Reaction::None:
