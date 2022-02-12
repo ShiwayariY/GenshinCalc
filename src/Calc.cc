@@ -37,8 +37,9 @@ float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) {
 	init_stats();
 	float dmg = 0.0;
 
+	const auto tot_atk = total_atk();
 	for (const Hit& hit : combo) {
-		const float hit_atk = total_atk() * hit.scaling_perc / 100.0 + m_stats.additional_dmg;
+		const float hit_atk = tot_atk * hit.scaling_perc / 100.0 + m_stats.additional_dmg;
 		DEBUG("Hit Atk: " << hit_atk);
 
 		const float bonus_mult = 1.0 + dmg_bonus(hit.element, hit.talent) / 100.0;
