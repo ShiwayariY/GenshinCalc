@@ -85,9 +85,8 @@ Hit HuTao::get_hit(DmgTalent talent, unsigned int hit_num) const {
 void HuTao::apply_effects(Status& stats) const {
 	if (GuideToAfterlife) {
 		const float total_hp = stats.base_hp * (1.0 + stats.hp_perc / 100.0) + stats.flat_hp;
-		const float total_atk = stats.base_atk * (1.0 + stats.atk_perc / 100.0) + stats.flat_atk;
 		const float atk_bonus = GuideToAfterlife_atk_ratio * total_hp;
-		stats.flat_atk += std::min(4.0f * total_atk, atk_bonus);
+		stats.flat_atk += std::min(4.0f * stats.base_atk, atk_bonus);
 	}
 }
 }
