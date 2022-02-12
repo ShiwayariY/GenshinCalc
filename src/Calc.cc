@@ -47,7 +47,16 @@ float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) {
 		float hit_dmg = hit_atk * bonus_mult * amplifying_multiplier(hit.reaction);
 		DEBUG("Base dmg hit: " << hit_dmg);
 
-		if (hit.can_crit) hit_dmg *= 1.0 + std::min(100.0f, m_stats.crit_rate) * m_stats.crit_dmg / 10000.0;
+		switch (hit.crit) {
+			case Crit::Normal:
+				hit_dmg *= 1.0 + std::min(100.0f, m_stats.crit_rate) * m_stats.crit_dmg / 10000.0;
+				break;
+			case Crit::Always:
+				hit_dmg *= 1.0 + m_stats.crit_dmg / 100.0;
+				break;
+			case Crit::Never:
+				break;
+		}
 		DEBUG("Crit avg hit: " << hit_dmg << '\n');
 
 		dmg += hit_dmg;

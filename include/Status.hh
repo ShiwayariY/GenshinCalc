@@ -36,11 +36,17 @@ enum class Reaction {
 	VapeByPyro
 };
 
+enum class Crit {
+	Normal,
+	Never,
+	Always
+};
+
 struct Hit {
 	DmgTalent talent = DmgTalent::Normal;
 	DmgElement element = DmgElement::Phys;
 	float scaling_perc = 100.0;
-	bool can_crit = true;
+	Crit crit = Crit::Normal;
 	Reaction reaction = Reaction::None;
 };
 using Combo = std::vector<Hit>;
