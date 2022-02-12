@@ -25,4 +25,39 @@ void RedhornStonethresher::apply_effects(Status& stats) const {
 	stats.additional_dmg += (0.3f + static_cast<float>(m_refine) * 0.1f) * total_def;
 }
 
+// -------------------------------------------------- Lost Prayer --------------------------------------------------
+
+void LostPrayer::apply_effects(Status& stats) const {
+	auto bonus = bonus_per_stack * std::min(stacks, max_stacks);
+	stats.pyro_bonus += bonus;
+	stats.hydro_bonus += bonus;
+	stats.cryo_bonus += bonus;
+	stats.electro_bonus += bonus;
+	stats.anemo_bonus += bonus;
+	stats.geo_bonus += bonus;
+}
+
+// -------------------------------------------------- Widsith --------------------------------------------------
+
+void Widsith::apply_effects(Status& stats) const {
+	switch (Song) {
+		case ThemeSong::None:
+			break;
+		case ThemeSong::Recitative:
+			stats.atk_perc += Recitative_atk_perc;
+			break;
+		case ThemeSong::Aria:
+			stats.pyro_bonus += Aria_elem_bonus;
+			stats.hydro_bonus += Aria_elem_bonus;
+			stats.cryo_bonus += Aria_elem_bonus;
+			stats.electro_bonus += Aria_elem_bonus;
+			stats.anemo_bonus += Aria_elem_bonus;
+			stats.geo_bonus += Aria_elem_bonus;
+			break;
+		case ThemeSong::Interlude:
+			stats.elem_mastery += Interlude_elem_mastery;
+			break;
+	};
+}
+
 }

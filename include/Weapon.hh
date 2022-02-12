@@ -186,6 +186,60 @@ public:
 
 	void apply_effects(Status&) const override {}
 };
+
+// -------------------------------------------------- Lost Prayer --------------------------------------------------
+
+class LostPrayer : public Weapon { // R1
+public:
+	unsigned int stacks = 0;
+	LostPrayer() :
+			Weapon{
+				{ .base_atk = 608.0f,
+				  .crit_rate = 33.1f }
+			} {
+		DEBUG("___Lost Prayer___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override;
+
+private:
+	inline static const float bonus_per_stack = 8.0;
+	inline static const unsigned max_stacks = 4;
+};
+
+// -------------------------------------------------- Widsith --------------------------------------------------
+
+class Widsith : public Weapon {
+public:
+	enum class ThemeSong {
+		None,
+		Recitative,
+		Aria,
+		Interlude
+	};
+	ThemeSong Song = ThemeSong::None;
+
+	Widsith(unsigned refine = 1) :
+			Weapon{
+				{ .base_atk = 510.0f,
+				  .crit_dmg = 55.1f }
+			},
+			Recitative_atk_perc{ 45.0f + 15.0f * refine },
+			Aria_elem_bonus{ 36.0f + 12.0f * refine },
+			Interlude_elem_mastery{ 180.0f + 60.0f * refine } {
+		DEBUG("___Widsith___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override;
+
+private:
+	float Recitative_atk_perc = 0.0;
+	float Aria_elem_bonus = 0.0;
+	float Interlude_elem_mastery = 0.0;
+};
+
 }
 
 #endif
