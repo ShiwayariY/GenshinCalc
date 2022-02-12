@@ -220,6 +220,42 @@ private:
 		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 588.0 } }  // low HP
 	};
 };
+
+// -------------------------------------------------- Yae Miko --------------------------------------------------
+
+class YaeMiko : public Character { // 9 9 9
+public:
+	YaeMiko() :
+			Character{
+				{ .base_hp = 10372.0,
+				  .base_atk = 340.0,
+				  .base_def = 569.0,
+				  .crit_rate = 24.2,
+				  .crit_dmg = 50.0,
+				  .energy_recharge = 100.0 }
+			} {
+		DEBUG("___HuTao___\n"
+			  << status);
+	}
+
+	Hit get_hit(DmgTalent, unsigned int hit_num) const override;
+	void apply_effects(Status&) const override;
+
+private:
+	inline static const float EnlightenedBlessing_skill_bonus = 0.15;
+	inline static const Abilities ABILITIES{
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Electro, 67.42 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Electro, 65.48 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Electro, 96.71 } },
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Electro, 242.92 } },
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 103.14 } },
+		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 128.93 } },
+		{ { DmgTalent::Skill, 3 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 161.16 } },
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 442.0 } },
+		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 567.49 } }
+	};
+};
+
 }
 
 #endif

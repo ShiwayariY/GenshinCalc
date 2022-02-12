@@ -89,4 +89,15 @@ void HuTao::apply_effects(Status& stats) const {
 		stats.flat_atk += std::min(4.0f * stats.base_atk, atk_bonus);
 	}
 }
+
+// -------------------------------------------------- Yae Miko --------------------------------------------------
+
+Hit YaeMiko::get_hit(DmgTalent talent, unsigned int hit_num) const {
+	return ABILITIES.at({ talent, hit_num });
+}
+
+void YaeMiko::apply_effects(Status& stats) const {
+	stats.skill_bonus += EnlightenedBlessing_skill_bonus * stats.elem_mastery;
+}
+
 }
