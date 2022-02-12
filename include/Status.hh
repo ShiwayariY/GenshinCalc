@@ -138,7 +138,7 @@ inline std::ostream& operator<<(std::ostream& os, const Status& s) {
 	   << "ATK base              " << std::setw(10) << s.base_atk << "   |   "
 	   << "ATK%                  " << std::setw(10) << s.atk_perc << "   |   "
 	   << "ATK                   " << std::setw(10) << s.flat_atk << "   |\n"
-	   << "DEF base              " << std::setw(10) << s.base_atk << "   |   "
+	   << "DEF base              " << std::setw(10) << s.base_def << "   |   "
 	   << "DEF%                  " << std::setw(10) << s.def_perc << "   |   "
 	   << "DEF                   " << std::setw(10) << s.flat_def << "   |\n"
 	   << "CRIT Rate             " << std::setw(10) << s.crit_rate << "   |   "
