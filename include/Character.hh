@@ -184,7 +184,7 @@ private:
 
 // -------------------------------------------------- Hu Tao --------------------------------------------------
 
-class HuTao : public Character { // 9 9 8
+class HuTao : public Character { // 10 10 9
 public:
 	bool GuideToAfterlife = true;
 
@@ -205,19 +205,19 @@ public:
 	void apply_effects(Status&) const override;
 
 private:
-	inline static const float GuideToAfterlife_atk_ratio = 0.0596;
+	inline static const float GuideToAfterlife_atk_ratio = 0.0626;
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 78.85 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 81.15 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 102.68 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 110.4 } },
-		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 55.96 + 59.2 } },
-		{ { DmgTalent::Normal, 6 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 144.57 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Phys, 228.66 } },
-		{ { DmgTalent::Plunge, 1 }, Hit{ DmgTalent::Plunge, DmgElement::Phys, 110.02 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 108.8 } },  // Blood Blossom
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 446.74 } }, // high HP
-		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 558.42 } }  // low HP
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 83.6 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 86.1 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 108.9 } },
+		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 117.1 } },
+		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 59.4 + 62.8 } },
+		{ { DmgTalent::Normal, 6 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 153.4 } },
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Phys, 242.6 } },
+		{ { DmgTalent::Plunge, 1 }, Hit{ DmgTalent::Plunge, DmgElement::Phys, 116.7 } },
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 115.0 } }, // Blood Blossom
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 470.0 } }, // high HP
+		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 588.0 } }  // low HP
 	};
 };
 }
