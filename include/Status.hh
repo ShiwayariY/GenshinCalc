@@ -132,34 +132,47 @@ struct Status {
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Status& s) {
-	os << "HP base               " << std::setw(10) << s.base_hp << "   |   "
-	   << "HP%                   " << std::setw(10) << s.hp_perc << "   |   "
-	   << "HP                    " << std::setw(10) << s.flat_hp << "   |\n"
-	   << "ATK base              " << std::setw(10) << s.base_atk << "   |   "
-	   << "ATK%                  " << std::setw(10) << s.atk_perc << "   |   "
-	   << "ATK                   " << std::setw(10) << s.flat_atk << "   |\n"
-	   << "DEF base              " << std::setw(10) << s.base_def << "   |   "
-	   << "DEF%                  " << std::setw(10) << s.def_perc << "   |   "
-	   << "DEF                   " << std::setw(10) << s.flat_def << "   |\n"
-	   << "CRIT Rate             " << std::setw(10) << s.crit_rate << "   |   "
-	   << "CRIT DMG              " << std::setw(10) << s.crit_dmg << "   |   "
-	   << "Energy Recharge       " << std::setw(10) << s.energy_recharge << "   |\n"
-	   << "Elemental Mastery     " << std::setw(10) << s.elem_mastery << "   |   "
-	   << "Healing Bonus         " << std::setw(10) << s.healing_bonus << "   |\n"
-	   << "Pyro DMG              " << std::setw(10) << s.pyro_bonus << "   |   "
-	   << "Hydro DMG             " << std::setw(10) << s.hydro_bonus << "   |   "
-	   << "Cryo DMG              " << std::setw(10) << s.cryo_bonus << "   |\n"
-	   << "Electro DMG           " << std::setw(10) << s.electro_bonus << "   |   "
-	   << "Anemo DMG             " << std::setw(10) << s.anemo_bonus << "   |   "
-	   << "Geo DMG               " << std::setw(10) << s.geo_bonus << "   |\n"
-	   << "Physical DMG          " << std::setw(10) << s.phys_bonus << "   |\n"
-	   << "Normal DMG            " << std::setw(10) << s.normal_bonus << "   |   "
-	   << "Charged DMG           " << std::setw(10) << s.charged_bonus << "   |   "
-	   << "Plunge DMG            " << std::setw(10) << s.plunge_bonus << "   |\n"
-	   << "Skill DMG             " << std::setw(10) << s.skill_bonus << "   |   "
-	   << "Burst DMG             " << std::setw(10) << s.burst_bonus << "   |   "
-	   << "Reaction DMG          " << std::setw(10) << s.reaction_bonus << "   |\n"
-	   << "Additional DMG        " << std::setw(10) << s.additional_dmg << "   |\n";
+	auto print_value = [&os](const auto& descr, const auto& val, const auto& sfx) {
+		os << std::setw(19) << std::left;
+		if (val > 0.001)
+			os << descr << std::setw(8) << std::right << val;
+		else
+			os << std::setfill('-') << descr << std::setw(8) << "" << std::setfill(' ');
+		os << "   |" << sfx;
+	};
+	print_value("HP base", s.base_hp, "   ");
+	print_value("HP%", s.hp_perc, "   ");
+	print_value("HP", s.flat_hp, "\n");
+	print_value("ATK base", s.base_atk, "   ");
+	print_value("ATK%", s.atk_perc, "   ");
+	print_value("ATK", s.flat_atk, "\n");
+	print_value("DEF base", s.base_def, "   ");
+	print_value("DEF%", s.def_perc, "   ");
+	print_value("DEF", s.flat_def, "\n");
+	print_value("CRIT Rate", s.crit_rate, "   ");
+	print_value("CRIT DMG", s.crit_dmg, "   ");
+	print_value("Energy Recharge", s.energy_recharge, "\n");
+	print_value("Elemental Mastery", s.elem_mastery, "   ");
+	print_value("Healing Bonus", s.healing_bonus, "   ");
+	print_value("", 0, "\n");
+	print_value("Pyro DMG", s.pyro_bonus, "   ");
+	print_value("Hydro DMG", s.hydro_bonus, "   ");
+	print_value("Cryo DMG", s.cryo_bonus, "\n");
+	print_value("Electro DMG", s.electro_bonus, "   ");
+	print_value("Anemo DMG", s.anemo_bonus, "   ");
+	print_value("Geo DMG", s.geo_bonus, "\n");
+	print_value("Physical DMG", s.phys_bonus, "   ");
+	print_value("", 0, "   ");
+	print_value("", 0, "\n");
+	print_value("Normal DMG", s.normal_bonus, "   ");
+	print_value("Charged DMG", s.charged_bonus, "   ");
+	print_value("Plunge DMG", s.plunge_bonus, "\n");
+	print_value("Skill DMG", s.skill_bonus, "   ");
+	print_value("Burst DMG", s.burst_bonus, "   ");
+	print_value("Reaction DMG", s.reaction_bonus, "\n");
+	print_value("Additional DMG", s.additional_dmg, "   ");
+	print_value("", 0, "   ");
+	print_value("", 0, "\n");
 	return os;
 }
 
