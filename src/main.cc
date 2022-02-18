@@ -202,11 +202,11 @@ void calc_Ayaka_team() {
 
 void calc_Ayaka_solo() {
 	Ayaka ayaka;
-	auto weapon = std::make_unique<Mistsplitter>();
+	Mistsplitter mistsplitter;
 	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
 
-	const auto dmg = best_set(ayaka, *weapon, AYAKA_ARTS, combo, Status{}, Calc::cryo_resonance_modifier);
-	std::cout << Calc::dmg_dealt(dmg, 90, 90, 0.0, 10.0) << std::endl;
+	const auto dmg = best_set(ayaka, mistsplitter, AYAKA_ARTS, combo, Status{}, Calc::cryo_resonance_modifier);
+	std::cout << Calc::dmg_dealt(dmg, 90, 95, 0.0, 10.0) << std::endl;
 }
 
 void calc_Baal() {
