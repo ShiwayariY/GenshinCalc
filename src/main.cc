@@ -360,63 +360,6 @@ void calc_Itto() {
 }
 
 void calc_Eula() {
-	std::vector<Artifact> arts = {
-		{ Main::Flower,
-		  SetType::PaleFlame,
-		  { StatusRoll::Def, 46 },
-		  { StatusRoll::ER, 9.7 },
-		  { StatusRoll::CRate, 14.0 },
-		  { StatusRoll::EM, 23 } },
-		{ Main::Flower,
-		  SetType::PaleFlame,
-		  { StatusRoll::DefPerc, 10.9 },
-		  { StatusRoll::CDmg, 13.2 },
-		  { StatusRoll::ER, 16.2 },
-		  { StatusRoll::Atk, 19 } },
-		{ Main::Feather,
-		  SetType::PaleFlame,
-		  { StatusRoll::Def, 42 },
-		  { StatusRoll::CDmg, 5.4 },
-		  { StatusRoll::CRate, 13.2 },
-		  { StatusRoll::HP, 269 } },
-		{ Main::SandAtk,
-		  SetType::PaleFlame,
-		  { StatusRoll::EM, 35 },
-		  { StatusRoll::ER, 5.8 },
-		  { StatusRoll::Atk, 31 },
-		  { StatusRoll::CDmg, 17.1 } },
-		{ Main::SandAtk,
-		  SetType::PaleFlame,
-		  { StatusRoll::CRate, 3.5 },
-		  { StatusRoll::CDmg, 7.8 },
-		  { StatusRoll::HP, 568 },
-		  { StatusRoll::Def, 83 } },
-		{ Main::SandAtk,
-		  SetType::PaleFlame,
-		  { StatusRoll::HP, 299 },
-		  { StatusRoll::EM, 56 },
-		  { StatusRoll::CRate, 8.6 },
-		  { StatusRoll::Atk, 14 } },
-		{ Main::GobletPhys,
-		  SetType::Millileth,
-		  { StatusRoll::AtkPerc, 10.5 },
-		  { StatusRoll::ER, 16.8 },
-		  { StatusRoll::Def, 19 },
-		  { StatusRoll::CRate, 6.2 } },
-		{ Main::GobletPhys,
-		  SetType::Millileth,
-		  { StatusRoll::CDmg, 12.4 },
-		  { StatusRoll::ER, 21.4 },
-		  { StatusRoll::HP, 299 },
-		  { StatusRoll::Def, 19 } },
-		{ Main::HeadCRate,
-		  SetType::PaleFlame,
-		  { StatusRoll::AtkPerc, 15.7 },
-		  { StatusRoll::HPPerc, 4.1 },
-		  { StatusRoll::DefPerc, 5.8 },
-		  { StatusRoll::CDmg, 28.0 } }
-	};
-
 	Eula eula;
 	SnowtombedStarsilver starsilver;
 	SerpentSpine serpentspine{ 1 };
@@ -439,7 +382,7 @@ void calc_Eula() {
 	Combo normal_atk{ eula.get_hit(DmgTalent::Normal, 1) };
 
 	auto weapon_dmg = [&](Weapon& w) {
-		return best_set(eula, w, arts, burst_rotation, {}, Calc::cryo_resonance_modifier);
+		return best_set(eula, w, EULA_ARTS, burst_rotation, {}, Calc::cryo_resonance_modifier);
 	};
 	auto dmg_dealt = [&](auto& dmg) {
 		return Calc::dmg_dealt(dmg, 90, 90, 0, 10.0 + Eula::Resistance_down);
