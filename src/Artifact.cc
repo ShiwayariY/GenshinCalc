@@ -7,7 +7,6 @@ namespace GenshinCalc {
 
 using Main = Artifact::Main;
 using SetType = Artifact::SetType;
-using StatusRoll = Artifact::StatusRoll;
 
 Artifact::Artifact(Main main, SetType set,
   std::pair<StatusRoll, float> stat1,
@@ -18,7 +17,7 @@ Artifact::Artifact(Main main, SetType set,
 		m_type{ set } {
 	set_main();
 	for (const auto& [type, value] : { stat1, stat2, stat3, stat4 })
-		add_status(type, value);
+		m_status.add_roll(type, value);
 }
 
 void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
@@ -218,41 +217,6 @@ void Artifact::set_main() {
 			break;
 		case Main::HeadHealing:
 			m_status.healing_bonus = 35.9;
-			break;
-	}
-}
-
-void Artifact::add_status(StatusRoll type, float value) {
-	switch (type) {
-		case StatusRoll::HP:
-			m_status.flat_hp += value;
-			break;
-		case StatusRoll::HPPerc:
-			m_status.hp_perc += value;
-			break;
-		case StatusRoll::Atk:
-			m_status.flat_atk += value;
-			break;
-		case StatusRoll::AtkPerc:
-			m_status.atk_perc += value;
-			break;
-		case StatusRoll::Def:
-			m_status.flat_def += value;
-			break;
-		case StatusRoll::DefPerc:
-			m_status.def_perc += value;
-			break;
-		case StatusRoll::CRate:
-			m_status.crit_rate += value;
-			break;
-		case StatusRoll::CDmg:
-			m_status.crit_dmg += value;
-			break;
-		case StatusRoll::EM:
-			m_status.elem_mastery += value;
-			break;
-		case StatusRoll::ER:
-			m_status.energy_recharge += value;
 			break;
 	}
 }

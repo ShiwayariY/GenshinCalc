@@ -60,18 +60,6 @@ public:
 		OceanHuedClam
 	};
 
-	enum class StatusRoll {
-		Atk,
-		AtkPerc,
-		Def,
-		DefPerc,
-		HP,
-		HPPerc,
-		CRate,
-		CDmg,
-		EM,
-		ER
-	};
 
 	Artifact(Main, SetType,
 	  std::pair<StatusRoll, float>,
@@ -108,7 +96,6 @@ private:
 	static void use_set_Wanderer(Status&, int piece_count);
 
 	void set_main();
-	void add_status(StatusRoll, float value);
 
 	const Main m_main;
 	const SetType m_type;

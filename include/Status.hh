@@ -10,6 +10,19 @@
 
 namespace GenshinCalc {
 
+enum class StatusRoll {
+	Atk,
+	AtkPerc,
+	Def,
+	DefPerc,
+	HP,
+	HPPerc,
+	CRate,
+	CDmg,
+	EM,
+	ER
+};
+
 enum class DmgElement {
 	Phys,
 	Pyro,
@@ -86,8 +99,43 @@ struct Status {
 	  skill_bonus = 0.0,
 	  burst_bonus = 0.0,
 	  reaction_bonus = 0.0,
-	  
+
 	  additional_dmg = 0.0; // like flat atk, but without talent scaling
+
+	void add_roll(StatusRoll type, float value) {
+		switch (type) {
+			case StatusRoll::HP:
+				flat_hp += value;
+				break;
+			case StatusRoll::HPPerc:
+				hp_perc += value;
+				break;
+			case StatusRoll::Atk:
+				flat_atk += value;
+				break;
+			case StatusRoll::AtkPerc:
+				atk_perc += value;
+				break;
+			case StatusRoll::Def:
+				flat_def += value;
+				break;
+			case StatusRoll::DefPerc:
+				def_perc += value;
+				break;
+			case StatusRoll::CRate:
+				crit_rate += value;
+				break;
+			case StatusRoll::CDmg:
+				crit_dmg += value;
+				break;
+			case StatusRoll::EM:
+				elem_mastery += value;
+				break;
+			case StatusRoll::ER:
+				energy_recharge += value;
+				break;
+		}
+	}
 
 	Status operator+(const Status& other) const {
 		return Status{
