@@ -7,7 +7,6 @@ namespace GenshinCalc {
 
 using Main = Artifact::Main;
 using SetType = Artifact::SetType;
-using StatusRoll = Artifact::StatusRoll;
 
 const std::vector<Artifact> AYAKA_ARTS{
 	{ Main::Flower,
@@ -337,6 +336,78 @@ const std::vector<Artifact> YAE_ARTS{
 	  { StatusRoll::CDmg, 18.7 },
 	  { StatusRoll::Def, 42 },
 	  { StatusRoll::Atk, 18 } }
+};
+
+const std::vector<Artifact> BAAL_ARTS{
+	{ Main::Flower,
+	  SetType::Emblem,
+	  { StatusRoll::Atk, 49 },
+	  { StatusRoll::Def, 23 },
+	  { StatusRoll::CDmg, 23.3 },
+	  { StatusRoll::CRate, 3.5 } },
+	{ Main::Flower,
+	  SetType::Emblem,
+	  { StatusRoll::HPPerc, 5.3 },
+	  { StatusRoll::AtkPerc, 16.9 },
+	  { StatusRoll::CRate, 2.7 },
+	  { StatusRoll::ER, 10.4 } },
+	{ Main::Feather,
+	  SetType::Emblem,
+	  { StatusRoll::ER, 11.0 },
+	  { StatusRoll::CRate, 10.1 },
+	  { StatusRoll::Def, 19 },
+	  { StatusRoll::CDmg, 20.2 } },
+	{ Main::SandER,
+	  SetType::Emblem,
+	  { StatusRoll::HPPerc, 16.3 },
+	  { StatusRoll::HP, 508 },
+	  { StatusRoll::CDmg, 14.8 },
+	  { StatusRoll::Def, 23 } },
+	{ Main::GobletAtk,
+	  SetType::HeartOfDepth,
+	  { StatusRoll::HP, 508 },
+	  { StatusRoll::CRate, 10.1 },
+	  { StatusRoll::ER, 6.5 },
+	  { StatusRoll::CDmg, 14.8 } },
+	{ Main::HeadCDmg,
+	  SetType::Emblem,
+	  { StatusRoll::Atk, 16 },
+	  { StatusRoll::CRate, 17.1 },
+	  { StatusRoll::EM, 40 },
+	  { StatusRoll::HPPerc, 4.7 } }
+};
+
+const std::vector<Artifact> ITTO_ARTS{
+	{ Main::Flower,
+	  SetType::HuskOfOpulentDreams,
+	  { StatusRoll::DefPerc, 7.29 },
+	  { StatusRoll::AtkPerc, 5.83 },
+	  { StatusRoll::CDmg, 23.31 },
+	  { StatusRoll::CRate, 15.56 } },
+	{ Main::Feather,
+	  SetType::HuskOfOpulentDreams,
+	  { StatusRoll::DefPerc, 7.29 },
+	  { StatusRoll::CRate, 11.67 },
+	  { StatusRoll::AtkPerc, 5.83 },
+	  { StatusRoll::CDmg, 31.08 } },
+	{ Main::SandDef,
+	  SetType::HuskOfOpulentDreams,
+	  { StatusRoll::AtkPerc, 5.83 },
+	  { StatusRoll::CRate, 11.67 },
+	  { StatusRoll::CDmg, 31.08 },
+	  { StatusRoll::Def, 23.15 } },
+	{ Main::GobletGeo,
+	  SetType::HuskOfOpulentDreams,
+	  { StatusRoll::DefPerc, 7.29 },
+	  { StatusRoll::CRate, 11.67 },
+	  { StatusRoll::AtkPerc, 5.83 },
+	  { StatusRoll::CDmg, 31.08 } },
+	{ Main::HeadCDmg,
+	  SetType::HuskOfOpulentDreams,
+	  { StatusRoll::DefPerc, 7.29 },
+	  { StatusRoll::CRate, 23.34 },
+	  { StatusRoll::AtkPerc, 5.83 },
+	  { StatusRoll::Def, 23.15 } }
 };
 
 }

@@ -210,54 +210,6 @@ void calc_Ayaka_solo() {
 }
 
 void calc_Baal() {
-	Artifact flower_1{
-		Main::Flower,
-		SetType::Emblem,
-		{ StatusRoll::Atk, 49 },
-		{ StatusRoll::Def, 23 },
-		{ StatusRoll::CDmg, 23.3 },
-		{ StatusRoll::CRate, 3.5 }
-	};
-	Artifact flower_2{
-		Main::Flower,
-		SetType::Emblem,
-		{ StatusRoll::HPPerc, 5.3 },
-		{ StatusRoll::AtkPerc, 16.9 },
-		{ StatusRoll::CRate, 2.7 },
-		{ StatusRoll::ER, 10.4 }
-	};
-	Artifact feather{
-		Main::Feather,
-		SetType::Emblem,
-		{ StatusRoll::ER, 11.0 },
-		{ StatusRoll::CRate, 10.1 },
-		{ StatusRoll::Def, 19 },
-		{ StatusRoll::CDmg, 20.2 }
-	};
-	Artifact sand{
-		Main::SandER,
-		SetType::Emblem,
-		{ StatusRoll::HPPerc, 16.3 },
-		{ StatusRoll::HP, 508 },
-		{ StatusRoll::CDmg, 14.8 },
-		{ StatusRoll::Def, 23 },
-	};
-	Artifact goblet{
-		Main::GobletAtk,
-		SetType::HeartOfDepth,
-		{ StatusRoll::HP, 508 },
-		{ StatusRoll::CRate, 10.1 },
-		{ StatusRoll::ER, 6.5 },
-		{ StatusRoll::CDmg, 14.8 }
-	};
-	Artifact head{
-		Main::HeadCDmg,
-		SetType::Emblem,
-		{ StatusRoll::Atk, 16 },
-		{ StatusRoll::CRate, 17.1 },
-		{ StatusRoll::EM, 40 },
-		{ StatusRoll::HPPerc, 4.7 }
-	};
 	Baal baal;
 	baal.energy_consumed = 80 + 70 + 60;
 	Combo combo{
@@ -277,55 +229,13 @@ void calc_Baal() {
 	};
 	TheCatch thecatch;
 
-	Calc calc{ baal, thecatch, flower_1, feather, sand, goblet, head };
-	const auto avg_dmg = calc.avg_dmg(combo);
+	const auto avg_dmg = best_set(baal, thecatch, BAAL_ARTS, combo);
 	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg, 81, 91, 0, 10);
 
 	std::cout << dmg_dealt << std::endl;
 }
 
 void calc_Itto() {
-	Artifact f{
-		Main::Flower,
-		SetType::HuskOfOpulentDreams,
-		{ StatusRoll::DefPerc, 7.29 },
-		{ StatusRoll::AtkPerc, 5.83 },
-		{ StatusRoll::CDmg, 23.31 },
-		{ StatusRoll::CRate, 15.56 }
-	};
-	Artifact p{
-		Main::Feather,
-		SetType::HuskOfOpulentDreams,
-		{ StatusRoll::DefPerc, 7.29 },
-		{ StatusRoll::CRate, 11.67 },
-		{ StatusRoll::AtkPerc, 5.83 },
-		{ StatusRoll::CDmg, 31.08 }
-	};
-	Artifact s{
-		Main::SandDef,
-		SetType::HuskOfOpulentDreams,
-		{ StatusRoll::AtkPerc, 5.83 },
-		{ StatusRoll::CRate, 11.67 },
-		{ StatusRoll::CDmg, 31.08 },
-		{ StatusRoll::Def, 23.15 },
-	};
-	Artifact g{
-		Main::GobletGeo,
-		SetType::HuskOfOpulentDreams,
-		{ StatusRoll::DefPerc, 7.29 },
-		{ StatusRoll::CRate, 11.67 },
-		{ StatusRoll::AtkPerc, 5.83 },
-		{ StatusRoll::CDmg, 31.08 }
-	};
-	Artifact h{
-		Main::HeadCDmg,
-		SetType::HuskOfOpulentDreams,
-		{ StatusRoll::DefPerc, 7.29 },
-		{ StatusRoll::CRate, 23.34 },
-		{ StatusRoll::AtkPerc, 5.83 },
-		{ StatusRoll::Def, 23.15 }
-	};
-
 	Itto itto;
 	Whiteblind whiteblind{ 5 };
 	SkywardPride skyward_pride{ 1 };
@@ -338,13 +248,14 @@ void calc_Itto() {
 		arataki_combo,
 		final_slash
 	};
-	Calc calc{ itto, whiteblind, f, p, s, g, h };
-	const auto avg_dmg = calc.avg_dmg(combo, [](Status& stats) {
-		Calc::geo_resonance_modifier(stats);
-		stats.geo_bonus += 15.0; // Gorou skill
-		stats.flat_def += 350;   // Gorou skill
-		stats.def_perc += 25.0;  // Gorou burst passive
-	});
+
+	const auto avg_dmg = best_set(itto, whiteblind, ITTO_ARTS, combo, {},
+	  [](Status& stats) {
+		  Calc::geo_resonance_modifier(stats);
+		  stats.geo_bonus += 15.0; // Gorou skill
+		  stats.flat_def += 350;   // Gorou skill
+		  stats.def_perc += 25.0;  // Gorou burst passive
+	  });
 
 	const unsigned CHAR_LVL = 90;
 	const unsigned ENEMY_LVL = 90;
