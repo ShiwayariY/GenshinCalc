@@ -362,7 +362,18 @@ void calc_Yae() {
 	Combo charged{
 		yae.get_hit(DmgTalent::Charged, 1)
 	};
-	auto avg_dmg = best_set(yae, lost_prayer, YAE_ARTS, skill);
+	auto avg_dmg = best_set(yae, lost_prayer, YAE_ARTS, skill, Status{},
+	  [](Status& stats) {
+		  //   stats.electro_bonus += 58; // Mona burst
+		  //   stats.electro_bonus += 34.52; // Kazu C0
+		  //   stats.electro_bonus += 42.52; // Kazu C2
+		  //   stats.elem_mastery += 200; // Kazu C2
+		  //   stats.flat_atk += 798; // Bennet C1
+		  stats.flat_atk += 551; // Sara C1
+								 //   stats.elem_mastery += 222; // Sucrose
+								 //   stats.skill_bonus += 15;   // Shenhe
+								 //   stats.atk_perc += 68; // Kokomi
+	  });
 	std::cout << "avg dmg: " << Calc::dmg_dealt(avg_dmg, 90, ENEMY_LVL, 0.0, ENEMY_RES) << std::endl;
 }
 
