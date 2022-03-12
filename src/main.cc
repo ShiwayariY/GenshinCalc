@@ -11,12 +11,70 @@
 #include <Artifact.hh>
 #include <Calc.hh>
 #include <Artifact_constants.hh>
+#include <StatusGenerator.hh>
 
 namespace GenshinCalc {
 
 using Main = Artifact::Main;
 using SetType = Artifact::SetType;
-using StatusRoll = Artifact::StatusRoll;
+
+float find_max_potential(
+  const Character& chara,
+  const Weapon& weapon,
+  const Combo& combo,
+  SetType flower_set, SetType feather_set, SetType sands_set, SetType goblet_set, SetType circlet_set,
+  const std::vector<Main>& sands_mains,
+  const std::vector<Main>& goblet_mains,
+  const std::vector<Main>& circlet_mains,
+  const std::vector<StatusRoll>& priority_rolls,
+  unsigned rolls,
+  void (*modifier)(Status&) = [](Status&) {}) {
+
+	float best_dmg = 0.0;
+	Status best_stats;
+
+	Artifact dummy_flower{ Main::Flower, flower_set };
+	Artifact dummy_feather{ Main::Feather, feather_set };
+
+	auto iteration = 0;
+	std::cout << "Checking stat combinations...\n";
+
+	for (const auto& sands_main : sands_mains) {
+		Artifact dummy_sands{ sands_main, sands_set };
+
+		for (const auto& goblet_main : goblet_mains) {
+			Artifact dummy_goblet{ goblet_main, goblet_set };
+
+			for (const auto& circlet_main : circlet_mains) {
+				Artifact dummy_circlet{ circlet_main, circlet_set };
+
+				Calc calc{ chara, weapon,
+					dummy_flower, dummy_feather, dummy_sands, dummy_goblet, dummy_circlet };
+				StatusGenerator gen{ sands_main, goblet_main, circlet_main, priority_rolls, rolls };
+
+				do {
+					std::cout << ++iteration << "           \r";
+
+					const auto curr_stats = gen.get();
+					auto avg_dmg = calc.avg_dmg(combo,
+					  [&curr_stats, &modifier](Status& stats) {
+						  stats = stats + curr_stats;
+						  modifier(stats);
+					  });
+
+					if (avg_dmg > best_dmg) {
+						best_dmg = avg_dmg;
+						best_stats = calc.status();
+					}
+				} while (gen.next());
+			}
+		}
+	}
+
+	std::cout << "\n"
+			  << best_stats << std::endl;
+	return best_dmg;
+}
 
 bool has_min_stats(const Status& stats, const Status& min) {
 	return stats.base_hp >= min.base_hp					   //
@@ -84,6 +142,7 @@ std::ostream& operator<<(std::ostream& os, const SetResult& set) {
 			  << "*************************************************************************************************\n";
 	return os;
 }
+
 std::vector<SetResult> list_sets_by_dmg(
   const Character& chara,
   const Weapon& weapon,
@@ -207,6 +266,25 @@ void calc_Ayaka_solo() {
 
 	const auto dmg = best_set(ayaka, mistsplitter, AYAKA_ARTS, combo, Status{}, Calc::cryo_resonance_modifier);
 	std::cout << Calc::dmg_dealt(dmg, 90, 95, 0.0, 10.0) << std::endl;
+}
+
+void calc_Ayaka_potential() {
+	Ayaka ayaka;
+	Mistsplitter mistsplitter;
+	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
+
+	auto blizz = SetType::BlizzardStrayer;
+	const auto max_potential_dmg = find_max_potential(
+	  ayaka, mistsplitter, combo,
+	  blizz, blizz, blizz, blizz, blizz,
+	  { Main::SandAtk }, { Main::GobletCryo, Main::GobletAtk }, { Main::HeadCDmg, Main::HeadCRate, Main::HeadAtk },
+	  { StatusRoll::CRate,
+		StatusRoll::CDmg,
+		StatusRoll::AtkPerc,
+		StatusRoll::Atk,
+		StatusRoll::ER },
+	  22, Calc::cryo_resonance_modifier);
+	std::cout << max_potential_dmg << std::endl;
 }
 
 void calc_Baal() {
@@ -381,5 +459,5 @@ void calc_Yae() {
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Yae();
+	calc_Ayaka_potential();
 }
