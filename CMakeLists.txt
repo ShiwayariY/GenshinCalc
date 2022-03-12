@@ -15,6 +15,7 @@ include_directories(
 
 add_executable(GenshinCalc
 	src/main.cc
+	src/StatusGenerator.cc
 	src/Calc.cc
 	src/Artifact.cc
 	src/Weapon.cc
