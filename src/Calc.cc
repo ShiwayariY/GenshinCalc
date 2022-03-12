@@ -31,10 +31,7 @@ float Calc::dmg_dealt(
 	return dmg_applied * def_multiplier(char_level, enemy_level, def_reduction_perc) * res_multiplier(res_perc);
 }
 
-float Calc::avg_dmg(const Combo& combo, void (*modifier)(Status&)) {
-	m_stats = Status{};
-	modifier(m_stats);
-	init_stats();
+float Calc::calc_avg_dmg(const Combo& combo) {
 	float dmg = 0.0;
 
 	const auto tot_atk = total_atk();

@@ -27,9 +27,15 @@ public:
 	  float def_reduction_perc,
 	  float res_perc);
 
+	template<typename Callable>
 	float avg_dmg(
-	  const Combo&,
-	  void (*modifier)(Status&) = [](Status&) {});
+	  const Combo& combo,
+	  Callable modifier = [](Status&) {}) {
+		m_stats = Status{};
+		modifier(m_stats);
+		init_stats();
+		return calc_avg_dmg(combo);
+	}
 
 	// retrieve total stats after calculating avg_dmg(...
 	Status status() const;
@@ -41,6 +47,7 @@ public:
 private:
 	Status m_stats;
 	void init_stats();
+	float calc_avg_dmg(const Combo&);
 	void apply_artifact_sets();
 
 	static float def_multiplier(
