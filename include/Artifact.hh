@@ -60,6 +60,7 @@ public:
 		OceanHuedClam
 	};
 
+	Artifact(Main, SetType);
 
 	Artifact(Main, SetType,
 	  std::pair<StatusRoll, float>,

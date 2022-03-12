@@ -8,14 +8,18 @@ namespace GenshinCalc {
 using Main = Artifact::Main;
 using SetType = Artifact::SetType;
 
+Artifact::Artifact(Main main, SetType set) :
+		m_main{ main },
+		m_type{ set } {
+	set_main();
+}
+
 Artifact::Artifact(Main main, SetType set,
   std::pair<StatusRoll, float> stat1,
   std::pair<StatusRoll, float> stat2,
   std::pair<StatusRoll, float> stat3,
   std::pair<StatusRoll, float> stat4) :
-		m_main{ main },
-		m_type{ set } {
-	set_main();
+		Artifact{ main, set } {
 	for (const auto& [type, value] : { stat1, stat2, stat3, stat4 })
 		m_status.add_roll(type, value);
 }
