@@ -197,7 +197,7 @@ public:
 				  .crit_dmg = 88.4,
 				  .energy_recharge = 100.0 }
 			} {
-		DEBUG("___HuTao___\n"
+		DEBUG("___Hu Tao___\n"
 			  << status);
 	}
 
@@ -234,7 +234,7 @@ public:
 				  .crit_dmg = 50.0,
 				  .energy_recharge = 100.0 }
 			} {
-		DEBUG("___HuTao___\n"
+		DEBUG("___Yae Miko___\n"
 			  << status);
 	}
 
