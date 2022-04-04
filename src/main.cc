@@ -522,9 +522,56 @@ void calc_Yae() {
 	std::cout << "avg dmg: " << Calc::dmg_dealt(avg_dmg, 90, ENEMY_LVL, 0.0, ENEMY_RES) << std::endl;
 }
 
+void calc_Yelan_potential() {
+	Yelan yelan;
+	Stringless stringless;
+	ViridescentHunt viridescent;
+
+	Combo barb{ yelan.get_hit(DmgTalent::Charged, 1) };
+	Combo skill{ yelan.get_hit(DmgTalent::Skill, 1) };
+	Combo burst{ yelan.get_hit(DmgTalent::Burst, 1) };
+
+	const auto max_potential_dmg = find_max_potential(yelan, stringless, skill,
+	  //   SetType::Emblem, SetType::Emblem, SetType::Emblem, SetType::Emblem, SetType::Emblem,
+	  SetType::Millileth, SetType::Millileth, SetType::Millileth, SetType::HeartOfDepth, SetType::HeartOfDepth,
+	  { Main::SandHP },
+	  { Main::GobletHydro },
+	  { Main::HeadCDmg, Main::HeadCRate, Main::HeadHP },
+	  { StatusRoll::CDmg, StatusRoll::CRate, StatusRoll::HPPerc, StatusRoll::HP, StatusRoll::ER },
+	  25);
+
+	std::cout << "outgoing: " << max_potential_dmg << std::endl;
+}
+
+void calc_Yelan() {
+	Yelan yelan;
+	Stringless stringless;
+	ViridescentHunt viridescent;
+	SacrificialBow sac_bow;
+	Weapon& weapon = viridescent;
+
+	Combo barb{ yelan.get_hit(DmgTalent::Charged, 1) };
+	Combo skill{ yelan.get_hit(DmgTalent::Skill, 1) };
+	Combo burst{ yelan.get_hit(DmgTalent::Burst, 1) };
+
+	const auto set_results = list_sets_by_dmg(yelan, weapon, YELAN_ARTS, burst,
+	  {
+		// .energy_recharge = 180.0 //
+	  });
+	if (set_results.empty()) return;
+
+	const auto best_result = set_results.at(0);
+	burst[0].crit = Crit::Always;
+	const auto dmg = best_set(yelan, weapon, best_result.artifacts, burst, {});
+
+	const auto dealt = Calc::dmg_dealt(dmg, 90, 100, 0, 10.0);
+	std::cout << "outgoing: " << dmg << "\n"
+			  << "dealt: " << dealt << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Ayaka_potential();
+	calc_Yelan();
 }
