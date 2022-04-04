@@ -101,4 +101,22 @@ void YaeMiko::apply_effects(Status& stats) const {
 	stats.skill_bonus += EnlightenedBlessing_skill_bonus * stats.elem_mastery;
 }
 
+// -------------------------------------------------- Yelan --------------------------------------------------
+
+Hit Yelan::get_hit(DmgTalent talent, unsigned int hit_num) const {
+	return ABILITIES.at({ talent, hit_num });
+}
+
+void Yelan::apply_effects(Status& stats) const {
+	auto max_hp = stats.base_hp * (1.0 + stats.hp_perc / 100.0) + stats.flat_hp;
+	auto stacks = TurnControl_stacks;
+	stacks = std::max(stacks, 1u);
+	stacks = std::min(stacks, static_cast<unsigned>(TurnControl_bonus.size()));
+	max_hp *= 1.0 + TurnControl_bonus[stacks - 1] / 100.0;
+
+	stats.additional_charged_dmg += max_hp * BreakthroughBarb_scaling / 100.0;
+	stats.additional_skill_dmg += max_hp * LingeringLifeline_scaling / 100.0;
+	stats.additional_burst_dmg += max_hp * ExquisiteThrow_scaling / 100.0;
+}
+
 }

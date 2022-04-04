@@ -257,6 +257,46 @@ private:
 	};
 };
 
+// -------------------------------------------------- Yelan --------------------------------------------------
+
+class Yelan : public Character { // 9 9 9
+public:
+	unsigned TurnControl_stacks = 3;
+
+	Yelan() :
+			Character{
+				{ .base_hp = 14450.0,
+				  .base_atk = 244.0,
+				  .base_def = 548.0,
+				  .crit_rate = 24.2,
+				  .crit_dmg = 50.0,
+				  .energy_recharge = 100.0 }
+			} {
+		DEBUG("___Yelan___\n"
+			  << status);
+	}
+
+	Hit get_hit(DmgTalent, unsigned int hit_num) const override;
+	void apply_effects(Status&) const override;
+
+private:
+	inline static const std::vector<float> TurnControl_bonus = { 6.0, 12.0, 18.0, 30.0 };
+	inline static const float BreakthroughBarb_scaling = 19.68;
+	inline static const float LingeringLifeline_scaling = 38.44; // skill
+	// currently not possible to have different scalings for same talent type
+	// -> could add a bool member to switch manually if needed
+	inline static const float ExquisiteThrow_scaling = 7.8; // burst procs
+	inline static const Abilities ABILITIES{
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 74.73 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 71.73 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 94.8 } },
+		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 39.82 * 3.0 } },
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Hydro, 0.0 } }, // Breakthrough Barb
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Hydro, 0.0 } },
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Hydro, 0.0 } } // Exquisite Throw
+	};
+};
+
 }
 
 #endif
