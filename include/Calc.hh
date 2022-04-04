@@ -57,6 +57,7 @@ private:
 	static float res_multiplier(float res_perc);
 
 	float total_atk() const;
+	float additional_dmg(DmgTalent) const;
 	float dmg_bonus(DmgElement, DmgTalent) const;
 	float amplifying_multiplier(Reaction) const;
 

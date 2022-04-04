@@ -36,7 +36,7 @@ float Calc::calc_avg_dmg(const Combo& combo) {
 
 	const auto tot_atk = total_atk();
 	for (const Hit& hit : combo) {
-		const float hit_atk = tot_atk * hit.scaling_perc / 100.0 + m_stats.additional_dmg;
+		const float hit_atk = tot_atk * hit.scaling_perc / 100.0 + additional_dmg(hit.talent);
 		DEBUG("Hit Atk: " << hit_atk);
 
 		const float bonus_mult = 1.0 + dmg_bonus(hit.element, hit.talent) / 100.0;
@@ -142,6 +142,27 @@ float Calc::total_atk() const {
 	const float tot = m_stats.base_atk * (1.0 + m_stats.atk_perc / 100.0) + m_stats.flat_atk;
 	DEBUG("Total ATK: " << tot);
 	return tot;
+}
+
+float Calc::additional_dmg(DmgTalent talent) const {
+	float add_dmg = m_stats.additional_dmg;
+	switch (talent) {
+		case DmgTalent::Normal:
+			add_dmg += m_stats.additional_normal_dmg;
+			break;
+		case DmgTalent::Charged:
+			add_dmg += m_stats.additional_charged_dmg;
+			break;
+		case DmgTalent::Plunge:
+			break;
+		case DmgTalent::Skill:
+			add_dmg += m_stats.additional_skill_dmg;
+			break;
+		case DmgTalent::Burst:
+			add_dmg += m_stats.additional_burst_dmg;
+			break;
+	}
+	return add_dmg;
 }
 
 float Calc::dmg_bonus(DmgElement elem, DmgTalent talent) const {

@@ -100,7 +100,11 @@ struct Status {
 	  burst_bonus = 0.0,
 	  reaction_bonus = 0.0,
 
-	  additional_dmg = 0.0; // like flat atk, but without talent scaling
+	  additional_dmg = 0.0,		   // like flat atk, but without talent scaling
+	  additional_normal_dmg = 0.0, // use these for abilities scaling off e.g. Max HP
+	  additional_charged_dmg = 0.0,
+	  additional_skill_dmg = 0.0,
+	  additional_burst_dmg = 0.0;
 
 	void add_roll(StatusRoll type, float value) {
 		switch (type) {
@@ -174,7 +178,11 @@ struct Status {
 
 			.reaction_bonus = reaction_bonus + other.reaction_bonus,
 
-			.additional_dmg = additional_dmg + other.additional_dmg
+			.additional_dmg = additional_dmg + other.additional_dmg,
+			.additional_normal_dmg = additional_normal_dmg + other.additional_normal_dmg,
+			.additional_charged_dmg = additional_charged_dmg + other.additional_charged_dmg,
+			.additional_skill_dmg = additional_skill_dmg + other.additional_skill_dmg,
+			.additional_burst_dmg = additional_burst_dmg + other.additional_burst_dmg
 		};
 	};
 };
@@ -218,8 +226,11 @@ inline std::ostream& operator<<(std::ostream& os, const Status& s) {
 	print_value("Skill DMG", s.skill_bonus, "   ");
 	print_value("Burst DMG", s.burst_bonus, "   ");
 	print_value("Reaction DMG", s.reaction_bonus, "\n");
-	print_value("Additional DMG", s.additional_dmg, "   ");
-	print_value("", 0, "   ");
+	print_value("Add. Normal DMG", s.additional_normal_dmg, "   ");
+	print_value("Add. Charged DMG", s.additional_charged_dmg, "   ");
+	print_value("Add. Skill DMG", s.additional_skill_dmg, "\n");
+	print_value("Add. Burst DMG", s.additional_burst_dmg, "   ");
+	print_value("Add. DMG", s.additional_dmg, "   ");
 	print_value("", 0, "\n");
 	return os;
 }
