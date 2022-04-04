@@ -256,6 +256,56 @@ private:
 	float Interlude_elem_mastery = 0.0;
 };
 
+// -------------------------------------------------- Stringless --------------------------------------------------
+
+class Stringless : public Weapon {
+public:
+	Stringless() :
+			Weapon{
+				{ .base_atk = 510.0f,
+				  .elem_mastery = 165.0f,
+				  .skill_bonus = 24.0f,
+				  .burst_bonus = 24.0f }
+			} {
+		DEBUG("___Stringless___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
+// -------------------------------------------------- ViridescentHunt --------------------------------------------------
+
+class ViridescentHunt : public Weapon {
+public:
+	ViridescentHunt() :
+			Weapon{
+				{ .base_atk = 510.0f,
+				  .crit_rate = 27.6f }
+			} {
+		DEBUG("___Viridescent Hunt___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
+// -------------------------------------------------- Sacrificial Bow --------------------------------------------------
+
+class SacrificialBow : public Weapon {
+public:
+	SacrificialBow() :
+			Weapon{
+				{ .base_atk = 565.0f,
+				  .energy_recharge = 30.6f }
+			} {
+		DEBUG("___Sacrificial Bow___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
 }
 
 #endif
