@@ -1,9 +1,11 @@
+
 #include <iostream>
 #include <vector>
 #include <set>
 #include <array>
 #include <algorithm>
 #include <memory>
+#include <iomanip>
 
 #include <Status.hh>
 #include <Character.hh>
@@ -36,8 +38,10 @@ float find_max_potential(
 	Artifact dummy_flower{ Main::Flower, flower_set };
 	Artifact dummy_feather{ Main::Feather, feather_set };
 
-	auto iteration = 0;
-	std::cout << "Checking stat combinations...\n";
+	std::cout << "Checking stat combinations ...\n"
+			  << std::left << std::setw(10) << "Main"
+			  << "Sub [million]\n";
+	unsigned iteration_main = 0;
 
 	for (const auto& sands_main : sands_mains) {
 		Artifact dummy_sands{ sands_main, sands_set };
@@ -48,12 +52,21 @@ float find_max_potential(
 			for (const auto& circlet_main : circlet_mains) {
 				Artifact dummy_circlet{ circlet_main, circlet_set };
 
+				++iteration_main;
+
 				Calc calc{ chara, weapon,
 					dummy_flower, dummy_feather, dummy_sands, dummy_goblet, dummy_circlet };
 				StatusGenerator gen{ sands_main, goblet_main, circlet_main, priority_rolls, rolls };
 
+				unsigned long iteration_sub_mil = 0;
+				unsigned iteration_sub = 0;
 				do {
-					std::cout << ++iteration << "           \r";
+					if (++iteration_sub >= 1000000) {
+						iteration_sub = 0;
+						std::cout << std::setw(10) << iteration_main << ++iteration_sub_mil
+								  << std::setw(10) << ""
+								  << "\r";
+					}
 
 					const auto curr_stats = gen.get();
 					auto avg_dmg = calc.avg_dmg(combo,
