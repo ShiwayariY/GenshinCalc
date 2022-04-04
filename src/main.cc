@@ -274,11 +274,18 @@ void calc_Ayaka_team() {
 
 void calc_Ayaka_solo() {
 	Ayaka ayaka;
+	BlackSword black_sword;
 	Mistsplitter mistsplitter;
-	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
+	Combo combo{ ayaka.get_hit(DmgTalent::Normal, 3) };
 
-	const auto dmg = best_set(ayaka, mistsplitter, AYAKA_ARTS, combo, Status{}, Calc::cryo_resonance_modifier);
-	std::cout << Calc::dmg_dealt(dmg, 90, 95, 0.0, 10.0) << std::endl;
+	const auto dmg = best_set(ayaka, mistsplitter, AYAKA_ARTS, combo, Status{},
+	  [](Status& stats) {
+		  stats.atk_perc += 48.0 + 20.0;   // TTDS + Noblesse/Millileth
+		  stats.cryo_bonus += 15.0 + 40.0; // Shenhe + Kazu
+		  stats.burst_bonus += 15.0;	   // Shenhe
+		  Calc::cryo_resonance_modifier(stats);
+	  });
+	std::cout << Calc::dmg_dealt(dmg, 90, 95, 0.0, -15.0) << std::endl;
 }
 
 void calc_Ayaka_potential() {
@@ -296,8 +303,17 @@ void calc_Ayaka_potential() {
 		StatusRoll::AtkPerc,
 		StatusRoll::Atk,
 		StatusRoll::ER },
-	  22, Calc::cryo_resonance_modifier);
-	std::cout << max_potential_dmg << std::endl;
+	  22, [](Status& stats) {
+		  Calc::cryo_resonance_modifier(stats);
+		  stats.cryo_bonus += 0.04 * (3.0 * 187.0 + 115.0 + 165.0) + 10.0; // Kazuha + <Shenhe>
+		  stats.skill_bonus += 15.0;									   //
+		  stats.burst_bonus += 15.0;									   //
+		  stats.normal_bonus += 15.0;									   //
+		  stats.charged_bonus += 15.0;									   // </Shenhe>
+		  stats.atk_perc += 68.0;										   // TTDS + Millileth (Kokomi)
+	  });
+	std::cout << "outgoing: " << max_potential_dmg << "\n"
+			  << "dealt: " << Calc::dmg_dealt(max_potential_dmg, 90, 100, 0, -30.0) << std::endl;
 }
 
 void calc_Baal() {
