@@ -444,12 +444,9 @@ void calc_HuTao() {
 	constexpr static float ENEMY_RES = 10.0;
 
 	const HuTao hutao;
-	const Deathmatch deathmatch{ 1, true };
-	Combo combo{
-		hutao.get_hit(DmgTalent::Normal, 1),
-		hutao.get_hit(DmgTalent::Charged, 1)
-	};
-	combo[1].reaction = Reaction::VapeByPyro;
+	const Deathmatch deathmatch{ 2, true };
+	Combo combo{ hutao.get_hit(DmgTalent::Charged, 1) };
+	combo[0].reaction = Reaction::VapeByPyro;
 
 	auto modifiers = [](Status& stats) {
 		Calc::pyro_resonance_modifier(stats);
@@ -457,8 +454,31 @@ void calc_HuTao() {
 	};
 
 	auto best_result = list_sets_by_dmg(hutao, deathmatch, HUTAO_ARTS, combo, Status{}, modifiers).at(0);
-	std::cout << best_result
+	std::cout << "outgoing: " << best_result << "\n"
 			  << "dealt (Sucrose + VV): " << Calc::dmg_dealt(best_result.dmg, 90, ENEMY_LVL, 0.0, ENEMY_RES - 40.0) << std::endl;
+}
+
+void calc_HuTao_potential() {
+	constexpr static float SUCROSE_EM = 864.0;
+
+	HuTao hutao;
+	Deathmatch deathmatch{ 2, true };
+	Combo combo{ hutao.get_hit(DmgTalent::Charged, 1) };
+	combo[0].reaction = Reaction::VapeByPyro;
+
+	const auto shime = SetType::Shimenawa;
+	const auto max_potential_dmg = find_max_potential(hutao, deathmatch, combo,
+	  shime, shime, shime, shime, shime,
+	  { Main::SandHP },
+	  { Main::GobletPyro },
+	  { Main::HeadCDmg, Main::HeadCRate },
+	  { StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::HPPerc, StatusRoll::EM },
+	  25,
+	  [](Status& stats) {
+		  Calc::pyro_resonance_modifier(stats);
+		  stats.elem_mastery += 50 + 0.2 * SUCROSE_EM;
+	  });
+	std::cout << "outgoing: " << max_potential_dmg << std::endl;
 }
 
 void calc_Yae() {
