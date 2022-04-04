@@ -32,6 +32,22 @@ public:
 	void apply_effects(Status&) const override {}
 };
 
+// -------------------------------------------------- Amenoma Kageuchi --------------------------------------------------
+
+class AmenomaKageuchi : public Weapon {
+public:
+	AmenomaKageuchi() :
+			Weapon{
+				{ .base_atk = 454.0f,
+				  .atk_perc = 55.1f }
+			} {
+		DEBUG("___Amenoma Kageuchi___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
 // -------------------------------------------------- Mistsplitter --------------------------------------------------
 
 class Mistsplitter : public Weapon {
