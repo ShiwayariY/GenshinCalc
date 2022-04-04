@@ -1,5 +1,6 @@
 #include <iostream>
 #include <utility>
+#include <map>
 
 #include <Status.hh>
 
@@ -104,6 +105,30 @@ private:
 };
 
 std::ostream& operator<<(std::ostream&, const Artifact&);
+inline std::string to_string(Artifact::SetType type) {
+	static const std::map<Artifact::SetType, std::string> type_str{
+		{ Artifact::SetType::Gladiator, "Gladiator's Finale" },
+		{ Artifact::SetType::Wanderer, "Wanderer's Troupe" },
+		{ Artifact::SetType::Noblesse, "Noblesse Oblige" },
+		{ Artifact::SetType::Bloodstained, "Bloodstained Chivalry" },
+		{ Artifact::SetType::Emblem, "Emblem of Severed Fate" },
+		{ Artifact::SetType::Shimenawa, "Shimenawa's Reminiscence" },
+		{ Artifact::SetType::HeartOfDepth, "Heart of Depth" },
+		{ Artifact::SetType::BlizzardStrayer, "Blizzard Strayer" },
+		{ Artifact::SetType::PaleFlame, "Pale Flame" },
+		{ Artifact::SetType::Millileth, "Tenacity of the Millelith" },
+		{ Artifact::SetType::CrimsonWitch, "Crimson Witch of Flames" },
+		{ Artifact::SetType::Lavawalker, "Lavawalker" },
+		{ Artifact::SetType::Venerer, "Viridescent Venerer" },
+		{ Artifact::SetType::Maiden, "Maiden Beloved" },
+		{ Artifact::SetType::Bolide, "Retracing Bolide" },
+		{ Artifact::SetType::ThunderingFury, "Thundering Fury" },
+		{ Artifact::SetType::Thundersoother, "Thundersoother" },
+		{ Artifact::SetType::HuskOfOpulentDreams, "Husk of Opulent Dreams" },
+		{ Artifact::SetType::OceanHuedClam, "Ocean-Hued Clam" }
+	};
+	return type_str.at(type);
+}
 
 }
 

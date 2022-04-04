@@ -226,7 +226,8 @@ void Artifact::set_main() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Artifact& a) {
-	os << a.status();
+	os << to_string(a.m_type) << "\n"
+	   << a.status();
 	return os;
 }
 
