@@ -88,6 +88,7 @@ void HuTao::apply_effects(Status& stats) const {
 		const float atk_bonus = GuideToAfterlife_atk_ratio * total_hp;
 		stats.flat_atk += std::min(4.0f * stats.base_atk, atk_bonus);
 	}
+	if (SanguineRouge) stats.pyro_bonus += 33.0;
 }
 
 // -------------------------------------------------- Yae Miko --------------------------------------------------

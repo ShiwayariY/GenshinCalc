@@ -187,6 +187,7 @@ private:
 class HuTao : public Character { // 10 10 9
 public:
 	bool GuideToAfterlife = true;
+	bool SanguineRouge = true;
 
 	HuTao() :
 			Character{
