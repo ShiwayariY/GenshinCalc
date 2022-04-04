@@ -398,9 +398,10 @@ void calc_Eula() {
 		eula.get_hit(DmgTalent::Burst, 3)
 	};
 	Combo normal_atk{ eula.get_hit(DmgTalent::Normal, 1) };
+	Combo burst_hit{ eula.get_hit(DmgTalent::Burst, 3) };
 
 	auto weapon_dmg = [&](Weapon& w) {
-		return best_set(eula, w, EULA_ARTS, burst_rotation, {}, Calc::cryo_resonance_modifier);
+		return best_set(eula, w, EULA_ARTS, burst_hit, {}, Calc::cryo_resonance_modifier);
 	};
 	auto dmg_dealt = [&](auto& dmg) {
 		return Calc::dmg_dealt(dmg, 90, 90, 0, 10.0 + Eula::Resistance_down);
@@ -418,6 +419,23 @@ void calc_Eula() {
 		const auto dealt = dmg_dealt(dmg_spine);
 		std::cout << stacks << " stacks | raw: " << dmg_spine << ", dealt: " << dealt << "\n";
 	}
+}
+
+void calc_Eula_potential() {
+	Eula eula;
+	SnowtombedStarsilver starsilver;
+	Combo combo{ eula.get_hit(DmgTalent::Burst, 3) };
+
+	const auto pale = SetType::PaleFlame;
+	const auto max_dmg_potential = find_max_potential(eula, starsilver, combo,
+	  pale, pale, pale, pale, pale,
+	  { Main::SandAtk },
+	  { Main::GobletPhys },
+	  { Main::HeadCDmg, Main::HeadCRate },
+	  { StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::Atk, StatusRoll::ER },
+	  22,
+	  Calc::cryo_resonance_modifier);
+	std::cout << "outgoing: " << max_dmg_potential << std::endl;
 }
 
 void calc_HuTao() {
