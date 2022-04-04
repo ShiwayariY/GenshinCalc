@@ -22,8 +22,8 @@ public:
 			Weapon{
 				{ .base_atk = 510.0f,
 				  .crit_rate = 27.6f,
-				  .normal_bonus = 35.0f,
-				  .charged_bonus = 35.0f }
+				  .normal_bonus = 40.0f,
+				  .charged_bonus = 40.0f }
 			} {
 		DEBUG("___Black Sword___\n"
 			  << status);
