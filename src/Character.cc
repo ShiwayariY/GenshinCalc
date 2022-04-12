@@ -108,12 +108,13 @@ Hit Yelan::get_hit(DmgTalent talent, unsigned int hit_num) const {
 }
 
 void Yelan::apply_effects(Status& stats) const {
-	auto max_hp = stats.base_hp * (1.0 + stats.hp_perc / 100.0) + stats.flat_hp;
-	auto stacks = TurnControl_stacks;
-	stacks = std::max(stacks, 1u);
-	stacks = std::min(stacks, static_cast<unsigned>(TurnControl_bonus.size()));
-	max_hp *= 1.0 + TurnControl_bonus[stacks - 1] / 100.0;
+	auto hp = stats.base_hp;
 
+	auto stacks = std::max(TurnControl_stacks, 1u);
+	stacks = std::min(stacks, static_cast<unsigned>(TurnControl_bonus.size()));
+	hp *= 1.0 + TurnControl_bonus[stacks - 1] / 100.0;
+
+	auto max_hp = hp * (1.0 + stats.hp_perc / 100.0) + stats.flat_hp;
 	stats.additional_charged_dmg += max_hp * BreakthroughBarb_scaling / 100.0;
 	stats.additional_skill_dmg += max_hp * LingeringLifeline_scaling / 100.0;
 	stats.additional_burst_dmg += max_hp * ExquisiteThrow_scaling / 100.0;
