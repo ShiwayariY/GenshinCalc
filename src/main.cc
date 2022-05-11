@@ -187,10 +187,11 @@ float best_set(
   const std::vector<Artifact>& arts,
   const Combo& combo,
   const Status& min_stats = Status{},
-  void (*modifier)(Status&) = [](Status&) {}) {
+  void (*modifier)(Status&) = [](Status&) {},
+  bool print = true) {
 	const auto sets = list_sets_by_dmg(chara, weapon, arts, combo, min_stats, modifier);
 	if (!sets.empty()) {
-		std::cout << sets[0];
+		if (print) std::cout << sets[0];
 		return sets[0].dmg;
 	}
 	return 0.0;
