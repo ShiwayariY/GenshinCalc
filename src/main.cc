@@ -200,11 +200,13 @@ float best_set(
 void calc_Ayaka_team() {
 	Ayaka ayaka;
 	BlackSword black_sword;
+	BlackcliffLongsword blackcliff;
+	AmenomaKageuchi amenoma;
 	Mistsplitter mistsplitter{ 1 };
-	Combo combo{ ayaka.get_hit(DmgTalent::Normal, 1) };
+	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
 
 	auto best = [&](void (*modifier)(Status&)) {
-		return best_set(ayaka, mistsplitter, AYAKA_ARTS, combo, Status{}, modifier);
+		return best_set(ayaka, amenoma, AYAKA_ARTS, combo, Status{}, modifier, false);
 	};
 
 	const auto dmg = best(Calc::cryo_resonance_modifier);
@@ -270,23 +272,34 @@ void calc_Ayaka_team() {
 				  << "Ayaka / Kokomi / Kazuha / Shenhe: " << Calc::dmg_dealt(team_shenhe_kazuha, 90, 90, 0.0, ENEMY_RES - 54.0) << "\n";
 	};
 	print_dmg_with_res(10.0);
-	print_dmg_with_res(50.0);
+	// print_dmg_with_res(50.0);
 }
 
 void calc_Ayaka_solo() {
 	Ayaka ayaka;
-	BlackSword black_sword;
-	Mistsplitter mistsplitter;
-	Combo combo{ ayaka.get_hit(DmgTalent::Normal, 3) };
+	Mistsplitter mistsplitter{ 1 };
+	Combo combo{ ayaka.get_hit(DmgTalent::Normal, 1) };
 
-	const auto dmg = best_set(ayaka, mistsplitter, AYAKA_ARTS, combo, Status{},
-	  [](Status& stats) {
-		  stats.atk_perc += 48.0 + 20.0;   // TTDS + Noblesse/Millileth
-		  stats.cryo_bonus += 15.0 + 40.0; // Shenhe + Kazu
-		  stats.burst_bonus += 15.0;	   // Shenhe
-		  Calc::cryo_resonance_modifier(stats);
-	  });
-	std::cout << Calc::dmg_dealt(dmg, 90, 95, 0.0, -15.0) << std::endl;
+	const auto char_lvl = 90u;
+	const auto enemy_lvl = 84u;
+	const auto res = 10.0f;
+
+	Status min_stats{
+		.energy_recharge = 135.0
+	};
+	const auto mod = [](Status& stats) {
+		//   stats.atk_perc += 48.0 + 20.0;   // TTDS + Noblesse/Millileth
+		//   stats.cryo_bonus += 15.0 + 40.0; // Shenhe + Kazu
+		//   stats.burst_bonus += 15.0;	   // Shenhe
+		Calc::cryo_resonance_modifier(stats);
+	};
+
+	const auto ordered_sets = list_sets_by_dmg(ayaka, mistsplitter, AYAKA_ARTS, combo, min_stats, mod);
+	if (ordered_sets.empty()) return;
+
+	combo[0].crit = Crit::Always;
+	const auto dmg = best_set(ayaka, mistsplitter, ordered_sets.at(0).artifacts, combo, min_stats, mod);
+	std::cout << Calc::dmg_dealt(dmg, char_lvl, enemy_lvl, 0.0, res) << std::endl;
 }
 
 void calc_Ayaka_potential() {
@@ -546,33 +559,47 @@ void calc_Yelan_potential() {
 
 void calc_Yelan() {
 	Yelan yelan;
-	Stringless stringless;
-	ViridescentHunt viridescent;
-	SacrificialBow sac_bow;
-	Weapon& weapon = viridescent;
+	// Stringless weapon;
+	// ViridescentHunt weapon;
+	SacrificialBow weapon;
 
 	Combo barb{ yelan.get_hit(DmgTalent::Charged, 1) };
 	Combo skill{ yelan.get_hit(DmgTalent::Skill, 1) };
 	Combo burst{ yelan.get_hit(DmgTalent::Burst, 1) };
 
-	const auto set_results = list_sets_by_dmg(yelan, weapon, YELAN_ARTS, burst,
-	  {
-		// .energy_recharge = 180.0 //
-	  });
-	if (set_results.empty()) return;
+	auto inc = [](float dmg) { return Calc::dmg_dealt(dmg, 90, 100, 0, 10.0); };
+	auto dmg_combo_with_set = [&yelan, &weapon](const auto& combo, const auto& set) {
+		return best_set(
+		  yelan, weapon, set, combo, {}, [](Status&) {}, false);
+	};
 
-	const auto best_result = set_results.at(0);
+	const auto ordered_sets = list_sets_by_dmg(yelan, weapon, YELAN_ARTS, burst, {
+																				   .energy_recharge = 180.0 //
+																				 });
+	if (ordered_sets.empty()) return;
+	const auto strongest_set = ordered_sets.at(0).artifacts;
+	const auto dmg_avg_best = ordered_sets.at(0).dmg;
+	const auto dmg_avg_equipped = dmg_combo_with_set(burst, YELAN_ARTS_EQUIPPED);
+
 	burst[0].crit = Crit::Always;
-	const auto dmg = best_set(yelan, weapon, best_result.artifacts, burst, {});
+	const auto dmg_crit_best = dmg_combo_with_set(burst, strongest_set);
+	const auto dealt_crit_best = inc(dmg_crit_best);
+	const auto dmg_crit_equipped = dmg_combo_with_set(burst, YELAN_ARTS_EQUIPPED);
+	const auto dealt_crit_equipped = inc(dmg_crit_equipped);
 
-	const auto dealt = Calc::dmg_dealt(dmg, 90, 100, 0, 10.0);
-	std::cout << "outgoing: " << dmg << "\n"
-			  << "dealt: " << dealt << std::endl;
+	for (const auto& art : strongest_set)
+		std::cout << art << "\n";
+	std::cout << ordered_sets.at(0).stats << "\n"
+
+			  << "outgoing (avg, best): " << dmg_avg_best << "\n"
+			  << "dealt (crit, best): " << dealt_crit_best << "\n"
+			  << "outgoing (avg, equipped): " << dmg_avg_equipped << "\n"
+			  << "dealt (crit, equipped): " << dealt_crit_equipped << "\n";
 }
 
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Yelan();
+	calc_Ayaka_solo();
 }
