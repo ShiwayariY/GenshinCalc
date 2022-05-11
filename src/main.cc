@@ -351,7 +351,7 @@ void calc_Baal() {
 	TheCatch thecatch;
 
 	const auto avg_dmg = best_set(baal, thecatch, BAAL_ARTS, combo);
-	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg, 81, 91, 0, 10);
+	const auto dmg_dealt = Calc::dmg_dealt(avg_dmg, 90, 100, 0, 10);
 
 	std::cout << dmg_dealt << std::endl;
 }
@@ -395,6 +395,9 @@ void calc_Eula() {
 	Eula eula;
 	SnowtombedStarsilver starsilver;
 	SerpentSpine serpentspine{ 1 };
+	Unforged unforged;
+	unforged.stacks = 5;
+	unforged.shielded = true;
 	Combo burst_rotation{
 		eula.get_hit(DmgTalent::Skill, 1),
 		eula.get_hit(DmgTalent::Burst, 1),
@@ -415,10 +418,10 @@ void calc_Eula() {
 	Combo burst_hit{ eula.get_hit(DmgTalent::Burst, 3) };
 
 	auto weapon_dmg = [&](Weapon& w) {
-		return best_set(eula, w, EULA_ARTS, burst_hit, {}, Calc::cryo_resonance_modifier);
+		return best_set(eula, w, EULA_ARTS, burst_hit, {}, Calc::cryo_resonance_modifier, false);
 	};
 	auto dmg_dealt = [&](auto& dmg) {
-		return Calc::dmg_dealt(dmg, 90, 90, 0, 10.0 + Eula::Resistance_down);
+		return Calc::dmg_dealt(dmg, 90, 100, 0, 10.0 + Eula::Resistance_down - 40.0);
 	};
 
 	const auto dmg_starsilver = weapon_dmg(starsilver);
@@ -433,6 +436,11 @@ void calc_Eula() {
 		const auto dealt = dmg_dealt(dmg_spine);
 		std::cout << stacks << " stacks | raw: " << dmg_spine << ", dealt: " << dealt << "\n";
 	}
+
+	const auto dmg_unforged = weapon_dmg(unforged);
+	const auto dealt_unforged = dmg_dealt(dmg_unforged);
+	std::cout << "___Unforged___\n"
+			  << "raw: " << dmg_unforged << ", dealt: " << dealt_unforged << std::endl;
 }
 
 void calc_Eula_potential() {
