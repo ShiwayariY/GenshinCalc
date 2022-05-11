@@ -32,6 +32,22 @@ public:
 	void apply_effects(Status&) const override {}
 };
 
+// -------------------------------------------------- Blackcliff Longsword --------------------------------------------------
+
+class BlackcliffLongsword : public Weapon {
+public:
+	BlackcliffLongsword() :
+			Weapon{
+				{ .base_atk = 565.0f,
+				  .crit_dmg = 36.8f }
+			} {
+		DEBUG("___Blackcliff Longsword___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
 // -------------------------------------------------- Amenoma Kageuchi --------------------------------------------------
 
 class AmenomaKageuchi : public Weapon {
@@ -304,6 +320,29 @@ public:
 	}
 
 	void apply_effects(Status&) const override {}
+};
+
+// -------------------------------------------------- The Unforged --------------------------------------------------
+
+class Unforged : public Weapon {
+	static const unsigned MAX_STACKS = 5u;
+	float m_atk_perc_bonus_per_stack = 4.0;
+
+public:
+	unsigned stacks = 0;
+	bool shielded = false;
+
+	Unforged(unsigned refine = 1) :
+			Weapon{
+				{ .base_atk = 608.0f,
+				  .atk_perc = 49.6f }
+			},
+			m_atk_perc_bonus_per_stack{ 3.0f + refine } {
+		DEBUG("___Unforged___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override;
 };
 
 }

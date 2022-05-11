@@ -60,4 +60,13 @@ void Widsith::apply_effects(Status& stats) const {
 	};
 }
 
+// -------------------------------------------------- The Unforged --------------------------------------------------
+
+void Unforged::apply_effects(Status& stats) const {
+	const auto stacks_bounded = std::min(stacks, 5u);
+	auto atk_perc_bonus = stacks_bounded * m_atk_perc_bonus_per_stack;
+	if (shielded) atk_perc_bonus *= 2;
+	stats.atk_perc += atk_perc_bonus;
+}
+
 }
