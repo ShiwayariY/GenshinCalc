@@ -322,6 +322,44 @@ public:
 	void apply_effects(Status&) const override {}
 };
 
+// -------------------------------------------------- Favonius Bow --------------------------------------------------
+
+class FavoniusBow : public Weapon {
+public:
+	FavoniusBow() :
+			Weapon{
+				{ .base_atk = 454.0f,
+				  .energy_recharge = 61.3f }
+			} {
+		DEBUG("___Favonius Bow___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
+// -------------------------------------------------- Aqua Simulacra --------------------------------------------------
+
+class AquaSimulacra : public Weapon { // R1
+public:
+	AquaSimulacra() :
+			Weapon{
+				{ .hp_perc = 16.0f,
+				  .base_atk = 542.0f,
+				  .crit_dmg = 88.2f,
+				  .normal_bonus = 20.0f,
+				  .charged_bonus = 20.0f,
+				  .plunge_bonus = 20.0f,
+				  .skill_bonus = 20.0f,
+				  .burst_bonus = 20.0f }
+			} {
+		DEBUG("___Aqua Simulacra___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override {}
+};
+
 // -------------------------------------------------- The Unforged --------------------------------------------------
 
 class Unforged : public Weapon {
