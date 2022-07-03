@@ -20,6 +20,37 @@ namespace GenshinCalc {
 using Main = Artifact::Main;
 using SetType = Artifact::SetType;
 
+bool has_min_stats(const Status& stats, const Status& min) {
+	return stats.base_hp >= min.base_hp					   //
+		   && stats.flat_hp >= min.flat_hp				   //
+		   && stats.hp_perc >= min.hp_perc				   //
+		   && stats.base_atk >= min.base_atk			   //
+		   && stats.flat_atk >= min.flat_atk			   //
+		   && stats.atk_perc >= min.atk_perc			   //
+		   && stats.base_def >= min.base_def			   //
+		   && stats.flat_def >= min.flat_def			   //
+		   && stats.def_perc >= min.def_perc			   //
+		   && stats.crit_rate >= min.crit_rate			   //
+		   && stats.crit_dmg >= min.crit_dmg			   //
+		   && stats.energy_recharge >= min.energy_recharge //
+		   && stats.elem_mastery >= min.elem_mastery	   //
+		   && stats.healing_bonus >= min.healing_bonus	 //
+		   && stats.pyro_bonus >= min.pyro_bonus		   //
+		   && stats.hydro_bonus >= min.hydro_bonus		   //
+		   && stats.cryo_bonus >= min.cryo_bonus		   //
+		   && stats.electro_bonus >= min.electro_bonus	 //
+		   && stats.anemo_bonus >= min.anemo_bonus		   //
+		   && stats.geo_bonus >= min.geo_bonus			   //
+		   && stats.phys_bonus >= min.phys_bonus		   //
+		   && stats.normal_bonus >= min.normal_bonus	   //
+		   && stats.charged_bonus >= min.charged_bonus	 //
+		   && stats.plunge_bonus >= min.plunge_bonus	   //
+		   && stats.skill_bonus >= min.skill_bonus		   //
+		   && stats.burst_bonus >= min.burst_bonus		   //
+		   && stats.reaction_bonus >= min.reaction_bonus   //
+		   && stats.additional_dmg >= min.additional_dmg;
+}
+
 float find_max_potential(
   const Character& chara,
   const Weapon& weapon,
@@ -87,37 +118,6 @@ float find_max_potential(
 	std::cout << "\n"
 			  << best_stats << std::endl;
 	return best_dmg;
-}
-
-bool has_min_stats(const Status& stats, const Status& min) {
-	return stats.base_hp >= min.base_hp					   //
-		   && stats.flat_hp >= min.flat_hp				   //
-		   && stats.hp_perc >= min.hp_perc				   //
-		   && stats.base_atk >= min.base_atk			   //
-		   && stats.flat_atk >= min.flat_atk			   //
-		   && stats.atk_perc >= min.atk_perc			   //
-		   && stats.base_def >= min.base_def			   //
-		   && stats.flat_def >= min.flat_def			   //
-		   && stats.def_perc >= min.def_perc			   //
-		   && stats.crit_rate >= min.crit_rate			   //
-		   && stats.crit_dmg >= min.crit_dmg			   //
-		   && stats.energy_recharge >= min.energy_recharge //
-		   && stats.elem_mastery >= min.elem_mastery	   //
-		   && stats.healing_bonus >= min.healing_bonus	 //
-		   && stats.pyro_bonus >= min.pyro_bonus		   //
-		   && stats.hydro_bonus >= min.hydro_bonus		   //
-		   && stats.cryo_bonus >= min.cryo_bonus		   //
-		   && stats.electro_bonus >= min.electro_bonus	 //
-		   && stats.anemo_bonus >= min.anemo_bonus		   //
-		   && stats.geo_bonus >= min.geo_bonus			   //
-		   && stats.phys_bonus >= min.phys_bonus		   //
-		   && stats.normal_bonus >= min.normal_bonus	   //
-		   && stats.charged_bonus >= min.charged_bonus	 //
-		   && stats.plunge_bonus >= min.plunge_bonus	   //
-		   && stats.skill_bonus >= min.skill_bonus		   //
-		   && stats.burst_bonus >= min.burst_bonus		   //
-		   && stats.reaction_bonus >= min.reaction_bonus   //
-		   && stats.additional_dmg >= min.additional_dmg;
 }
 
 struct ArtifactCollection {
