@@ -59,6 +59,12 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::Wanderer:
 			use_set_Wanderer(stats, piece_count);
 			break;
+		case SetType::Venerer:
+			use_set_Venerer(stats, piece_count);
+			break;
+		case SetType::Noblesse:
+			use_set_Noblesse(stats, piece_count);
+			break;
 
 		default:
 			throw std::logic_error{ "Artifact set not implemented" };
@@ -139,6 +145,16 @@ void Artifact::use_set_ThunderingFury(Status& stats, int piece_count) {
 void Artifact::use_set_Wanderer(Status& stats, int piece_count) {
 	if (piece_count >= 2) stats.elem_mastery += 80.0;
 	if (piece_count >= 4) stats.charged_bonus += 35.0;
+}
+
+void Artifact::use_set_Venerer(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.anemo_bonus += 15.0;
+	if (piece_count >= 4) throw std::logic_error{ "4 piece Venerer not implemented" };
+}
+
+void Artifact::use_set_Noblesse(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.burst_bonus += 20.0;
+	if (piece_count >= 4) throw std::logic_error{ "4 piece Noblesse not implemented" };
 }
 
 void Artifact::set_main() {
