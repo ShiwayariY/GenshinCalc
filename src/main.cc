@@ -61,6 +61,7 @@ float find_max_potential(
   const std::vector<Main>& circlet_mains,
   const std::vector<StatusRoll>& priority_rolls,
   unsigned rolls,
+  StatusGenerator::Quality quality = StatusGenerator::Quality::BEST,
   void (*modifier)(Status&) = [](Status&) {}) {
 
 	float best_dmg = 0.0;
@@ -88,6 +89,7 @@ float find_max_potential(
 				Calc calc{ chara, weapon,
 					dummy_flower, dummy_feather, dummy_sands, dummy_goblet, dummy_circlet };
 				StatusGenerator gen{ sands_main, goblet_main, circlet_main, priority_rolls, rolls };
+				gen.set_quality(quality);
 
 				unsigned long iteration_sub_mil = 0;
 				unsigned iteration_sub = 0;
@@ -306,6 +308,7 @@ void calc_Ayaka_potential() {
 	Ayaka ayaka;
 	Mistsplitter mistsplitter;
 	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
+	StatusGenerator::Quality quality = StatusGenerator::Quality::AVERAGE;
 
 	auto blizz = SetType::BlizzardStrayer;
 	const auto max_potential_dmg = find_max_potential(
@@ -317,7 +320,8 @@ void calc_Ayaka_potential() {
 		StatusRoll::AtkPerc,
 		StatusRoll::Atk,
 		StatusRoll::ER },
-	  22, [](Status& stats) {
+	  22, quality,
+	  [](Status& stats) {
 		  Calc::cryo_resonance_modifier(stats);
 		  stats.cryo_bonus += 0.04 * (3.0 * 187.0 + 115.0 + 165.0) + 10.0; // Kazuha + <Shenhe>
 		  stats.skill_bonus += 15.0;									   //
@@ -455,7 +459,7 @@ void calc_Eula_potential() {
 	  { Main::GobletPhys },
 	  { Main::HeadCDmg, Main::HeadCRate },
 	  { StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::Atk, StatusRoll::ER },
-	  22,
+	  22, StatusGenerator::Quality::AVERAGE,
 	  Calc::cryo_resonance_modifier);
 	std::cout << "outgoing: " << max_dmg_potential << std::endl;
 }
@@ -495,7 +499,7 @@ void calc_HuTao_potential() {
 	  { Main::GobletPyro },
 	  { Main::HeadCDmg, Main::HeadCRate },
 	  { StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::HPPerc, StatusRoll::EM },
-	  25,
+	  25, StatusGenerator::Quality::AVERAGE,
 	  [](Status& stats) {
 		  Calc::pyro_resonance_modifier(stats);
 		  stats.elem_mastery += 50 + 0.2 * SUCROSE_EM;
@@ -560,7 +564,7 @@ void calc_Yelan_potential() {
 	  { Main::GobletHydro },
 	  { Main::HeadCDmg, Main::HeadCRate, Main::HeadHP },
 	  { StatusRoll::CDmg, StatusRoll::CRate, StatusRoll::HPPerc, StatusRoll::HP, StatusRoll::ER },
-	  25);
+	  25, StatusGenerator::Quality::AVERAGE);
 
 	std::cout << "outgoing: " << max_potential_dmg << std::endl;
 }

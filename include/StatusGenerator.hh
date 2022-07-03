@@ -14,10 +14,20 @@ public:
 	  const std::vector<StatusRoll>& priority_rolls,
 	  unsigned roll_num);
 
+	enum class Quality {
+		BEST,
+		BETTER,
+		AVERAGE,
+		WORSE,
+		WORST
+	};
+	void set_quality(Quality);
+
 	bool next();
 	Status get() const;
 
 private:
+	Quality m_quality = Quality::BEST;
 	unsigned m_total_sub_rolls;
 	std::vector<StatusRoll> m_prio_rolls;
 	std::vector<unsigned> m_initial_rolls;
@@ -25,8 +35,8 @@ private:
 	std::vector<unsigned> m_sub_rolls;
 	std::vector<unsigned> m_max_sub_rolls;
 
+	float max_roll(StatusRoll) const;
 	static bool is_same_stat(Artifact::Main, StatusRoll);
-	static float max_roll(StatusRoll);
 	static void reset_range(
 	  std::vector<unsigned>& rolls,
 	  const std::vector<unsigned>& max_rolls,

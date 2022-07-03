@@ -31,6 +31,10 @@ StatusGenerator::StatusGenerator(
 	reset_range(m_sub_rolls, m_max_sub_rolls, m_sub_rolls.size() - 1, m_total_sub_rolls);
 }
 
+void StatusGenerator::set_quality(Quality q) {
+	m_quality = q;
+}
+
 bool StatusGenerator::next() {
 	if (next_rolls(m_sub_rolls, m_max_sub_rolls))
 		return true;
@@ -54,6 +58,29 @@ Status StatusGenerator::get() const {
 }
 
 // private
+
+float StatusGenerator::max_roll(StatusRoll roll) const {
+	static const std::map<StatusRoll, float> MAX_ROLLS{
+		{ StatusRoll::Atk, 19.45 },
+		{ StatusRoll::AtkPerc, 5.83 },
+		{ StatusRoll::Def, 23.15 },
+		{ StatusRoll::DefPerc, 7.29 },
+		{ StatusRoll::HP, 298.75 },
+		{ StatusRoll::HPPerc, 5.83 },
+		{ StatusRoll::EM, 23.31 },
+		{ StatusRoll::ER, 6.48 },
+		{ StatusRoll::CRate, 3.89 },
+		{ StatusRoll::CDmg, 7.77 }
+	};
+	static const std::map<Quality, float> QUALITY_MODIFIERS{
+		{ Quality::BEST, 1.0 },
+		{ Quality::BETTER, 0.9 },
+		{ Quality::AVERAGE, 0.85 },
+		{ Quality::WORSE, 0.8 },
+		{ Quality::WORST, 0.7 }
+	};
+	return MAX_ROLLS.at(roll) * QUALITY_MODIFIERS.at(m_quality);
+}
 
 bool StatusGenerator::is_same_stat(Main main, StatusRoll roll) {
 	switch (main) {
@@ -86,22 +113,6 @@ bool StatusGenerator::is_same_stat(Main main, StatusRoll roll) {
 		default:
 			return false;
 	}
-}
-
-float StatusGenerator::max_roll(StatusRoll roll) {
-	static const std::map<StatusRoll, float> MAX_ROLLS{
-		{ StatusRoll::Atk, 19.45 },
-		{ StatusRoll::AtkPerc, 5.83 },
-		{ StatusRoll::Def, 23.15 },
-		{ StatusRoll::DefPerc, 7.29 },
-		{ StatusRoll::HP, 298.75 },
-		{ StatusRoll::HPPerc, 5.83 },
-		{ StatusRoll::EM, 23.31 },
-		{ StatusRoll::ER, 6.48 },
-		{ StatusRoll::CRate, 3.89 },
-		{ StatusRoll::CDmg, 7.77 }
-	};
-	return MAX_ROLLS.at(roll);
 }
 
 void StatusGenerator::resolve_max_initial_rolls(
