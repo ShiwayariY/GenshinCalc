@@ -62,6 +62,7 @@ float find_max_potential(
   const std::vector<StatusRoll>& priority_rolls,
   unsigned rolls,
   StatusGenerator::Quality quality = StatusGenerator::Quality::BEST,
+  Status min_stats = {},
   void (*modifier)(Status&) = [](Status&) {}) {
 
 	float best_dmg = 0.0;
@@ -102,15 +103,16 @@ float find_max_potential(
 					}
 
 					const auto curr_stats = gen.get();
+
 					auto avg_dmg = calc.avg_dmg(combo,
 					  [&curr_stats, &modifier](Status& stats) {
 						  stats = stats + curr_stats;
 						  modifier(stats);
 					  });
-
-					if (avg_dmg > best_dmg) {
+					const auto tot_stats = calc.status();
+					if (has_min_stats(tot_stats, min_stats) && avg_dmg > best_dmg) {
 						best_dmg = avg_dmg;
-						best_stats = calc.status();
+						best_stats = tot_stats;
 					}
 				} while (gen.next());
 			}
@@ -320,7 +322,7 @@ void calc_Ayaka_potential() {
 		StatusRoll::AtkPerc,
 		StatusRoll::Atk,
 		StatusRoll::ER },
-	  22, quality,
+	  22, quality, {},
 	  [](Status& stats) {
 		  Calc::cryo_resonance_modifier(stats);
 		  stats.cryo_bonus += 0.04 * (3.0 * 187.0 + 115.0 + 165.0) + 10.0; // Kazuha + <Shenhe>
@@ -459,7 +461,7 @@ void calc_Eula_potential() {
 	  { Main::GobletPhys },
 	  { Main::HeadCDmg, Main::HeadCRate },
 	  { StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::Atk, StatusRoll::ER },
-	  22, StatusGenerator::Quality::AVERAGE,
+	  22, StatusGenerator::Quality::AVERAGE, {},
 	  Calc::cryo_resonance_modifier);
 	std::cout << "outgoing: " << max_dmg_potential << std::endl;
 }
@@ -499,7 +501,7 @@ void calc_HuTao_potential() {
 	  { Main::GobletPyro },
 	  { Main::HeadCDmg, Main::HeadCRate },
 	  { StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::HPPerc, StatusRoll::EM },
-	  25, StatusGenerator::Quality::AVERAGE,
+	  25, StatusGenerator::Quality::AVERAGE, {},
 	  [](Status& stats) {
 		  Calc::pyro_resonance_modifier(stats);
 		  stats.elem_mastery += 50 + 0.2 * SUCROSE_EM;
@@ -564,7 +566,8 @@ void calc_Yelan_potential() {
 	  { Main::GobletHydro },
 	  { Main::HeadCDmg, Main::HeadCRate, Main::HeadHP },
 	  { StatusRoll::CDmg, StatusRoll::CRate, StatusRoll::HPPerc, StatusRoll::HP, StatusRoll::ER },
-	  25, StatusGenerator::Quality::AVERAGE);
+	  25, StatusGenerator::Quality::AVERAGE,
+	  { .energy_recharge = 190.0 });
 
 	std::cout << "outgoing: " << max_potential_dmg << std::endl;
 }
