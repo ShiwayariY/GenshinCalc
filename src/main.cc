@@ -281,28 +281,32 @@ void calc_Ayaka_team() {
 
 void calc_Ayaka_solo() {
 	Ayaka ayaka;
-	Mistsplitter mistsplitter{ 1 };
-	Combo combo{ ayaka.get_hit(DmgTalent::Normal, 1) };
+	Mistsplitter mistsplitter{ 3 };
+	Combo combo{ ayaka.get_hit(DmgTalent::Burst, 1) };
 
 	const auto char_lvl = 90u;
-	const auto enemy_lvl = 84u;
-	const auto res = 10.0f;
+	const auto enemy_lvl = 100u;
+	const auto res = 10.0f - 40.0f;
 
 	Status min_stats{
-		.energy_recharge = 135.0
+		.energy_recharge = 140.0
 	};
 	const auto mod = [](Status& stats) {
-		//   stats.atk_perc += 48.0 + 20.0;   // TTDS + Noblesse/Millileth
-		//   stats.cryo_bonus += 15.0 + 40.0; // Shenhe + Kazu
-		//   stats.burst_bonus += 15.0;	   // Shenhe
 		Calc::cryo_resonance_modifier(stats);
+		stats.cryo_bonus += 0.04 * (3.0 * 187.0 + 115.0 + 165.0) + 10.0; // Kazuha + <Shenhe>
+		stats.skill_bonus += 15.0;										 //
+		stats.burst_bonus += 15.0;										 //
+		stats.normal_bonus += 15.0;										 //
+		stats.charged_bonus += 15.0;									 // </Shenhe>
+		stats.atk_perc += 68.0;											 // TTDS + Millileth (Kokomi)
 	};
 
 	const auto ordered_sets = list_sets_by_dmg(ayaka, mistsplitter, AYAKA_ARTS, combo, min_stats, mod);
 	if (ordered_sets.empty()) return;
+	auto best_result = ordered_sets.at(0);
 
-	combo[0].crit = Crit::Always;
-	const auto dmg = best_set(ayaka, mistsplitter, ordered_sets.at(0).artifacts, combo, min_stats, mod);
+	// combo[0].crit = Crit::Always;
+	const auto dmg = best_set(ayaka, mistsplitter, best_result.artifacts, combo, min_stats, mod);
 	std::cout << Calc::dmg_dealt(dmg, char_lvl, enemy_lvl, 0.0, res) << std::endl;
 }
 
@@ -468,7 +472,7 @@ void calc_Eula_potential() {
 
 void calc_HuTao() {
 	constexpr static float SUCROSE_EM = 864.0;
-	constexpr static int ENEMY_LVL = 95;
+	constexpr static int ENEMY_LVL = 100;
 	constexpr static float ENEMY_RES = 10.0;
 
 	const HuTao hutao;
@@ -554,15 +558,17 @@ void calc_Yelan_potential() {
 	Yelan yelan;
 	Stringless stringless;
 	ViridescentHunt viridescent;
+	FavoniusBow favbow;
+	AquaSimulacra aqua;
 
 	Combo barb{ yelan.get_hit(DmgTalent::Charged, 1) };
 	Combo skill{ yelan.get_hit(DmgTalent::Skill, 1) };
 	Combo burst{ yelan.get_hit(DmgTalent::Burst, 1) };
 
-	const auto max_potential_dmg = find_max_potential(yelan, stringless, skill,
+	const auto max_potential_dmg = find_max_potential(yelan, aqua, skill,
 	  //   SetType::Emblem, SetType::Emblem, SetType::Emblem, SetType::Emblem, SetType::Emblem,
 	  SetType::Millileth, SetType::Millileth, SetType::Millileth, SetType::HeartOfDepth, SetType::HeartOfDepth,
-	  { Main::SandHP },
+	  { Main::SandER },
 	  { Main::GobletHydro },
 	  { Main::HeadCDmg, Main::HeadCRate, Main::HeadHP },
 	  { StatusRoll::CDmg, StatusRoll::CRate, StatusRoll::HPPerc, StatusRoll::HP, StatusRoll::ER },
@@ -575,8 +581,8 @@ void calc_Yelan_potential() {
 void calc_Yelan() {
 	Yelan yelan;
 	// Stringless weapon;
-	// ViridescentHunt weapon;
-	SacrificialBow weapon;
+	ViridescentHunt weapon;
+	// SacrificialBow weapon;
 
 	Combo barb{ yelan.get_hit(DmgTalent::Charged, 1) };
 	Combo skill{ yelan.get_hit(DmgTalent::Skill, 1) };
@@ -589,7 +595,7 @@ void calc_Yelan() {
 	};
 
 	const auto ordered_sets = list_sets_by_dmg(yelan, weapon, YELAN_ARTS, burst, {
-																				   .energy_recharge = 180.0 //
+																				   .energy_recharge = 155.0 //
 																				 });
 	if (ordered_sets.empty()) return;
 	const auto strongest_set = ordered_sets.at(0).artifacts;
@@ -612,9 +618,40 @@ void calc_Yelan() {
 			  << "dealt (crit, equipped): " << dealt_crit_equipped << "\n";
 }
 
+void cmp_Yelan() {
+	Yelan yelan;
+	ViridescentHunt weapon;
+	Calc calc{ yelan, weapon,
+		Artifact{ Main::Flower, SetType::Emblem },
+		Artifact{ Main::Feather, SetType::Emblem },
+		Artifact{ Main::SandHP, SetType::Emblem },
+		Artifact{ Main::GobletHydro, SetType::Emblem },
+		Artifact{ Main::HeadCRate, SetType::Emblem } };
+	Combo combo{ yelan.get_hit(DmgTalent::Burst, 1) };
+
+	Status stats = {
+		.flat_hp = 209.0,
+		.hp_perc = 4.7 + 20.4 + 21.6 + 16.9,
+		.flat_atk = 16.0 + 35.0,
+		.flat_def = 39.0,
+		.crit_rate = 3.1,
+		.crit_dmg = 28.7 + 21.0 + 19.4 + 22.5,
+		.energy_recharge = 9.1 + 4.5 + 11.0 + 4.5 + 9.7,
+		.elem_mastery = 37.0 + 16.0
+	};
+
+	auto avg_dmg = calc.avg_dmg(combo, [&stats](Status& s) {
+		s = s + stats;
+	});
+	auto total_stats = calc.status();
+
+	std::cout << "Avg dmg: " << avg_dmg << "\n"
+			  << total_stats << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Ayaka_solo();
+	calc_Yelan_potential();
 }
