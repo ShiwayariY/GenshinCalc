@@ -297,6 +297,39 @@ private:
 	};
 };
 
+// -------------------------------------------------- Klee --------------------------------------------------
+
+class Klee : public Character { // 9 9 9
+public:
+	Klee() :
+			Character{
+				{ .base_hp = 10287.0,
+				  .base_atk = 311.0,
+				  .base_def = 615.0,
+				  .crit_rate = 5.0,
+				  .crit_dmg = 50.0,
+				  .energy_recharge = 100.0,
+				  .pyro_bonus = 28.8 }
+			} {
+		DEBUG("___Klee___\n"
+			  << status);
+	}
+
+	Hit get_hit(DmgTalent, unsigned int hit_num) const override;
+	void apply_effects(Status&) const override {}
+
+private:
+	inline static const Abilities ABILITIES{
+		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Pyro, 122.67 } },
+		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Pyro, 106.08 } },
+		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Pyro, 152.86 } },
+		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Pyro, 267.51 } },
+		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 161.84 } }, // bounce
+		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 55.76 } },  // mine
+		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 72.49 } }
+	};
+};
+
 }
 
 #endif

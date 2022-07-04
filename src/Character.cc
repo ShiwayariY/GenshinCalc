@@ -120,4 +120,10 @@ void Yelan::apply_effects(Status& stats) const {
 	stats.additional_burst_dmg += max_hp * ExquisiteThrow_scaling / 100.0;
 }
 
+// -------------------------------------------------- Klee --------------------------------------------------
+
+Hit Klee::get_hit(DmgTalent talent, unsigned int hit_num) const {
+	return ABILITIES.at({ talent, hit_num });
+}
+
 }
