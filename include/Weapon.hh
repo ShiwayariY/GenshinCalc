@@ -240,6 +240,28 @@ private:
 	inline static const unsigned max_stacks = 4;
 };
 
+// -------------------------------------------------- Skyward Atlas --------------------------------------------------
+
+class SkywardAtlas : public Weapon { // R1
+public:
+	SkywardAtlas() :
+			Weapon{
+				{ .base_atk = 674.0f,
+				  .atk_perc = 33.1f,
+				  .pyro_bonus = 12.0,
+				  .hydro_bonus = 12.0,
+				  .cryo_bonus = 12.0,
+				  .electro_bonus = 12.0,
+				  .anemo_bonus = 12.0,
+				  .geo_bonus = 12.0 }
+			} {
+		DEBUG("___Skyward Atlas___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override{};
+};
+
 // -------------------------------------------------- Widsith --------------------------------------------------
 
 class Widsith : public Weapon {
