@@ -214,7 +214,7 @@ void Artifact::set_main() {
 			m_status.geo_bonus = 46.6;
 			break;
 		case Main::GobletPhys:
-			m_status.geo_bonus = 58.3;
+			m_status.phys_bonus = 58.3;
 			break;
 
 		case Main::HeadHP:
