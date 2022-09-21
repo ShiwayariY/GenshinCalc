@@ -213,6 +213,9 @@ void Artifact::set_main() {
 		case Main::GobletGeo:
 			m_status.geo_bonus = 46.6;
 			break;
+		case Main::GobletDendro:
+			m_status.dendro_bonus = 46.6;
+			break;
 		case Main::GobletPhys:
 			m_status.phys_bonus = 58.3;
 			break;

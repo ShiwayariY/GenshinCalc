@@ -41,6 +41,7 @@ bool has_min_stats(const Status& stats, const Status& min) {
 		   && stats.electro_bonus >= min.electro_bonus	 //
 		   && stats.anemo_bonus >= min.anemo_bonus		   //
 		   && stats.geo_bonus >= min.geo_bonus			   //
+		   && stats.dendro_bonus >= min.dendro_bonus	   //
 		   && stats.phys_bonus >= min.phys_bonus		   //
 		   && stats.normal_bonus >= min.normal_bonus	   //
 		   && stats.charged_bonus >= min.charged_bonus	 //

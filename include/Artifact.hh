@@ -29,6 +29,7 @@ public:
 		GobletElectro,
 		GobletAnemo,
 		GobletGeo,
+		GobletDendro,
 		GobletPhys,
 		HeadHP,
 		HeadAtk,

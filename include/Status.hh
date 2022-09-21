@@ -30,7 +30,8 @@ enum class DmgElement {
 	Cryo,
 	Electro,
 	Anemo,
-	Geo
+	Geo,
+	Dendro
 };
 
 enum class DmgTalent {
@@ -96,6 +97,7 @@ struct Status {
 	  electro_bonus = 0.0,
 	  anemo_bonus = 0.0,
 	  geo_bonus = 0.0,
+	  dendro_bonus = 0.0,
 	  phys_bonus = 0.0,
 
 	  normal_bonus = 0.0,
@@ -173,6 +175,7 @@ struct Status {
 			.electro_bonus = electro_bonus + other.electro_bonus,
 			.anemo_bonus = anemo_bonus + other.anemo_bonus,
 			.geo_bonus = geo_bonus + other.geo_bonus,
+			.dendro_bonus = dendro_bonus + other.dendro_bonus,
 			.phys_bonus = phys_bonus + other.phys_bonus,
 
 			.normal_bonus = normal_bonus + other.normal_bonus,
@@ -222,8 +225,8 @@ inline std::ostream& operator<<(std::ostream& os, const Status& s) {
 	print_value("Electro DMG", s.electro_bonus, "   ");
 	print_value("Anemo DMG", s.anemo_bonus, "   ");
 	print_value("Geo DMG", s.geo_bonus, "\n");
+	print_value("Dendro DMG", s.dendro_bonus, "");
 	print_value("Physical DMG", s.phys_bonus, "   ");
-	print_value("", 0, "   ");
 	print_value("", 0, "\n");
 	print_value("Normal DMG", s.normal_bonus, "   ");
 	print_value("Charged DMG", s.charged_bonus, "   ");
