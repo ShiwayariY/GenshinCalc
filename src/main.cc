@@ -650,9 +650,41 @@ void cmp_Yelan() {
 			  << total_stats << std::endl;
 }
 
+void calc_Klee() {
+	Klee klee;
+	SkywardAtlas atlas;
+	Combo combo{ // ~ third of a "rotation"
+		klee.get_hit(DmgTalent::Burst, 1),
+		klee.get_hit(DmgTalent::Burst, 1),
+		klee.get_hit(DmgTalent::Burst, 1),
+		klee.get_hit(DmgTalent::Burst, 1),
+		klee.get_hit(DmgTalent::Burst, 1),
+		klee.get_hit(DmgTalent::Burst, 1),
+		klee.get_hit(DmgTalent::Skill, 1),
+		klee.get_hit(DmgTalent::Skill, 1),
+		klee.get_hit(DmgTalent::Skill, 2),
+		klee.get_hit(DmgTalent::Skill, 2),
+		klee.get_hit(DmgTalent::Normal, 1),
+		klee.get_hit(DmgTalent::Normal, 1),
+		klee.get_hit(DmgTalent::Charged, 1)
+	};
+
+	combo[0].reaction = Reaction::VapeByPyro;
+	combo[8].reaction = Reaction::VapeByPyro;
+	combo[10].reaction = Reaction::VapeByPyro;
+
+	const auto ordered_sets = list_sets_by_dmg(klee, atlas, KLEE_ARTS, combo,
+	  {
+		.energy_recharge = 100.0 //
+	  });
+	if (ordered_sets.empty()) return;
+	const auto best_result = ordered_sets.at(0);
+	std::cout << best_result << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
-	calc_Yelan_potential();
+	calc_Klee();
 }
