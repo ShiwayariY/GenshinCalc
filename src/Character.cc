@@ -7,10 +7,19 @@ namespace GenshinCalc {
 Character::Character(Status stats) :
 		status{ stats } {}
 
+Hit Character::to_hit(DmgTalent talent, DmgDealt dmg_dealt) {
+	return {
+		.talent = talent,
+		.element = dmg_dealt.element,
+		.scaling_type = dmg_dealt.scaling,
+		.scaling_perc = dmg_dealt.value
+	};
+}
+
 // -------------------------------------------------- Ayaka --------------------------------------------------
 
 Hit Ayaka::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	auto hit = ABILITIES.at({ talent, hit_num });
+	auto hit = to_hit(talent, ABILITIES.at({ talent, hit_num }));
 	if (!CryoInfused && hit.talent == DmgTalent::Normal) hit.element = DmgElement::Phys;
 	return hit;
 }
@@ -26,7 +35,7 @@ void Ayaka::apply_effects(Status& stats) const {
 // -------------------------------------------------- Baal --------------------------------------------------
 
 Hit Baal::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	auto hit = ABILITIES.at({ talent, hit_num });
+	auto hit = to_hit(talent, ABILITIES.at({ talent, hit_num }));
 	if (hit.talent == DmgTalent::Burst) {
 		const float resolve = std::min(60.0f, static_cast<float>(energy_consumed) * MusouShinsetsu_resolve_per_energy);
 		const float resolve_bonus = (hit_num == 1
@@ -47,7 +56,7 @@ void Baal::apply_effects(Status& stats) const {
 // -------------------------------------------------- Eula --------------------------------------------------
 
 Hit Eula::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	auto hit = ABILITIES.at({ talent, hit_num });
+	auto hit = to_hit(talent, ABILITIES.at({ talent, hit_num }));
 	if (talent == DmgTalent::Burst && hit_num == 3)
 		hit.scaling_perc += static_cast<float>(Lightfall_stacks) * Lightfall_dmg_per_stack;
 	return hit;
@@ -56,7 +65,7 @@ Hit Eula::get_hit(DmgTalent talent, unsigned int hit_num) const {
 // -------------------------------------------------- Itto --------------------------------------------------
 
 Hit Itto::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	auto hit = ABILITIES.at({ talent, hit_num });
+	auto hit = to_hit(talent, ABILITIES.at({ talent, hit_num }));
 	if (!RoyalDescent && hit.talent == DmgTalent::Normal) hit.element = DmgElement::Phys;
 	return hit;
 }
@@ -72,7 +81,7 @@ void Itto::apply_effects(Status& stats) const {
 // -------------------------------------------------- HuTao --------------------------------------------------
 
 Hit HuTao::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	auto hit = ABILITIES.at({ talent, hit_num });
+	auto hit = to_hit(talent, ABILITIES.at({ talent, hit_num }));
 	if (GuideToAfterlife &&
 		(talent == DmgTalent::Normal ||
 		  talent == DmgTalent::Charged ||
@@ -94,7 +103,7 @@ void HuTao::apply_effects(Status& stats) const {
 // -------------------------------------------------- Yae Miko --------------------------------------------------
 
 Hit YaeMiko::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	return ABILITIES.at({ talent, hit_num });
+	return to_hit(talent, ABILITIES.at({ talent, hit_num }));
 }
 
 void YaeMiko::apply_effects(Status& stats) const {
@@ -104,26 +113,20 @@ void YaeMiko::apply_effects(Status& stats) const {
 // -------------------------------------------------- Yelan --------------------------------------------------
 
 Hit Yelan::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	return ABILITIES.at({ talent, hit_num });
+	return to_hit(talent, ABILITIES.at({ talent, hit_num }));
 }
 
 void Yelan::apply_effects(Status& stats) const {
-	auto hp = stats.base_hp;
-
 	auto stacks = std::max(TurnControl_stacks, 1u);
 	stacks = std::min(stacks, static_cast<unsigned>(TurnControl_bonus.size()));
-	hp *= 1.0 + TurnControl_bonus[stacks - 1] / 100.0;
 
-	auto max_hp = hp * (1.0 + stats.hp_perc / 100.0) + stats.flat_hp;
-	stats.additional_charged_dmg += max_hp * BreakthroughBarb_scaling / 100.0;
-	stats.additional_skill_dmg += max_hp * LingeringLifeline_scaling / 100.0;
-	stats.additional_burst_dmg += max_hp * ExquisiteThrow_scaling / 100.0;
+	stats.hp_perc += TurnControl_bonus[stacks - 1];
 }
 
 // -------------------------------------------------- Klee --------------------------------------------------
 
 Hit Klee::get_hit(DmgTalent talent, unsigned int hit_num) const {
-	return ABILITIES.at({ talent, hit_num });
+	return to_hit(talent, ABILITIES.at({ talent, hit_num }));
 }
 
 }

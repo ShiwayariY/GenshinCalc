@@ -8,10 +8,19 @@
 namespace GenshinCalc {
 
 class Character {
-public:
-	using AtkID = std::pair<DmgTalent, unsigned int>;
-	using Abilities = std::map<AtkID, Hit>;
 
+protected:
+	using AtkID = std::pair<DmgTalent, unsigned int>;
+	struct DmgDealt {
+		DmgElement element;
+		ScalingType scaling;
+		float value;
+	};
+	using Abilities = std::map<AtkID, DmgDealt>;
+
+	static Hit to_hit(DmgTalent, DmgDealt);
+
+public:
 	Character(Status);
 
 	virtual Hit get_hit(DmgTalent, unsigned int hit_num) const = 0;
@@ -46,15 +55,15 @@ public:
 
 private:
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 90.39 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 96.24 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 123.79 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 44.77 * 3.0 } },
-		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Cryo, 154.55 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Cryo, 108.97 * 3.0 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 430.56 } },
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 202.14 } }, // Cutting dmg (19 hits)
-		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 303.21 } }  // Explosion dmg
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 90.39 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 96.24 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 123.79 } },
+		{ { DmgTalent::Normal, 4 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 44.77 * 3.0 } },
+		{ { DmgTalent::Normal, 5 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 154.55 } },
+		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 108.97 * 3.0 } },
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 430.56 } },
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 202.14 } }, // Cutting dmg (19 hits)
+		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 303.21 } }  // Explosion dmg
 
 	};
 };
@@ -87,21 +96,21 @@ private:
 	inline static const float MusouShinsetsu_resolve_bonus_initial = 7.0;
 	inline static const float MusouShinsetsu_resolve_bonus_normal = 1.31;
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 57.6 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 57.8 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 72.5 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 42.1 + 42.1 } },
-		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 95.1 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Phys, 144.8 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 187.5 } },		  // initial hit
-		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 67.2 } },		  // coord. attack
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 721.44 } },		  // initial hit
-		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 79.82 } },		  // N1
-		{ { DmgTalent::Burst, 3 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 78.42 } },		  // N2
-		{ { DmgTalent::Burst, 4 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 96.02 } },		  // N3
-		{ { DmgTalent::Burst, 5 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 55.11 + 55.26 } }, // N4
-		{ { DmgTalent::Burst, 6 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 131.92 } },		  // N5
-		{ { DmgTalent::Burst, 7 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 109.9 + 132.67 } } // charged
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 57.6 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 57.8 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 72.5 } },
+		{ { DmgTalent::Normal, 4 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 42.1 + 42.1 } },
+		{ { DmgTalent::Normal, 5 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 95.1 } },
+		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 144.8 } },
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 187.5 } },		   // initial hit
+		{ { DmgTalent::Skill, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 67.2 } },		   // coord. attack
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 721.44 } },		   // initial hit
+		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 79.82 } },		   // N1
+		{ { DmgTalent::Burst, 3 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 78.42 } },		   // N2
+		{ { DmgTalent::Burst, 4 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 96.02 } },		   // N3
+		{ { DmgTalent::Burst, 5 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 55.11 + 55.26 } }, // N4
+		{ { DmgTalent::Burst, 6 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 131.92 } },		   // N5
+		{ { DmgTalent::Burst, 7 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 109.9 + 132.67 } } // charged
 	};
 };
 
@@ -131,17 +140,17 @@ private:
 	inline static const float Lightfall_dmg_per_stack = 137.78;
 
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 164.86 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 171.87 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 2.0 * 104.35 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 206.95 } },
-		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 2.0 * 131.97 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 248.88 } }, // Press
-		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 417.52 } }, // Hold
-		{ { DmgTalent::Skill, 3 }, Hit{ DmgTalent::Skill, DmgElement::Cryo, 163.2 } },  // Icewhirl Brand
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Cryo, 417.52 } }, // Initial hit
-		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Phys, 337.17 } }, // Shattered Lightfall Sword (passive)
-		{ { DmgTalent::Burst, 3 }, Hit{ DmgTalent::Burst, DmgElement::Phys, 674.34 } }  // Lightfall Sword base dmg
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 164.86 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 171.87 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 2.0 * 104.35 } },
+		{ { DmgTalent::Normal, 4 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 206.95 } },
+		{ { DmgTalent::Normal, 5 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 2.0 * 131.97 } },
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 248.88 } }, // Press
+		{ { DmgTalent::Skill, 2 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 417.52 } }, // Hold
+		{ { DmgTalent::Skill, 3 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 163.2 } },  // Icewhirl Brand
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Cryo, ScalingType::Atk, 417.52 } }, // Initial hit
+		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 337.17 } }, // Shattered Lightfall Sword (passive)
+		{ { DmgTalent::Burst, 3 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 674.34 } }  // Lightfall Sword base dmg
 	};
 };
 
@@ -171,14 +180,14 @@ public:
 private:
 	inline static const float RoyalDescent_atk_bonus = 1.0368;
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 156.62 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 150.96 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 181.15 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Geo, 231.72 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 180.2 } },  // Arataki Kesagiri Combo Slash
-		{ { DmgTalent::Charged, 2 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 377.4 } },  // Arataki Kesagiri Final Slash
-		{ { DmgTalent::Charged, 3 }, Hit{ DmgTalent::Charged, DmgElement::Geo, 178.84 } }, // Saichimonji Slash
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Geo, 552.96 } }
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 156.62 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 150.96 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 181.15 } },
+		{ { DmgTalent::Normal, 4 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 231.72 } },
+		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 180.2 } },  // Arataki Kesagiri Combo Slash
+		{ { DmgTalent::Charged, 2 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 377.4 } },  // Arataki Kesagiri Final Slash
+		{ { DmgTalent::Charged, 3 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 178.84 } }, // Saichimonji Slash
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Geo, ScalingType::Atk, 552.96 } }
 	};
 };
 
@@ -208,17 +217,17 @@ public:
 private:
 	inline static const float GuideToAfterlife_atk_ratio = 0.0626;
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 83.6 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 86.1 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 108.9 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 117.1 } },
-		{ { DmgTalent::Normal, 5 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 59.4 + 62.8 } },
-		{ { DmgTalent::Normal, 6 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 153.4 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Phys, 242.6 } },
-		{ { DmgTalent::Plunge, 1 }, Hit{ DmgTalent::Plunge, DmgElement::Phys, 116.7 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 115.0 } }, // Blood Blossom
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 470.0 } }, // high HP
-		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 588.0 } }  // low HP
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 83.6 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 86.1 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 108.9 } },
+		{ { DmgTalent::Normal, 4 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 117.1 } },
+		{ { DmgTalent::Normal, 5 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 59.4 + 62.8 } },
+		{ { DmgTalent::Normal, 6 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 153.4 } },
+		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 242.6 } },
+		{ { DmgTalent::Plunge, 1 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 116.7 } },
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 115.0 } }, // Blood Blossom
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 470.0 } }, // high HP
+		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 588.0 } }  // low HP
 	};
 };
 
@@ -245,21 +254,21 @@ public:
 private:
 	inline static const float EnlightenedBlessing_skill_bonus = 0.15;
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Electro, 67.42 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Electro, 65.48 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Electro, 96.71 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Electro, 242.92 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 103.14 } },
-		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 128.93 } },
-		{ { DmgTalent::Skill, 3 }, Hit{ DmgTalent::Skill, DmgElement::Electro, 161.16 } },
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 442.0 } },
-		{ { DmgTalent::Burst, 2 }, Hit{ DmgTalent::Burst, DmgElement::Electro, 567.49 } }
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 67.42 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 65.48 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 96.71 } },
+		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 242.92 } },
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 103.14 } },
+		{ { DmgTalent::Skill, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 128.93 } },
+		{ { DmgTalent::Skill, 3 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 161.16 } },
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 442.0 } },
+		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 567.49 } }
 	};
 };
 
 // -------------------------------------------------- Yelan --------------------------------------------------
 
-class Yelan : public Character { // 9 9 9
+class Yelan : public Character { // 9 9 10
 public:
 	unsigned TurnControl_stacks = 3;
 
@@ -281,19 +290,15 @@ public:
 
 private:
 	inline static const std::vector<float> TurnControl_bonus = { 6.0, 12.0, 18.0, 30.0 };
-	inline static const float BreakthroughBarb_scaling = 19.68;
-	inline static const float LingeringLifeline_scaling = 38.44; // skill
-	// currently not possible to have different scalings for same talent type
-	// -> could add a bool member to switch manually if needed
-	inline static const float ExquisiteThrow_scaling = 7.8; // burst procs
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 74.73 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 71.73 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 94.8 } },
-		{ { DmgTalent::Normal, 4 }, Hit{ DmgTalent::Normal, DmgElement::Phys, 39.82 * 3.0 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Hydro, 0.0 } }, // Breakthrough Barb
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Hydro, 0.0 } },
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Hydro, 0.0 } } // Exquisite Throw
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 74.73 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 71.73 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 94.8 } },
+		{ { DmgTalent::Normal, 4 }, DmgDealt{ DmgElement::Phys, ScalingType::Atk, 39.82 * 3.0 } },
+		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 19.68 } }, // Breakthrough Barb
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 38.44 } },
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 13.15 } }, // Activation
+		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 8.77 } }   // Exquisite Throw
 	};
 };
 
@@ -320,13 +325,13 @@ public:
 
 private:
 	inline static const Abilities ABILITIES{
-		{ { DmgTalent::Normal, 1 }, Hit{ DmgTalent::Normal, DmgElement::Pyro, 122.67 } },
-		{ { DmgTalent::Normal, 2 }, Hit{ DmgTalent::Normal, DmgElement::Pyro, 106.08 } },
-		{ { DmgTalent::Normal, 3 }, Hit{ DmgTalent::Normal, DmgElement::Pyro, 152.86 } },
-		{ { DmgTalent::Charged, 1 }, Hit{ DmgTalent::Charged, DmgElement::Pyro, 267.51 } },
-		{ { DmgTalent::Skill, 1 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 161.84 } }, // bounce
-		{ { DmgTalent::Skill, 2 }, Hit{ DmgTalent::Skill, DmgElement::Pyro, 55.76 } },  // mine
-		{ { DmgTalent::Burst, 1 }, Hit{ DmgTalent::Burst, DmgElement::Pyro, 72.49 } }
+		{ { DmgTalent::Normal, 1 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 122.67 } },
+		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 106.08 } },
+		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 152.86 } },
+		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 267.51 } },
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 161.84 } }, // bounce
+		{ { DmgTalent::Skill, 2 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 55.76 } },  // mine
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Pyro, ScalingType::Atk, 72.49 } }
 	};
 };
 

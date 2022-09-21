@@ -41,6 +41,10 @@ enum class DmgTalent {
 	Burst
 };
 
+enum class ScalingType {
+	HP, Atk, Def
+};
+
 enum class Reaction {
 	None,
 	MeltByPyro,
@@ -58,6 +62,7 @@ enum class Crit {
 struct Hit {
 	DmgTalent talent = DmgTalent::Normal;
 	DmgElement element = DmgElement::Phys;
+	ScalingType scaling_type = ScalingType::Atk;
 	float scaling_perc = 100.0;
 	Crit crit = Crit::Normal;
 	Reaction reaction = Reaction::None;

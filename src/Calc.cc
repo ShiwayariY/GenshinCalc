@@ -34,15 +34,20 @@ float Calc::dmg_dealt(
 float Calc::calc_avg_dmg(const Combo& combo) {
 	float dmg = 0.0;
 
-	const auto tot_atk = total_atk();
+	const std::map<ScalingType, float> power{
+		{ ScalingType::HP, total_hp() },
+		{ ScalingType::Atk, total_atk() },
+		{ ScalingType::Def, total_def() }
+	};
+
 	for (const Hit& hit : combo) {
-		const float hit_atk = tot_atk * hit.scaling_perc / 100.0 + additional_dmg(hit.talent);
+		const float hit_power = power.at(hit.scaling_type) * hit.scaling_perc / 100.0 + additional_dmg(hit.talent);
 		DEBUG("Hit Atk: " << hit_atk);
 
 		const float bonus_mult = 1.0 + dmg_bonus(hit.element, hit.talent) / 100.0;
 		DEBUG("Bonus mult: " << bonus_mult);
 
-		float hit_dmg = hit_atk * bonus_mult * amplifying_multiplier(hit.reaction);
+		float hit_dmg = hit_power * bonus_mult * amplifying_multiplier(hit.reaction);
 		DEBUG("Base dmg hit: " << hit_dmg);
 
 		switch (hit.crit) {
@@ -138,9 +143,21 @@ float Calc::res_multiplier(float res_perc) {
 	return res_mult;
 }
 
+float Calc::total_hp() const {
+	float tot = m_stats.base_hp * (1.0 + m_stats.hp_perc / 100.0) + m_stats.flat_hp;
+	DEBUG("Total HP: " << tot);
+	return tot;
+}
+
 float Calc::total_atk() const {
-	const float tot = m_stats.base_atk * (1.0 + m_stats.atk_perc / 100.0) + m_stats.flat_atk;
+	float tot = m_stats.base_atk * (1.0 + m_stats.atk_perc / 100.0) + m_stats.flat_atk;
 	DEBUG("Total ATK: " << tot);
+	return tot;
+}
+
+float Calc::total_def() const {
+	float tot = m_stats.base_def * (1.0 + m_stats.def_perc / 100.0) + m_stats.flat_def;
+	DEBUG("Total DEF: " << tot);
 	return tot;
 }
 
