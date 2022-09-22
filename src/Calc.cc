@@ -27,8 +27,11 @@ float Calc::dmg_dealt(
   unsigned int char_level,
   unsigned int enemy_level,
   float def_reduction_perc,
-  float res_perc) {
-	return dmg_applied * def_multiplier(char_level, enemy_level, def_reduction_perc) * res_multiplier(res_perc);
+  float res_perc,
+  bool ignore_def) {
+	dmg_applied *= res_multiplier(res_perc);
+	if (!ignore_def) dmg_applied *= def_multiplier(char_level, enemy_level, def_reduction_perc);
+	return dmg_applied;
 }
 
 float Calc::calc_avg_dmg(const Combo& combo) {
@@ -65,6 +68,29 @@ float Calc::calc_avg_dmg(const Combo& combo) {
 		dmg += hit_dmg;
 	}
 	return dmg;
+}
+
+float Calc::calc_traforeaction(TrafoReaction reaction, unsigned int char_level) {
+	static const std::map<TrafoReaction, float> multiplier{
+		{ TrafoReaction::Burn, 0.25 },
+		{ TrafoReaction::Superconduct, 0.5 },
+		{ TrafoReaction::Swirl, 0.6 },
+		{ TrafoReaction::Electrocharge, 1.2 },
+		{ TrafoReaction::Shatter, 1.5 },
+		{ TrafoReaction::OverloadBloom, 2.0 },
+		{ TrafoReaction::HyperbloomBurgeon, 3.0 }
+	};
+	static const std::map<unsigned int, float> base{
+		{ 10, 34.14 }, { 20, 80.58 }, { 30, 136.29 },
+		{ 40, 207.38 }, { 50, 323.60 }, { 60, 492.88 },
+		{ 70, 765.64 }, { 80, 1077.44 }, { 90, 1446.85 }
+	};
+	char_level = std::max(char_level, 11u);
+	char_level = std::min(char_level, 90u);
+	char_level = (char_level / 10u) * 10u;
+	return base.at(char_level) * multiplier.at(reaction) *
+		   (1.0f + m_stats.reaction_bonus +
+			 16.0f * m_stats.elem_mastery / (2000.0f + m_stats.elem_mastery));
 }
 
 Status Calc::status() const {

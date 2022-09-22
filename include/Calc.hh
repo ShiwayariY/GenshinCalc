@@ -25,7 +25,8 @@ public:
 	  unsigned int char_level,
 	  unsigned int enemy_level,
 	  float def_reduction_perc,
-	  float res_perc);
+	  float res_perc,
+	  bool ignore_def = false);
 
 	template<typename Callable>
 	float avg_dmg(
@@ -37,7 +38,18 @@ public:
 		return calc_avg_dmg(combo);
 	}
 
-	// retrieve total stats after calculating avg_dmg(...
+	template<typename Callable>
+	float traforeaction_dmg(
+	  TrafoReaction reaction,
+	  unsigned int char_level = 90,
+	  Callable modifier = [](Status&) {}) {
+		m_stats = Status{};
+		modifier(m_stats);
+		init_stats();
+		return calc_traforeaction(reaction, char_level);
+	}
+
+	// retrieve total stats after calculating avg_dmg(.. / traforeaction_dmg(..
 	Status status() const;
 
 	static void pyro_resonance_modifier(Status&);
@@ -50,6 +62,7 @@ private:
 	Status m_stats;
 	void init_stats();
 	float calc_avg_dmg(const Combo&);
+	float calc_traforeaction(TrafoReaction, unsigned int char_level);
 	void apply_artifact_sets();
 
 	static float def_multiplier(

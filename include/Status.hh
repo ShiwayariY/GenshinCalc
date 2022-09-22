@@ -56,6 +56,16 @@ enum class AmplifyReaction {
 	VapeByPyro
 };
 
+enum class TrafoReaction {
+	HyperbloomBurgeon,
+	OverloadBloom,
+	Shatter,
+	Electrocharge,
+	Swirl,
+	Superconduct,
+	Burn,
+};
+
 enum class Crit {
 	Normal,
 	Never,
