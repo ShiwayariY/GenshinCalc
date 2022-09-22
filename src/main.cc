@@ -63,6 +63,7 @@ float find_max_potential(
   const std::vector<StatusRoll>& priority_rolls,
   unsigned rolls,
   StatusGenerator::Quality quality = StatusGenerator::Quality::BEST,
+  const DmgContext& context = {},
   Status min_stats = {},
   void (*modifier)(Status&) = [](Status&) {}) {
 
@@ -105,14 +106,16 @@ float find_max_potential(
 
 					const auto curr_stats = gen.get();
 
-					auto avg_dmg = calc.avg_dmg(combo,
+					auto applied_dmg = calc.avg_dmg(combo, context.char_level,
 					  [&curr_stats, &modifier](Status& stats) {
 						  stats = stats + curr_stats;
 						  modifier(stats);
 					  });
+
+					auto dealt_dmg = Calc::dmg_dealt(applied_dmg, context);
 					const auto tot_stats = calc.status();
-					if (has_min_stats(tot_stats, min_stats) && avg_dmg > best_dmg) {
-						best_dmg = avg_dmg;
+					if (has_min_stats(tot_stats, min_stats) && dealt_dmg > best_dmg) {
+						best_dmg = dealt_dmg;
 						best_stats = tot_stats;
 					}
 				} while (gen.next());
@@ -166,7 +169,8 @@ std::vector<SetResult> list_sets_by_dmg(
   const Weapon& weapon,
   const std::vector<Artifact>& arts,
   const Combo& combo,
-  const Status& min_stats = Status{},
+  const DmgContext& context = {},
+  const Status& min_stats = {},
   void (*modifier)(Status&) = [](Status&) {}) {
 
 	auto coll = collect_artifacts(arts);
@@ -177,7 +181,8 @@ std::vector<SetResult> list_sets_by_dmg(
 				for (const auto& goblet : coll.goblets)
 					for (const auto& head : coll.heads) {
 						Calc calc(chara, weapon, flower, feather, sand, goblet, head);
-						const float avg_dmg = calc.avg_dmg(combo, modifier);
+						const auto avg_dmg = Calc::dmg_dealt(calc.avg_dmg(combo, context.char_level, modifier), context);
+
 						if (has_min_stats(calc.status(), min_stats))
 							results.push_back({ avg_dmg, calc.status(), { flower, feather, sand, goblet, head } });
 					}
@@ -191,10 +196,11 @@ float best_set(
   const Weapon& weapon,
   const std::vector<Artifact>& arts,
   const Combo& combo,
-  const Status& min_stats = Status{},
+  const DmgContext& context = {},
+  const Status& min_stats = {},
   void (*modifier)(Status&) = [](Status&) {},
   bool print = true) {
-	const auto sets = list_sets_by_dmg(chara, weapon, arts, combo, min_stats, modifier);
+	const auto sets = list_sets_by_dmg(chara, weapon, arts, combo, context, min_stats, modifier);
 	if (!sets.empty()) {
 		if (print) std::cout << sets[0];
 		return sets[0].dmg;

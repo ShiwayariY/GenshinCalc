@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <variant>
+#include <map>
 
 #ifndef GENSHINCALC_INCLUDE_STATUS
 #define GENSHINCALC_INCLUDE_STATUS
@@ -58,12 +60,12 @@ enum class AmplifyReaction {
 
 enum class TrafoReaction {
 	HyperbloomBurgeon,
-	OverloadBloom,
-	Shatter,
-	Electrocharge,
-	Swirl,
-	Superconduct,
-	Burn,
+	Bloom
+};
+
+static const std::map<TrafoReaction, DmgElement> TRAFOREACTION_ELEMENT{
+	{ TrafoReaction::HyperbloomBurgeon, DmgElement::Dendro },
+	{ TrafoReaction::Bloom, DmgElement::Dendro }
 };
 
 enum class Crit {
@@ -80,7 +82,16 @@ struct Hit {
 	Crit crit = Crit::Normal;
 	AmplifyReaction reaction = AmplifyReaction::None;
 };
-using Combo = std::vector<Hit>;
+using Combo = std::vector<std::variant<Hit, TrafoReaction>>;
+
+using Resistances = std::map<DmgElement, float>;
+
+struct DmgContext {
+	unsigned int char_level = 90u;
+	unsigned int enemy_level = 100u;
+	float def_reduction_perc = 0.0f;
+	Resistances res_perc{};
+};
 
 struct Status {
 	// [..._perc, ..._bonus, crit_..., energy_recharge] are %-values (i.e. pyro_bonus = 46.0 for 46%)

@@ -1,3 +1,5 @@
+#include <map>
+
 #include <Status.hh>
 #include <Character.hh>
 #include <Weapon.hh>
@@ -11,6 +13,11 @@ namespace GenshinCalc {
 class Calc {
 
 public:
+	struct AppliedDmg {
+		std::map<DmgElement, float> regular;
+		std::map<DmgElement, float> ignores_def;
+	};
+
 	Calc(
 	  const Character&,
 	  const Weapon&,
@@ -20,22 +27,17 @@ public:
 	  Artifact goblet,
 	  Artifact head);
 
-	static float dmg_dealt(
-	  float dmg_applied,
-	  unsigned int char_level,
-	  unsigned int enemy_level,
-	  float def_reduction_perc,
-	  float res_perc,
-	  bool ignore_def = false);
+	static float dmg_dealt(const AppliedDmg& dmg_applied, DmgContext context = {});
 
 	template<typename Callable>
-	float avg_dmg(
+	AppliedDmg avg_dmg(
 	  const Combo& combo,
+	  unsigned int char_level = 90,
 	  Callable modifier = [](Status&) {}) {
 		m_stats = Status{};
 		modifier(m_stats);
 		init_stats();
-		return calc_avg_dmg(combo);
+		return calc_avg_dmg(combo, char_level);
 	}
 
 	template<typename Callable>
@@ -61,7 +63,7 @@ public:
 private:
 	Status m_stats;
 	void init_stats();
-	float calc_avg_dmg(const Combo&);
+	AppliedDmg calc_avg_dmg(const Combo&, unsigned int char_level);
 	float calc_traforeaction(TrafoReaction, unsigned int char_level);
 	void apply_artifact_sets();
 

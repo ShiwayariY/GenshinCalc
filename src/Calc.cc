@@ -22,20 +22,21 @@ Calc::Calc(
 		m_head{ head } {
 }
 
-float Calc::dmg_dealt(
-  float dmg_applied,
-  unsigned int char_level,
-  unsigned int enemy_level,
-  float def_reduction_perc,
-  float res_perc,
-  bool ignore_def) {
-	dmg_applied *= res_multiplier(res_perc);
-	if (!ignore_def) dmg_applied *= def_multiplier(char_level, enemy_level, def_reduction_perc);
-	return dmg_applied;
+float Calc::dmg_dealt(const AppliedDmg& dmg_applied, DmgContext context) {
+	float dealt = 0.0;
+
+	for (const auto& [elem, dmg] : dmg_applied.regular)
+		dealt += dmg * res_multiplier(context.res_perc[elem]);
+	dealt *= def_multiplier(context.char_level, context.enemy_level, context.def_reduction_perc);
+
+	for (const auto& [elem, dmg] : dmg_applied.ignores_def)
+		dealt += dmg * res_multiplier(context.res_perc[elem]);
+
+	return dealt;
 }
 
-float Calc::calc_avg_dmg(const Combo& combo) {
-	float dmg = 0.0;
+Calc::AppliedDmg Calc::calc_avg_dmg(const Combo& combo, unsigned int char_level) {
+	AppliedDmg dmg;
 
 	const std::map<ScalingType, float> power{
 		{ ScalingType::HP, total_hp() },
@@ -43,7 +44,7 @@ float Calc::calc_avg_dmg(const Combo& combo) {
 		{ ScalingType::Def, total_def() }
 	};
 
-	for (const Hit& hit : combo) {
+	auto talent_dmg = [*this, &power](const Hit& hit) {
 		const float hit_power = power.at(hit.scaling_type) * hit.scaling_perc / 100.0 + additional_dmg(hit.talent);
 		DEBUG("Hit Atk: " << hit_atk);
 
@@ -64,20 +65,25 @@ float Calc::calc_avg_dmg(const Combo& combo) {
 				break;
 		}
 		DEBUG("Crit avg hit: " << hit_dmg << '\n');
+		return hit_dmg;
+	};
 
-		dmg += hit_dmg;
+	for (const auto& hit : combo) {
+		if (std::holds_alternative<Hit>(hit)) {
+			const auto& talent_hit = std::get<Hit>(hit);
+			dmg.regular[talent_hit.element] += talent_dmg(talent_hit);
+		}
+		if (std::holds_alternative<TrafoReaction>(hit)) {
+			TrafoReaction trafo_hit = std::get<TrafoReaction>(hit);
+			dmg.ignores_def[TRAFOREACTION_ELEMENT.at(trafo_hit)] += calc_traforeaction(trafo_hit, char_level);
+		}
 	}
 	return dmg;
 }
 
 float Calc::calc_traforeaction(TrafoReaction reaction, unsigned int char_level) {
 	static const std::map<TrafoReaction, float> multiplier{
-		{ TrafoReaction::Burn, 0.25 },
-		{ TrafoReaction::Superconduct, 0.5 },
-		{ TrafoReaction::Swirl, 0.6 },
-		{ TrafoReaction::Electrocharge, 1.2 },
-		{ TrafoReaction::Shatter, 1.5 },
-		{ TrafoReaction::OverloadBloom, 2.0 },
+		{ TrafoReaction::Bloom, 2.0 },
 		{ TrafoReaction::HyperbloomBurgeon, 3.0 }
 	};
 	static const std::map<unsigned int, float> base{
