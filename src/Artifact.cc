@@ -29,11 +29,14 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::Gladiator:
 			use_set_Gladiator(stats, piece_count);
 			break;
-		case SetType::BlizzardStrayer:
-			use_set_BlizzardStrayer(stats, piece_count);
+		case SetType::WanderersTroupe:
+			use_set_WanderersTroupe(stats, piece_count);
 			break;
-		case SetType::HeartOfDepth:
-			use_set_HeartOfDepth(stats, piece_count);
+		case SetType::Noblesse:
+			use_set_Noblesse(stats, piece_count);
+			break;
+		case SetType::Bloodstained:
+			use_set_BloodstainedChivalry(stats, piece_count);
 			break;
 		case SetType::Emblem:
 			use_set_Emblem(stats, piece_count);
@@ -41,8 +44,11 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::Shimenawa:
 			use_set_Shimenawa(stats, piece_count);
 			break;
-		case SetType::HuskOfOpulentDreams:
-			use_set_HuskOfOpulentDreams(stats, piece_count);
+		case SetType::HeartOfDepth:
+			use_set_HeartOfDepth(stats, piece_count);
+			break;
+		case SetType::BlizzardStrayer:
+			use_set_BlizzardStrayer(stats, piece_count);
 			break;
 		case SetType::PaleFlame:
 			use_set_PaleFlame(stats, piece_count);
@@ -50,20 +56,20 @@ void Artifact::apply_effects(Status& stats, SetType type, int piece_count) {
 		case SetType::Millileth:
 			use_set_Millileth(stats, piece_count);
 			break;
-		case SetType::Bloodstained:
-			use_set_BloodstainedChivalry(stats, piece_count);
+		case SetType::Venerer:
+			use_set_Venerer(stats, piece_count);
 			break;
 		case SetType::ThunderingFury:
 			use_set_ThunderingFury(stats, piece_count);
 			break;
-		case SetType::Wanderer:
-			use_set_Wanderer(stats, piece_count);
+		case SetType::HuskOfOpulentDreams:
+			use_set_HuskOfOpulentDreams(stats, piece_count);
 			break;
-		case SetType::Venerer:
-			use_set_Venerer(stats, piece_count);
+		case SetType::DeepwoodMemories:
+			use_set_DeepwoodMemories(stats, piece_count);
 			break;
-		case SetType::Noblesse:
-			use_set_Noblesse(stats, piece_count);
+		case SetType::GildedDreams:
+			use_set_GildedDreams(stats, piece_count);
 			break;
 
 		default:
@@ -77,21 +83,18 @@ void Artifact::use_set_Gladiator(Status& stats, int piece_count) {
 }
 
 void Artifact::use_set_WanderersTroupe(Status& stats, int piece_count) {
-	if (piece_count >= 2) stats.elem_mastery += 80;
+	if (piece_count >= 2) stats.elem_mastery += 80.0;
 	if (piece_count >= 4) stats.charged_bonus += 35.0;
 }
 
-void Artifact::use_set_BlizzardStrayer(Status& stats, int piece_count) {
-	if (piece_count >= 2) stats.cryo_bonus += 15.0;
-	if (piece_count >= 4) stats.crit_rate += 40.0;
+void Artifact::use_set_Noblesse(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.burst_bonus += 20.0;
+	if (piece_count >= 4) throw std::logic_error{ "4 piece Noblesse not implemented" };
 }
 
-void Artifact::use_set_HeartOfDepth(Status& stats, int piece_count) {
-	if (piece_count >= 2) stats.hydro_bonus += 15.0;
-	if (piece_count >= 4) {
-		stats.normal_bonus += 30.0;
-		stats.charged_bonus += 30.0;
-	}
+void Artifact::use_set_BloodstainedChivalry(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.phys_bonus += 25.0;
+	if (piece_count >= 4) stats.charged_bonus += 50.0;
 }
 
 void Artifact::use_set_Emblem(Status& stats, int piece_count) {
@@ -108,12 +111,17 @@ void Artifact::use_set_Shimenawa(Status& stats, int piece_count) {
 	}
 }
 
-void Artifact::use_set_HuskOfOpulentDreams(Status& stats, int piece_count) {
-	if (piece_count >= 2) stats.def_perc += 30.0;
+void Artifact::use_set_HeartOfDepth(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.hydro_bonus += 15.0;
 	if (piece_count >= 4) {
-		stats.def_perc += 24.0;
-		stats.geo_bonus += 24.0;
+		stats.normal_bonus += 30.0;
+		stats.charged_bonus += 30.0;
 	}
+}
+
+void Artifact::use_set_BlizzardStrayer(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.cryo_bonus += 15.0;
+	if (piece_count >= 4) stats.crit_rate += 40.0;
 }
 
 void Artifact::use_set_PaleFlame(Status& stats, int piece_count) {
@@ -129,9 +137,9 @@ void Artifact::use_set_Millileth(Status& stats, int piece_count) {
 	if (piece_count >= 4) stats.atk_perc += 20.0;
 }
 
-void Artifact::use_set_BloodstainedChivalry(Status& stats, int piece_count) {
-	if (piece_count >= 2) stats.phys_bonus += 25.0;
-	if (piece_count >= 4) stats.charged_bonus += 50.0;
+void Artifact::use_set_Venerer(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.anemo_bonus += 15.0;
+	if (piece_count >= 4) throw std::logic_error{ "4 piece Venerer not implemented" };
 }
 
 void Artifact::use_set_ThunderingFury(Status& stats, int piece_count) {
@@ -142,19 +150,24 @@ void Artifact::use_set_ThunderingFury(Status& stats, int piece_count) {
 		};
 }
 
-void Artifact::use_set_Wanderer(Status& stats, int piece_count) {
+void Artifact::use_set_HuskOfOpulentDreams(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.def_perc += 30.0;
+	if (piece_count >= 4) {
+		stats.def_perc += 24.0;
+		stats.geo_bonus += 24.0;
+	}
+}
+
+void Artifact::use_set_DeepwoodMemories(Status& stats, int piece_count) {
+	if (piece_count >= 2) stats.dendro_bonus += 15.0;
+}
+
+void Artifact::use_set_GildedDreams(Status& stats, int piece_count) {
 	if (piece_count >= 2) stats.elem_mastery += 80.0;
-	if (piece_count >= 4) stats.charged_bonus += 35.0;
-}
-
-void Artifact::use_set_Venerer(Status& stats, int piece_count) {
-	if (piece_count >= 2) stats.anemo_bonus += 15.0;
-	if (piece_count >= 4) throw std::logic_error{ "4 piece Venerer not implemented" };
-}
-
-void Artifact::use_set_Noblesse(Status& stats, int piece_count) {
-	if (piece_count >= 2) stats.burst_bonus += 20.0;
-	if (piece_count >= 4) throw std::logic_error{ "4 piece Noblesse not implemented" };
+	if (piece_count >= 4) {
+		stats.atk_perc += 14.0;
+		stats.elem_mastery += 100.0;
+	}
 }
 
 void Artifact::set_main() {

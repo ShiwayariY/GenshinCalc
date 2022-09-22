@@ -42,7 +42,7 @@ public:
 
 	enum class SetType {
 		Gladiator,
-		Wanderer,
+		WanderersTroupe,
 		Noblesse,
 		Bloodstained,
 		Emblem,
@@ -59,7 +59,9 @@ public:
 		ThunderingFury,
 		Thundersoother,
 		HuskOfOpulentDreams,
-		OceanHuedClam
+		OceanHuedClam,
+		DeepwoodMemories,
+		GildedDreams
 	};
 
 	Artifact(Main, SetType);
@@ -87,18 +89,19 @@ public:
 private:
 	static void use_set_Gladiator(Status&, int piece_count);
 	static void use_set_WanderersTroupe(Status&, int piece_count);
-	static void use_set_BlizzardStrayer(Status&, int piece_count);
-	static void use_set_HeartOfDepth(Status&, int piece_count);
+	static void use_set_Noblesse(Status&, int piece_count);
+	static void use_set_BloodstainedChivalry(Status&, int piece_count);
 	static void use_set_Emblem(Status&, int piece_count);
 	static void use_set_Shimenawa(Status&, int piece_count);
-	static void use_set_HuskOfOpulentDreams(Status&, int piece_count);
+	static void use_set_HeartOfDepth(Status&, int piece_count);
+	static void use_set_BlizzardStrayer(Status&, int piece_count);
 	static void use_set_PaleFlame(Status&, int piece_count);
 	static void use_set_Millileth(Status&, int piece_count);
-	static void use_set_BloodstainedChivalry(Status&, int piece_count);
-	static void use_set_ThunderingFury(Status&, int piece_count);
-	static void use_set_Wanderer(Status&, int piece_count);
 	static void use_set_Venerer(Status&, int piece_count);
-	static void use_set_Noblesse(Status&, int piece_count);
+	static void use_set_ThunderingFury(Status&, int piece_count);
+	static void use_set_HuskOfOpulentDreams(Status&, int piece_count);
+	static void use_set_DeepwoodMemories(Status&, int piece_count);
+	static void use_set_GildedDreams(Status&, int piece_count);
 
 	void set_main();
 
@@ -111,7 +114,7 @@ std::ostream& operator<<(std::ostream&, const Artifact&);
 inline std::string to_string(Artifact::SetType type) {
 	static const std::map<Artifact::SetType, std::string> type_str{
 		{ Artifact::SetType::Gladiator, "Gladiator's Finale" },
-		{ Artifact::SetType::Wanderer, "Wanderer's Troupe" },
+		{ Artifact::SetType::WanderersTroupe, "Wanderer's Troupe" },
 		{ Artifact::SetType::Noblesse, "Noblesse Oblige" },
 		{ Artifact::SetType::Bloodstained, "Bloodstained Chivalry" },
 		{ Artifact::SetType::Emblem, "Emblem of Severed Fate" },
@@ -128,7 +131,9 @@ inline std::string to_string(Artifact::SetType type) {
 		{ Artifact::SetType::ThunderingFury, "Thundering Fury" },
 		{ Artifact::SetType::Thundersoother, "Thundersoother" },
 		{ Artifact::SetType::HuskOfOpulentDreams, "Husk of Opulent Dreams" },
-		{ Artifact::SetType::OceanHuedClam, "Ocean-Hued Clam" }
+		{ Artifact::SetType::OceanHuedClam, "Ocean-Hued Clam" },
+		{ Artifact::SetType::DeepwoodMemories, "Deepwood Memories" },
+		{ Artifact::SetType::GildedDreams, "Gilded Dreams" }
 	};
 	return type_str.at(type);
 }
