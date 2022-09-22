@@ -335,6 +335,43 @@ private:
 	};
 };
 
+// -------------------------------------------------- Nilou --------------------------------------------------
+
+class Nilou : public Character { // 9 9 9
+public:
+	bool GoldenChalice = true;
+
+	Nilou() :
+			Character{
+				{ .base_hp = 15185.0,
+				  .hp_perc = 28.8,
+				  .base_atk = 229.61,
+				  .base_def = 728.59,
+				  .crit_rate = 5.0,
+				  .crit_dmg = 50.0,
+				  .energy_recharge = 100.0 }
+			} {
+		DEBUG("___Nilou___\n"
+			  << status);
+	}
+
+	Hit get_hit(DmgTalent, unsigned int hit_num) const override;
+	void apply_effects(Status&) const override;
+
+private:
+	inline static const Abilities ABILITIES{
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 5.68 } },
+		{ { DmgTalent::Skill, 2 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 7.74 } },  // sword dance 1
+		{ { DmgTalent::Skill, 3 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 8.75 } },  // sword dance 2
+		{ { DmgTalent::Skill, 4 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 12.19 } }, // sword dance 3
+		{ { DmgTalent::Skill, 5 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 5.55 } },  // whirling steps 1
+		{ { DmgTalent::Skill, 6 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 6.73 } },  // whirling steps 2
+		{ { DmgTalent::Skill, 7 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 8.6 } },   // whirling steps 3
+		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 31.33 } },
+		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Hydro, ScalingType::HP, 38.3 } }
+	};
+};
+
 }
 
 #endif
