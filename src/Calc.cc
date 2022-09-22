@@ -75,6 +75,10 @@ void Calc::pyro_resonance_modifier(Status& stats) {
 	stats.atk_perc += 25.0;
 }
 
+void Calc::hydro_resonance_modifier(Status& stats) {
+	stats.hp_perc += 25.0;
+}
+
 void Calc::cryo_resonance_modifier(Status& stats) {
 	stats.crit_rate += 15.0;
 }
@@ -85,6 +89,13 @@ void Calc::geo_resonance_modifier(Status& stats) {
 	stats.plunge_bonus += 15.0;
 	stats.skill_bonus += 15.0;
 	stats.burst_bonus += 15.0;
+}
+
+void Calc::dendro_resonance_modifier(Status& stats) {
+	// base -> +50 EM
+	// burn / quicken / bloom -> + 30 EM
+	// aggrv / spread / hyperbl / brgn -> +20 EM
+	stats.elem_mastery *= 100.0;
 }
 
 // private

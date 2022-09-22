@@ -41,8 +41,10 @@ public:
 	Status status() const;
 
 	static void pyro_resonance_modifier(Status&);
+	static void hydro_resonance_modifier(Status&);
 	static void cryo_resonance_modifier(Status&);
 	static void geo_resonance_modifier(Status&);
+	static void dendro_resonance_modifier(Status&);
 
 private:
 	Status m_stats;
