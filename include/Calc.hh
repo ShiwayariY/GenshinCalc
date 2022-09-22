@@ -63,7 +63,7 @@ private:
 	float total_def() const;
 	float additional_dmg(DmgTalent) const;
 	float dmg_bonus(DmgElement, DmgTalent) const;
-	float amplifying_multiplier(Reaction) const;
+	float amplifying_multiplier(AmplifyReaction) const;
 
 	const Character& m_char;
 	const Weapon& m_weapon;

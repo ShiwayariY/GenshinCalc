@@ -479,7 +479,7 @@ void calc_HuTao() {
 	const HuTao hutao;
 	const Deathmatch deathmatch{ 2, true };
 	Combo combo{ hutao.get_hit(DmgTalent::Charged, 1) };
-	combo[0].reaction = Reaction::VapeByPyro;
+	combo[0].reaction = AmplifyReaction::VapeByPyro;
 
 	auto modifiers = [](Status& stats) {
 		Calc::pyro_resonance_modifier(stats);
@@ -497,7 +497,7 @@ void calc_HuTao_potential() {
 	HuTao hutao;
 	Deathmatch deathmatch{ 2, true };
 	Combo combo{ hutao.get_hit(DmgTalent::Charged, 1) };
-	combo[0].reaction = Reaction::VapeByPyro;
+	combo[0].reaction = AmplifyReaction::VapeByPyro;
 
 	const auto shime = SetType::Shimenawa;
 	const auto max_potential_dmg = find_max_potential(hutao, deathmatch, combo,
@@ -669,9 +669,9 @@ void calc_Klee() {
 		klee.get_hit(DmgTalent::Charged, 1)
 	};
 
-	combo[0].reaction = Reaction::VapeByPyro;
-	combo[8].reaction = Reaction::VapeByPyro;
-	combo[10].reaction = Reaction::VapeByPyro;
+	combo[0].reaction = AmplifyReaction::VapeByPyro;
+	combo[8].reaction = AmplifyReaction::VapeByPyro;
+	combo[10].reaction = AmplifyReaction::VapeByPyro;
 
 	const auto ordered_sets = list_sets_by_dmg(klee, atlas, KLEE_ARTS, combo,
 	  {

@@ -242,19 +242,19 @@ float Calc::dmg_bonus(DmgElement elem, DmgTalent talent) const {
 	return bonus;
 }
 
-float Calc::amplifying_multiplier(Reaction reaction) const {
+float Calc::amplifying_multiplier(AmplifyReaction reaction) const {
 	float reaction_multiplier = 1.0;
 	switch (reaction) {
-		case Reaction::None:
+		case AmplifyReaction::None:
 			return reaction_multiplier;
 
-		case Reaction::MeltByCryo:
-		case Reaction::VapeByPyro:
+		case AmplifyReaction::MeltByCryo:
+		case AmplifyReaction::VapeByPyro:
 			reaction_multiplier = 1.5;
 			break;
 
-		case Reaction::MeltByPyro:
-		case Reaction::VapeByHydro:
+		case AmplifyReaction::MeltByPyro:
+		case AmplifyReaction::VapeByHydro:
 			reaction_multiplier = 2.0;
 			break;
 	}

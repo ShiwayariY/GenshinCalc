@@ -48,7 +48,7 @@ enum class ScalingType {
 	Def
 };
 
-enum class Reaction {
+enum class AmplifyReaction {
 	None,
 	MeltByPyro,
 	MeltByCryo,
@@ -68,7 +68,7 @@ struct Hit {
 	ScalingType scaling_type = ScalingType::Atk;
 	float scaling_perc = 100.0;
 	Crit crit = Crit::Normal;
-	Reaction reaction = Reaction::None;
+	AmplifyReaction reaction = AmplifyReaction::None;
 };
 using Combo = std::vector<Hit>;
 
