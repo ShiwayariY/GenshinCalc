@@ -43,7 +43,9 @@ enum class DmgTalent {
 };
 
 enum class ScalingType {
-	HP, Atk, Def
+	HP,
+	Atk,
+	Def
 };
 
 enum class Reaction {
