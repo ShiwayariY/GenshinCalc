@@ -203,6 +203,9 @@ float Calc::dmg_bonus(DmgElement elem, DmgTalent talent) const {
 		case DmgElement::Geo:
 			bonus += m_stats.geo_bonus;
 			break;
+		case DmgElement::Dendro:
+			bonus += m_stats.dendro_bonus;
+			break;
 		case DmgElement::Phys:
 			bonus += m_stats.phys_bonus;
 			break;
