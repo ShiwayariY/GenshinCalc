@@ -63,10 +63,21 @@ void Widsith::apply_effects(Status& stats) const {
 // -------------------------------------------------- The Unforged --------------------------------------------------
 
 void Unforged::apply_effects(Status& stats) const {
-	const auto stacks_bounded = std::min(stacks, 5u);
+	const auto stacks_bounded = std::min(stacks, MAX_STACKS);
 	auto atk_perc_bonus = stacks_bounded * m_atk_perc_bonus_per_stack;
 	if (shielded) atk_perc_bonus *= 2;
 	stats.atk_perc += atk_perc_bonus;
+}
+
+// -------------------------------------------------- Iron Sting --------------------------------------------------
+
+void IronSting::apply_effects(Status& stats) const {
+	const auto dmg_perc_bonus = m_dmg_perc_per_stack * std::min(stacks, MAX_STACKS);
+	stats.normal_bonus += dmg_perc_bonus;
+	stats.charged_bonus += dmg_perc_bonus;
+	stats.plunge_bonus += dmg_perc_bonus;
+	stats.skill_bonus += dmg_perc_bonus;
+	stats.burst_bonus += dmg_perc_bonus;
 }
 
 }

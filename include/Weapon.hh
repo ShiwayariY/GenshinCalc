@@ -405,6 +405,28 @@ public:
 	void apply_effects(Status&) const override;
 };
 
+// -------------------------------------------------- Iron Sting --------------------------------------------------
+
+class IronSting : public Weapon {
+	static const unsigned MAX_STACKS = 2u;
+	float m_dmg_perc_per_stack = 6.0f;
+
+public:
+	unsigned stacks = 2;
+
+	IronSting(unsigned refine = 1) :
+			Weapon{
+				{ .base_atk = 509.61f,
+				  .elem_mastery = 165.38f }
+			},
+			m_dmg_perc_per_stack{ 4.5f + 1.5f * std::max(1u, std::min(refine, 5u)) } {
+		DEBUG("___IronSting___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override;
+};
+
 }
 
 #endif
