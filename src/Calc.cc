@@ -95,7 +95,7 @@ float Calc::calc_traforeaction(TrafoReaction reaction, unsigned int char_level) 
 	char_level = std::min(char_level, 90u);
 	char_level = (char_level / 10u) * 10u;
 	return base.at(char_level) * multiplier.at(reaction) *
-		   (1.0f + m_stats.reaction_bonus +
+		   (1.0f + m_stats.reaction_bonus / 100.0f +
 			 16.0f * m_stats.elem_mastery / (2000.0f + m_stats.elem_mastery));
 }
 
