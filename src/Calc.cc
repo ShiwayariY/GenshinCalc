@@ -127,7 +127,7 @@ void Calc::dendro_resonance_modifier(Status& stats) {
 	// base -> +50 EM
 	// burn / quicken / bloom -> + 30 EM
 	// aggrv / spread / hyperbl / brgn -> +20 EM
-	stats.elem_mastery *= 100.0;
+	stats.elem_mastery += 80.0;
 }
 
 // private
