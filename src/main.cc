@@ -208,8 +208,62 @@ float best_set(
 	return 0.0;
 }
 
+void Nilou_potential() {
+	Nilou nilou;
+	IronSting weapon{ 5 };
+	DmgContext context{
+		.char_level = 90,
+		.enemy_level = 100,
+		.def_reduction_perc = 0.0,
+		.res_perc = {
+		  { DmgElement::Hydro, 10.0 },
+		  { DmgElement::Dendro, -20.0 } }
+	};
+	Combo combo{
+		nilou.get_hit(DmgTalent::Skill, 1),
+		nilou.get_hit(DmgTalent::Skill, 2),
+		nilou.get_hit(DmgTalent::Skill, 3),
+		nilou.get_hit(DmgTalent::Skill, 4),
+		nilou.get_hit(DmgTalent::Skill, 2),
+		nilou.get_hit(DmgTalent::Skill, 3),
+		nilou.get_hit(DmgTalent::Skill, 4),
+		nilou.get_hit(DmgTalent::Skill, 2),
+		nilou.get_hit(DmgTalent::Skill, 3),
+		nilou.get_hit(DmgTalent::Skill, 4),
+		nilou.get_hit(DmgTalent::Burst, 1),
+		nilou.get_hit(DmgTalent::Burst, 2),
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+		TrafoReaction::Bloom,
+	};
+	auto max_dmg = find_max_potential(
+	  nilou, weapon, combo,
+	  SetType::Millileth, SetType::Millileth, SetType::Millileth,
+	  SetType::WanderersTroupe, SetType::WanderersTroupe,
+	  { Main::SandHP, Main::SandEM },
+	  { Main::GobletHydro, Main::GobletHP, Main::GobletEM },
+	  { Main::HeadHP, Main::HeadEM, Main::HeadCRate, Main::HeadCDmg },
+	  { StatusRoll::HPPerc, StatusRoll::HP, StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::EM },
+	  25, StatusGenerator::Quality::AVERAGE, context, {},
+	  [](Status& stats) {
+		  Calc::dendro_resonance_modifier(stats);
+		  Calc::hydro_resonance_modifier(stats);
+	  });
+	std::cout << "Combo dmg: " << max_dmg << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
+	Nilou_potential();
 }
