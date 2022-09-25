@@ -137,7 +137,7 @@ Hit Nilou::get_hit(DmgTalent talent, unsigned int hit_num) const {
 
 void Nilou::apply_effects(Status& stats) const {
 	if (GoldenChalice) {
-		stats.elem_mastery += 60.0;
+		stats.elem_mastery += 60.0f;
 		const auto total_hp = stats.base_hp * (1.0f + stats.hp_perc / 100.0f) + stats.flat_hp;
 		stats.reaction_bonus += std::min(std::max(0.0f, total_hp - 30000.0f) * 0.007f, 300.0f);
 	}
