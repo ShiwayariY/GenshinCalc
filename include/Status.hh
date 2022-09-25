@@ -248,7 +248,7 @@ inline std::ostream& operator<<(std::ostream& os, const Status& s) {
 	print_value("Electro DMG", s.electro_bonus, "   ");
 	print_value("Anemo DMG", s.anemo_bonus, "   ");
 	print_value("Geo DMG", s.geo_bonus, "\n");
-	print_value("Dendro DMG", s.dendro_bonus, "");
+	print_value("Dendro DMG", s.dendro_bonus, "   ");
 	print_value("Physical DMG", s.phys_bonus, "   ");
 	print_value("", 0, "\n");
 	print_value("Normal DMG", s.normal_bonus, "   ");
