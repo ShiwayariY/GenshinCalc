@@ -46,7 +46,7 @@ Calc::AppliedDmg Calc::calc_avg_dmg(const Combo& combo, unsigned int char_level)
 
 	auto talent_dmg = [*this, &power](const Hit& hit) {
 		const float hit_power = power.at(hit.scaling_type) * hit.scaling_perc / 100.0 + additional_dmg(hit.talent);
-		DEBUG("Hit Atk: " << hit_atk);
+		DEBUG("Hit Atk: " << hit_power);
 
 		const float bonus_mult = 1.0 + dmg_bonus(hit.element, hit.talent) / 100.0;
 		DEBUG("Bonus mult: " << bonus_mult);
