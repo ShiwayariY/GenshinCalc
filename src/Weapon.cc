@@ -35,6 +35,7 @@ void LostPrayer::apply_effects(Status& stats) const {
 	stats.electro_bonus += bonus;
 	stats.anemo_bonus += bonus;
 	stats.geo_bonus += bonus;
+	stats.dendro_bonus += bonus;
 }
 
 // -------------------------------------------------- Widsith --------------------------------------------------
@@ -53,6 +54,7 @@ void Widsith::apply_effects(Status& stats) const {
 			stats.electro_bonus += Aria_elem_bonus;
 			stats.anemo_bonus += Aria_elem_bonus;
 			stats.geo_bonus += Aria_elem_bonus;
+			stats.dendro_bonus += Aria_elem_bonus;
 			break;
 		case ThemeSong::Interlude:
 			stats.elem_mastery += Interlude_elem_mastery;
