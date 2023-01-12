@@ -45,7 +45,7 @@ Calc::AppliedDmg Calc::calc_avg_dmg(const Combo& combo, unsigned int char_level)
 	};
 
 	auto talent_dmg = [*this, &power](const Hit& hit) {
-		const float hit_power = power.at(hit.scaling_type) * hit.scaling_perc / 100.0 + additional_dmg(hit.talent);
+		const float hit_power = power.at(hit.scaling_type) * hit.scaling_perc / 100.0 + additional_dmg(hit);
 		DEBUG("Hit Atk: " << hit_power);
 
 		const float bonus_mult = 1.0 + dmg_bonus(hit.element, hit.talent) / 100.0;
@@ -204,9 +204,9 @@ float Calc::total_def() const {
 	return tot;
 }
 
-float Calc::additional_dmg(DmgTalent talent) const {
+float Calc::additional_dmg(Hit hit) const {
 	float add_dmg = m_stats.additional_dmg;
-	switch (talent) {
+	switch (hit.talent) {
 		case DmgTalent::Normal:
 			add_dmg += m_stats.additional_normal_dmg;
 			break;
@@ -222,7 +222,20 @@ float Calc::additional_dmg(DmgTalent talent) const {
 			add_dmg += m_stats.additional_burst_dmg;
 			break;
 	}
-	return add_dmg;
+	float reaction_dmg = 0.0f;
+	switch (hit.reaction) {
+		case AmplifyReaction::Aggravate:
+			reaction_dmg += 1.15f;
+		break;
+		case AmplifyReaction::Spread:
+			reaction_dmg += 1.25f;
+		break;
+		default:
+		reaction_dmg = 0.0f;
+	}
+	reaction_dmg *= 1446.85f; // level multiplier for lv. 90 character
+	reaction_dmg *= 1 + m_stats.reaction_bonus + 5.0f * m_stats.elem_mastery / (1200.0f + m_stats.elem_mastery);
+	return add_dmg + reaction_dmg;
 }
 
 float Calc::dmg_bonus(DmgElement elem, DmgTalent talent) const {
@@ -278,6 +291,8 @@ float Calc::amplifying_multiplier(AmplifyReaction reaction) const {
 	float reaction_multiplier = 1.0;
 	switch (reaction) {
 		case AmplifyReaction::None:
+		case AmplifyReaction::Aggravate:
+		case AmplifyReaction::Spread:
 			return reaction_multiplier;
 
 		case AmplifyReaction::MeltByCryo:

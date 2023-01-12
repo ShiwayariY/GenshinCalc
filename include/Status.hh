@@ -55,7 +55,9 @@ enum class AmplifyReaction {
 	MeltByPyro,
 	MeltByCryo,
 	VapeByHydro,
-	VapeByPyro
+	VapeByPyro,
+	Aggravate,
+	Spread
 };
 
 enum class TrafoReaction {

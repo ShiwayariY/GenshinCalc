@@ -76,7 +76,7 @@ private:
 	float total_hp() const;
 	float total_atk() const;
 	float total_def() const;
-	float additional_dmg(DmgTalent) const;
+	float additional_dmg(Hit) const;
 	float dmg_bonus(DmgElement, DmgTalent) const;
 	float amplifying_multiplier(AmplifyReaction) const;
 
