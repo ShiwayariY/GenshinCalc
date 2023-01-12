@@ -427,6 +427,30 @@ public:
 	void apply_effects(Status&) const override;
 };
 
+// -------------------------------------------------- Kagura's Verity --------------------------------------------------
+
+class KagurasVerity : public Weapon {
+	static const unsigned MAX_STACKS = 3u;
+	float m_dmg_perc_per_stack = 12.0f;
+
+public:
+	unsigned stacks = 3;
+
+	KagurasVerity(unsigned refine = 1) :
+			Weapon{
+				{ .base_atk = 608.07f,
+				  .crit_dmg = 66.15f }
+			},
+			m_dmg_perc_per_stack{ 9.0f + 3.0f * std::max(1u, std::min(refine, 5u)) } {
+		DEBUG("___KagurasVerity___\n"
+			  << status);
+	}
+
+	void apply_effects(Status&) const override;
+};
+
+
+
 }
 
 #endif

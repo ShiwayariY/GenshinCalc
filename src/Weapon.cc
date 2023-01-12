@@ -80,4 +80,19 @@ void IronSting::apply_effects(Status& stats) const {
 	stats.burst_bonus += dmg_perc_bonus;
 }
 
+// -------------------------------------------------- Kagura's Verity --------------------------------------------------
+
+void KagurasVerity::apply_effects(Status& stats) const {
+	stats.skill_bonus += m_dmg_perc_per_stack * std::min(stacks, MAX_STACKS);
+	if (stacks == 3) {
+		stats.pyro_bonus += m_dmg_perc_per_stack;
+		stats.hydro_bonus += m_dmg_perc_per_stack;
+		stats.cryo_bonus += m_dmg_perc_per_stack;
+		stats.electro_bonus += m_dmg_perc_per_stack;
+		stats.anemo_bonus += m_dmg_perc_per_stack;
+		stats.geo_bonus += m_dmg_perc_per_stack;
+		stats.dendro_bonus += m_dmg_perc_per_stack;
+	}
+}
+
 }
