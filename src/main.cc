@@ -279,9 +279,104 @@ void Nilou_potential() {
 	std::cout << "Combo dmg: " << max_dmg << std::endl;
 }
 
+void Raiden_potential() {
+	Baal raiden;
+	TheCatch thecatch;
+	DmgContext context{
+		.char_level = 90,
+		.enemy_level = 100,
+		.def_reduction_perc = 0.0,
+		.res_perc = { { DmgElement::Electro, -15.0 } }
+	};
+	Combo combo {
+		raiden.get_hit(DmgTalent::Burst, 1),
+		raiden.get_hit(DmgTalent::Burst, 2),
+		raiden.get_hit(DmgTalent::Burst, 3),
+		raiden.get_hit(DmgTalent::Burst, 4),
+		raiden.get_hit(DmgTalent::Burst, 7),
+		raiden.get_hit(DmgTalent::Burst, 1),
+		raiden.get_hit(DmgTalent::Burst, 2),
+		raiden.get_hit(DmgTalent::Burst, 3),
+		raiden.get_hit(DmgTalent::Burst, 4),
+		raiden.get_hit(DmgTalent::Burst, 7),
+		raiden.get_hit(DmgTalent::Burst, 1),
+		raiden.get_hit(DmgTalent::Burst, 2),
+		raiden.get_hit(DmgTalent::Burst, 3),
+		raiden.get_hit(DmgTalent::Burst, 4),
+		raiden.get_hit(DmgTalent::Burst, 7)
+	};
+	auto max_dmg = find_max_potential(
+		raiden, thecatch, combo,
+		SetType::Emblem, SetType::Emblem, SetType::Emblem, SetType::Emblem, SetType::Emblem,
+		{Main::SandER},
+		{Main::GobletElectro},
+		{Main::HeadCDmg, Main::HeadCRate},
+		{StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::ER, StatusRoll::Atk},
+		25, StatusGenerator::Quality::AVERAGE, context, { .energy_recharge = 250.0 },
+		[](Status&){
+			// s.flat_atk += 1000.0f;
+	});
+	std::cout << "Combo dmg: " << max_dmg << std::endl
+		<< max_dmg / 656134.0f << std::endl;
+}
+
+void Yae_potential() {
+	YaeMiko yae;
+	KagurasVerity kagura;
+	DmgContext context {
+		.char_level = 90,
+		.enemy_level = 100,
+		.def_reduction_perc = 0.0,
+		.res_perc = { { DmgElement::Electro, -15.0 } }
+	};
+
+	auto skill_aggr = yae.get_hit(DmgTalent::Skill, 3);
+	skill_aggr.reaction = AmplifyReaction::Aggravate;
+	auto burst_init = yae.get_hit(DmgTalent::Burst, 1);
+	burst_init.reaction = AmplifyReaction::Aggravate;
+	auto burst_extra = yae.get_hit(DmgTalent::Burst, 2);
+	burst_extra.reaction = AmplifyReaction::Aggravate;
+
+	Combo combo {
+		yae.get_hit(DmgTalent::Skill, 3),
+		yae.get_hit(DmgTalent::Skill, 3),
+		skill_aggr,
+		yae.get_hit(DmgTalent::Skill, 3),
+		yae.get_hit(DmgTalent::Skill, 3),
+		skill_aggr,
+		yae.get_hit(DmgTalent::Skill, 3),
+		yae.get_hit(DmgTalent::Skill, 3),
+		skill_aggr,
+		yae.get_hit(DmgTalent::Skill, 3),
+		yae.get_hit(DmgTalent::Skill, 3),
+		skill_aggr,
+		yae.get_hit(DmgTalent::Skill, 3),
+		yae.get_hit(DmgTalent::Skill, 3),
+		skill_aggr,
+		burst_init,
+		burst_extra,
+		burst_extra,
+		burst_extra
+	};
+	auto max_dmg = find_max_potential(
+		yae, kagura, combo,
+		SetType::GildedDreams, SetType::GildedDreams, SetType::GildedDreams, SetType::GildedDreams, SetType::GildedDreams,
+		{Main::SandEM},
+		{Main::GobletEM},
+		{Main::HeadEM},
+		{StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::EM, StatusRoll::Atk},
+		25, StatusGenerator::Quality::AVERAGE, context, { .energy_recharge = 100.0 },
+		[](Status& s) {
+			s.electro_bonus += 40.0f; // Kazuha
+			s.elem_mastery += 0.002f * 30000.0f + 40.0f; // Kuki Key 30k HP + Nahida Thousand Floating Dreams
+			// s.flat_atk += 1000.0f;
+	});
+	std::cout << "Combo dmg: " << max_dmg << std::endl;
+}
+
 }
 
 int main() {
 	using namespace GenshinCalc;
-	Nilou_potential();
+	Yae_potential();
 }
