@@ -52,6 +52,19 @@ bool has_min_stats(const Status& stats, const Status& min) {
 		   && stats.additional_dmg >= min.additional_dmg;
 }
 
+struct MainStats {
+	Main sand = Main::SandAtk;
+	Main goblet = Main::GobletAtk;
+	Main circlet = Main::HeadAtk;
+};
+
+std::ostream& operator<<(std::ostream& os, const MainStats& mains) {
+	std::cout << to_string(mains.sand) << ", "
+			  << to_string(mains.goblet) << ", "
+			  << to_string(mains.circlet);
+			  return os;
+}
+
 float find_max_potential(
   const Character& chara,
   const Weapon& weapon,
@@ -78,6 +91,7 @@ float find_max_potential(
 			  << "Sub [million]\n";
 	unsigned iteration_main = 0;
 
+	MainStats chosen_mains;
 	for (const auto& sands_main : sands_mains) {
 		Artifact dummy_sands{ sands_main, sands_set };
 
@@ -117,6 +131,9 @@ float find_max_potential(
 					if (has_min_stats(tot_stats, min_stats) && dealt_dmg > best_dmg) {
 						best_dmg = dealt_dmg;
 						best_stats = tot_stats;
+						chosen_mains.sand = sands_main;
+						chosen_mains.goblet = goblet_main;
+						chosen_mains.circlet = circlet_main;
 					}
 				} while (gen.next());
 			}
@@ -124,6 +141,7 @@ float find_max_potential(
 	}
 
 	std::cout << "\n"
+			  << chosen_mains << "\n"
 			  << best_stats << std::endl;
 	return best_dmg;
 }

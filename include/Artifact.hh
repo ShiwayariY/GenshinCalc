@@ -137,6 +137,35 @@ inline std::string to_string(Artifact::SetType type) {
 	};
 	return type_str.at(type);
 }
+inline std::string to_string(Artifact::Main main) {
+	static const std::map<Artifact::Main, std::string> main_str{
+		{ Artifact::Main::SandAtk, "Sand ATK" },
+		{ Artifact::Main::SandDef, "Sand DEF" },
+		{ Artifact::Main::SandEM, "Sand EM" },
+		{ Artifact::Main::SandER, "Sand ER" },
+		{ Artifact::Main::SandHP, "Sand HP" },
+		{ Artifact::Main::GobletAtk, "Goblet ATK" },
+		{ Artifact::Main::GobletDef, "Goblet DEF" },
+		{ Artifact::Main::GobletEM, "Goblet EM" },
+		{ Artifact::Main::GobletHP, "Goblet HP" },
+		{ Artifact::Main::GobletPyro, "Goblet Pyro" },
+		{ Artifact::Main::GobletHydro, "Goblet Hydro" },
+		{ Artifact::Main::GobletCryo, "Goblet Cryo" },
+		{ Artifact::Main::GobletElectro, "Goblet Electro" },
+		{ Artifact::Main::GobletGeo, "Goblet Geo" },
+		{ Artifact::Main::GobletAnemo, "Goblet Anemo" },
+		{ Artifact::Main::GobletDendro, "Goblet Dendro" },
+		{ Artifact::Main::GobletPhys, "Goblet Phys" },
+		{ Artifact::Main::HeadAtk, "Circlet ATK" },
+		{ Artifact::Main::HeadCDmg, "Circlet CDmg" },
+		{ Artifact::Main::HeadCRate, "Circlet CRate" },
+		{ Artifact::Main::HeadDef, "Circlet Def" },
+		{ Artifact::Main::HeadEM, "Circlet EM" },
+		{ Artifact::Main::HeadHP, "Circlet HP" },
+		{ Artifact::Main::HeadHealing, "Circlet Healing" }
+	};
+	return main_str.at(main);
+}
 
 }
 
