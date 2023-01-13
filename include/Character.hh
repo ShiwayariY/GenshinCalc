@@ -233,7 +233,7 @@ private:
 
 // -------------------------------------------------- Yae Miko --------------------------------------------------
 
-class YaeMiko : public Character { // 9 9 9
+class YaeMiko : public Character { // 9 10 9
 public:
 	YaeMiko() :
 			Character{
@@ -258,9 +258,9 @@ private:
 		{ { DmgTalent::Normal, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 65.48 } },
 		{ { DmgTalent::Normal, 3 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 96.71 } },
 		{ { DmgTalent::Charged, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 242.92 } },
-		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 103.14 } },
-		{ { DmgTalent::Skill, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 128.93 } },
-		{ { DmgTalent::Skill, 3 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 161.16 } },
+		{ { DmgTalent::Skill, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 109.21 } },
+		{ { DmgTalent::Skill, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 136.51 } },
+		{ { DmgTalent::Skill, 3 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 170.64 } },
 		{ { DmgTalent::Burst, 1 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 442.0 } },
 		{ { DmgTalent::Burst, 2 }, DmgDealt{ DmgElement::Electro, ScalingType::Atk, 567.49 } }
 	};
