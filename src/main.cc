@@ -325,53 +325,93 @@ void Yae_potential() {
 	KagurasVerity kagura;
 	DmgContext context {
 		.char_level = 90,
-		.enemy_level = 100,
+		.enemy_level = 95,
 		.def_reduction_perc = 0.0,
-		.res_perc = { { DmgElement::Electro, -15.0 } }
+		.res_perc = { { DmgElement::Electro, -30.0 } }
 	};
 
+	auto skill = yae.get_hit(DmgTalent::Skill, 3);
 	auto skill_aggr = yae.get_hit(DmgTalent::Skill, 3);
 	skill_aggr.reaction = AmplifyReaction::Aggravate;
 	auto burst_init = yae.get_hit(DmgTalent::Burst, 1);
 	burst_init.reaction = AmplifyReaction::Aggravate;
-	auto burst_extra = yae.get_hit(DmgTalent::Burst, 2);
-	burst_extra.reaction = AmplifyReaction::Aggravate;
+	auto burst_thunderbolt = yae.get_hit(DmgTalent::Burst, 2);
+	burst_thunderbolt.reaction = AmplifyReaction::Aggravate;
 
-	Combo combo {
-		yae.get_hit(DmgTalent::Skill, 3),
-		yae.get_hit(DmgTalent::Skill, 3),
-		skill_aggr,
-		yae.get_hit(DmgTalent::Skill, 3),
-		yae.get_hit(DmgTalent::Skill, 3),
-		skill_aggr,
-		yae.get_hit(DmgTalent::Skill, 3),
-		yae.get_hit(DmgTalent::Skill, 3),
-		skill_aggr,
-		yae.get_hit(DmgTalent::Skill, 3),
-		yae.get_hit(DmgTalent::Skill, 3),
-		skill_aggr,
-		yae.get_hit(DmgTalent::Skill, 3),
-		yae.get_hit(DmgTalent::Skill, 3),
-		skill_aggr,
-		burst_init,
-		burst_extra,
-		burst_extra,
-		burst_extra
+	Combo rotation {
+		skill_aggr, skill, skill,
+		skill_aggr, skill, skill,
+		skill_aggr, skill, skill,
+		burst_init, burst_thunderbolt, burst_thunderbolt, burst_thunderbolt
 	};
+
 	auto max_dmg = find_max_potential(
-		yae, kagura, combo,
+		yae, kagura, rotation,
 		SetType::GildedDreams, SetType::GildedDreams, SetType::GildedDreams, SetType::GildedDreams, SetType::GildedDreams,
-		{Main::SandEM},
-		{Main::GobletEM},
-		{Main::HeadEM},
-		{StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::EM, StatusRoll::Atk},
-		25, StatusGenerator::Quality::AVERAGE, context, { .energy_recharge = 100.0 },
+		{ Main::SandEM },
+		{ Main::GobletEM },
+		{ Main::HeadEM },
+		{ StatusRoll::CRate, StatusRoll::CDmg, StatusRoll::AtkPerc, StatusRoll::EM, StatusRoll::Atk },
+		25, StatusGenerator::Quality::AVERAGE, context, {},
 		[](Status& s) {
 			s.electro_bonus += 40.0f; // Kazuha
-			s.elem_mastery += 0.002f * 30000.0f + 40.0f; // Kuki Key 30k HP + Nahida Thousand Floating Dreams
-			// s.flat_atk += 1000.0f;
+			s.atk_perc += 20.0f; // ToM
+			s.elem_mastery += 250.0f; // Nahida burst
 	});
-	std::cout << "Combo dmg: " << max_dmg << std::endl;
+	std::cout << "Rotation average dmg: " << max_dmg << std::endl;
+}
+
+void Yae_dmg() {
+	static const float KAZUHA_EM = 985.0f;
+
+	YaeMiko yae;
+	LostPrayer lostprayer;
+	lostprayer.stacks = 0;
+	DmgContext context {
+		.char_level = 90,
+		.enemy_level = 95,
+		.def_reduction_perc = 0.0,
+		.res_perc = { { DmgElement::Electro, -30.0 } }
+	};
+
+	auto skill = yae.get_hit(DmgTalent::Skill, 3);
+	skill.crit = Crit::Always;
+	auto skill_aggr = yae.get_hit(DmgTalent::Skill, 3);
+	skill_aggr.crit = Crit::Always;
+	skill_aggr.reaction = AmplifyReaction::Aggravate;
+
+	auto burst_init = yae.get_hit(DmgTalent::Burst, 1);
+	burst_init.crit = Crit::Always;
+	auto burst_init_aggr = yae.get_hit(DmgTalent::Burst, 1);
+	burst_init_aggr.crit = Crit::Always;
+	burst_init_aggr.reaction = AmplifyReaction::Aggravate;
+
+	auto burst_extra = yae.get_hit(DmgTalent::Burst, 2);
+	burst_extra.crit = Crit::Always;
+	auto burst_extra_aggr = yae.get_hit(DmgTalent::Burst, 2);
+	burst_extra_aggr.crit = Crit::Always;
+	burst_extra_aggr.reaction = AmplifyReaction::Aggravate;
+
+	auto buffs = [](Status& s) {
+		s.electro_bonus += 0.04f * KAZUHA_EM;
+		s.atk_perc += 20.0f;
+		s.elem_mastery += 0.25f * KAZUHA_EM;
+		s.crit_dmg += 20.0f;
+	};
+
+	auto art_coll = collect_artifacts(YAE_ARTS);
+	Calc calc {yae, lostprayer, art_coll.flowers.at(0), art_coll.feathers.at(0), art_coll.sands.at(0), art_coll.goblets.at(0), art_coll.heads.at(0) };
+	auto dmg = [&](const Hit& hit) {
+		return Calc::dmg_dealt(calc.avg_dmg({ hit }, context.char_level, buffs), context);
+	};
+
+	std::cout << "Skill: " << dmg(skill) << "\n"
+			  << "Skill aggravate: " << dmg(skill_aggr) << "\n"
+			  << "Burst first hit: " << dmg(burst_init) << "\n"
+			  << "Burst first hit aggravate: " << dmg(burst_init_aggr) << "\n"
+			  << "Burst thunderbolt: " << dmg(burst_extra) << "\n"
+			  << "Burst thunderbolt aggravate: " << dmg(burst_extra_aggr)
+			  << std::endl;
 }
 
 }
